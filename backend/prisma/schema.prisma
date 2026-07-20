@@ -1,0 +1,175 @@
+// ThesisFlow — Prisma schema
+// Docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum UserRole {
+  student
+  supervisor
+  coordinator
+}
+
+enum ThesisStatus {
+  draft
+  submitted
+  under_review
+  revisions_requested
+  approved
+}
+
+enum SubmissionStatus {
+  pending_review
+  revisions_requested
+  approved
+}
+
+enum SubmissionFileType {
+  docx
+  pdf
+}
+
+enum NotificationType {
+  comment
+  status_change
+}
+
+model User {
+  id           String   @id @default(uuid())
+  firstName    String
+  lastName     String
+  email        String   @unique
+  passwordHash String
+  role         UserRole @default(student)
+  departmentId String
+  department   Department @relation(fields: [departmentId], references: [id])
+  createdAt    DateTime  @default(now())
+  updatedAt    DateTime  @updatedAt
+  deletedAt    DateTime?
+
+  supervisedTheses Thesis[]     @relation("SupervisorTheses")
+  studentTheses    Thesis[]     @relation("StudentTheses")
+  coordinatorOf    Department?  @relation("DepartmentCoordinator")
+  comments         Comment[]
+  notifications    Notification[]
+  passwordResets   PasswordResetToken[]
+
+  @@index([departmentId])
+  @@index([email])
+  @@index([role])
+  @@index([deletedAt])
+  @@map("users")
+}
+
+model Department {
+  id            String  @id @default(uuid())
+  name          String
+  coordinatorId String  @unique
+  coordinator   User    @relation("DepartmentCoordinator", fields: [coordinatorId], references: [id])
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+
+  users  User[]
+  theses Thesis[]
+
+  @@index([coordinatorId])
+  @@map("departments")
+}
+
+model Thesis {
+  id                  String       @id @default(uuid())
+  studentId           String
+  student             User         @relation("StudentTheses", fields: [studentId], references: [id])
+  supervisorId        String
+  supervisor          User         @relation("SupervisorTheses", fields: [supervisorId], references: [id])
+  departmentId        String
+  department          Department   @relation(fields: [departmentId], references: [id])
+  title               String
+  status              ThesisStatus @default(draft)
+  currentSubmissionId String? @unique
+  currentSubmission   Submission?  @relation("CurrentSubmission", fields: [currentSubmissionId], references: [id])
+  createdAt           DateTime     @default(now())
+  updatedAt           DateTime     @updatedAt
+
+  submissions  Submission[]
+  notifications Notification[]
+
+  @@index([studentId])
+  @@index([supervisorId])
+  @@index([departmentId])
+  @@index([status])
+  @@map("theses")
+}
+
+model Submission {
+  id            String            @id @default(uuid())
+  thesisId      String
+  thesis        Thesis            @relation(fields: [thesisId], references: [id])
+  versionNumber Int
+  fileUrl       String
+  fileType      SubmissionFileType
+  submittedAt   DateTime          @default(now())
+  status        SubmissionStatus  @default(pending_review)
+
+  currentThesis Thesis?  @relation("CurrentSubmission")
+  comments      Comment[]
+
+  @@unique([thesisId, versionNumber])
+  @@index([thesisId])
+  @@index([status])
+  @@map("submissions")
+}
+
+model Comment {
+  id           String   @id @default(uuid())
+  submissionId String
+  submission   Submission @relation(fields: [submissionId], references: [id])
+  authorId     String
+  author       User     @relation(fields: [authorId], references: [id])
+  content      String
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+
+  @@index([submissionId])
+  @@index([authorId])
+  @@map("comments")
+}
+
+model Notification {
+  id          String           @id @default(uuid())
+  userId      String
+  user        User             @relation(fields: [userId], references: [id])
+  thesisId    String?
+  thesis      Thesis?          @relation(fields: [thesisId], references: [id])
+  type        NotificationType
+  referenceId String
+  message     String
+  read        Boolean          @default(false)
+  createdAt   DateTime         @default(now())
+
+  @@index([userId])
+  @@index([userId, read])
+  @@index([thesisId])
+  @@index([createdAt])
+  @@map("notifications")
+}
+
+model PasswordResetToken {
+  id         String   @id @default(uuid())
+  userId     String
+  user       User     @relation(fields: [userId], references: [id])
+  tokenHash  String
+  expiresAt  DateTime
+  used       Boolean  @default(false)
+  createdAt  DateTime @default(now())
+
+  @@index([userId])
+  @@index([tokenHash])
+  @@map("password_reset_tokens")
+}

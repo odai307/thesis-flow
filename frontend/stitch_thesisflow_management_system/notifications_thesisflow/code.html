@@ -1,0 +1,297 @@
+<!DOCTYPE html>
+
+<html lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>ThesisFlow - Notifications</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "tertiary-container": "#932c00",
+                        "surface-container-highest": "#e4e1ed",
+                        "on-surface-variant": "#454555",
+                        "on-secondary-fixed": "#111c2d",
+                        "inverse-surface": "#303039",
+                        "primary-fixed": "#e1e0ff",
+                        "tertiary-fixed": "#ffdbd0",
+                        "on-secondary-container": "#596377",
+                        "on-primary-container": "#bbbdff",
+                        "surface-dim": "#dbd8e5",
+                        "on-primary-fixed-variant": "#2a2bc4",
+                        "on-primary-fixed": "#04006d",
+                        "secondary-container": "#d6e0f8",
+                        "on-surface": "#1b1b23",
+                        "surface-bright": "#fbf8ff",
+                        "on-primary": "#ffffff",
+                        "primary": "#1713b8",
+                        "on-tertiary-fixed-variant": "#832600",
+                        "tertiary-fixed-dim": "#ffb59d",
+                        "secondary-fixed-dim": "#bdc7de",
+                        "on-tertiary-fixed": "#390c00",
+                        "tertiary": "#6c1e00",
+                        "surface-variant": "#e4e1ed",
+                        "outline": "#767586",
+                        "inverse-on-surface": "#f2effc",
+                        "surface-container-lowest": "#ffffff",
+                        "on-tertiary-container": "#ffaf95",
+                        "surface": "#fbf8ff",
+                        "on-secondary-fixed-variant": "#3d475a",
+                        "primary-fixed-dim": "#c0c1ff",
+                        "on-error-container": "#93000a",
+                        "surface-container-low": "#f5f2fe",
+                        "surface-container-high": "#e9e6f3",
+                        "secondary-fixed": "#d9e3fb",
+                        "outline-variant": "#c6c5d7",
+                        "on-tertiary": "#ffffff",
+                        "surface-tint": "#4549dc",
+                        "on-background": "#1b1b23",
+                        "background": "#fbf8ff",
+                        "inverse-primary": "#c0c1ff",
+                        "secondary": "#555f73",
+                        "primary-container": "#3538cd",
+                        "on-secondary": "#ffffff",
+                        "surface-container": "#efecf9",
+                        "error-container": "#ffdad6",
+                        "on-error": "#ffffff",
+                        "error": "#ba1a1a"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "full": "9999px"
+                    },
+                    "spacing": {
+                        "stack-gap": "12px",
+                        "sidebar-width": "280px",
+                        "gutter": "24px",
+                        "margin-mobile": "16px",
+                        "container-max": "1200px",
+                        "sidebar-collapsed": "64px",
+                        "section-gap": "40px"
+                    },
+                    "fontFamily": {
+                        "display-lg": ["Inter"],
+                        "section-header": ["Inter"],
+                        "label-md": ["Inter"],
+                        "body-base": ["Inter"],
+                        "headline-md": ["Inter"],
+                        "display-lg-mobile": ["Inter"],
+                        "label-xs": ["Inter"],
+                        "body-sm": ["Inter"]
+                    },
+                    "fontSize": {
+                        "display-lg": ["36px", { "lineHeight": "44px", "letterSpacing": "-0.02em", "fontWeight": "700" }],
+                        "section-header": ["18px", { "lineHeight": "28px", "fontWeight": "600" }],
+                        "label-md": ["14px", { "lineHeight": "20px", "fontWeight": "500" }],
+                        "body-base": ["16px", { "lineHeight": "24px", "fontWeight": "400" }],
+                        "headline-md": ["24px", { "lineHeight": "32px", "letterSpacing": "-0.01em", "fontWeight": "600" }],
+                        "display-lg-mobile": ["30px", { "lineHeight": "38px", "letterSpacing": "-0.02em", "fontWeight": "700" }],
+                        "label-xs": ["12px", { "lineHeight": "18px", "fontWeight": "600" }],
+                        "body-sm": ["14px", { "lineHeight": "20px", "fontWeight": "400" }]
+                    }
+                }
+            }
+        }
+    </script>
+</head>
+<body class="bg-background text-on-background font-body-base antialiased flex h-screen overflow-hidden">
+<!-- SideNavBar -->
+<nav class="hidden md:flex flex-col h-screen w-sidebar-width flex-shrink-0 sticky top-0 bg-surface-container-lowest border-r border-outline-variant py-gutter px-4">
+<!-- Header -->
+<div class="flex items-center gap-3 mb-8 px-3">
+<div class="w-10 h-10 rounded-lg bg-primary-container text-on-primary-container flex items-center justify-center font-bold font-headline-md">
+                TF
+            </div>
+<div>
+<h1 class="font-headline-md text-headline-md text-primary font-bold">ThesisFlow</h1>
+<p class="font-label-xs text-label-xs text-on-surface-variant">Academic Portal</p>
+</div>
+</div>
+<!-- Main Navigation -->
+<div class="flex-1 overflow-y-auto space-y-1">
+<a class="flex items-center gap-3 px-3 py-2.5 rounded-lg text-secondary hover:bg-surface-container-high transition-colors scale-95 active:transition-transform" href="#">
+<span class="material-symbols-outlined" data-icon="dashboard">dashboard</span>
+<span class="font-label-md text-label-md">Dashboard</span>
+</a>
+<a class="flex items-center gap-3 px-3 py-2.5 rounded-lg text-secondary hover:bg-surface-container-high transition-colors scale-95 active:transition-transform" href="#">
+<span class="material-symbols-outlined" data-icon="menu_book">menu_book</span>
+<span class="font-label-md text-label-md">Research Library</span>
+</a>
+<a class="flex items-center gap-3 px-3 py-2.5 rounded-lg text-secondary hover:bg-surface-container-high transition-colors scale-95 active:transition-transform" href="#">
+<span class="material-symbols-outlined" data-icon="article">article</span>
+<span class="font-label-md text-label-md">My Thesis</span>
+</a>
+<!-- Active Tab -->
+<a class="flex items-center gap-3 px-3 py-2.5 rounded-lg bg-secondary-container text-on-secondary-container font-semibold scale-95 active:transition-transform" href="#">
+<span class="material-symbols-outlined" data-icon="forum" data-weight="fill" style="font-variation-settings: 'FILL' 1;">forum</span>
+<span class="font-label-md text-label-md">Communications</span>
+</a>
+<a class="flex items-center gap-3 px-3 py-2.5 rounded-lg text-secondary hover:bg-surface-container-high transition-colors scale-95 active:transition-transform" href="#">
+<span class="material-symbols-outlined" data-icon="publish">publish</span>
+<span class="font-label-md text-label-md">Submissions</span>
+</a>
+<a class="flex items-center gap-3 px-3 py-2.5 rounded-lg text-secondary hover:bg-surface-container-high transition-colors scale-95 active:transition-transform" href="#">
+<span class="material-symbols-outlined" data-icon="insights">insights</span>
+<span class="font-label-md text-label-md">Analytics</span>
+</a>
+</div>
+<!-- CTA -->
+<div class="mt-4 px-3 mb-4">
+<button class="w-full bg-primary-container text-on-primary py-2.5 rounded-lg font-label-md text-label-md hover:opacity-90 transition-opacity">
+                New Entry
+            </button>
+</div>
+<!-- Footer Navigation -->
+<div class="border-t border-outline-variant pt-4 space-y-1">
+<a class="flex items-center gap-3 px-3 py-2.5 rounded-lg text-secondary hover:bg-surface-container-high transition-colors scale-95 active:transition-transform" href="#">
+<span class="material-symbols-outlined" data-icon="settings">settings</span>
+<span class="font-label-md text-label-md">Settings</span>
+</a>
+<a class="flex items-center gap-3 px-3 py-2.5 rounded-lg text-secondary hover:bg-surface-container-high transition-colors scale-95 active:transition-transform" href="#">
+<span class="material-symbols-outlined" data-icon="help">help</span>
+<span class="font-label-md text-label-md">Support</span>
+</a>
+</div>
+</nav>
+<!-- Main Content Area -->
+<div class="flex-1 flex flex-col min-w-0 overflow-hidden bg-background">
+<!-- TopAppBar -->
+<header class="flex justify-between items-center h-16 px-gutter w-full sticky top-0 z-40 bg-surface-bright border-b border-outline-variant">
+<!-- Mobile Brand -->
+<div class="md:hidden flex items-center gap-2">
+<div class="w-8 h-8 rounded-lg bg-primary-container text-on-primary-container flex items-center justify-center font-bold">
+                    TF
+                </div>
+<span class="font-headline-md text-headline-md text-primary font-bold">ThesisFlow</span>
+</div>
+<!-- Search Bar (Web) -->
+<div class="hidden md:flex flex-1 max-w-md relative">
+<span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-on-surface-variant text-[20px]" data-icon="search">search</span>
+<input class="w-full bg-surface-container pl-10 pr-4 py-2 rounded-lg border border-outline-variant focus:border-primary focus:ring-1 focus:ring-primary focus:outline-none transition-shadow text-body-sm text-on-surface placeholder:text-on-surface-variant" placeholder="Search thesis, files, or researchers..." type="text"/>
+</div>
+<!-- Actions -->
+<div class="flex items-center gap-4 ml-auto">
+<button class="text-primary font-bold border-b-2 border-primary h-16 px-2 flex items-center justify-center opacity-100 transition-opacity">
+<span class="material-symbols-outlined" data-icon="notifications" data-weight="fill" style="font-variation-settings: 'FILL' 1;">notifications</span>
+</button>
+<button class="text-on-surface-variant hover:text-primary cursor-pointer opacity-80 hover:opacity-100 transition-opacity h-16 px-2 flex items-center justify-center">
+<span class="material-symbols-outlined" data-icon="history">history</span>
+</button>
+<button class="text-on-surface-variant hover:text-primary cursor-pointer opacity-80 hover:opacity-100 transition-opacity h-16 px-2 flex items-center justify-center">
+<span class="material-symbols-outlined" data-icon="help_outline">help_outline</span>
+</button>
+<img alt="User avatar" class="w-8 h-8 rounded-full border border-outline-variant object-cover" data-alt="A professional headshot of a female graduate student in a well-lit academic library setting. She is wearing modern, minimalist glasses and a simple neutral-toned sweater. The lighting is bright and clean, typical of a modern light-mode interface. The background is slightly blurred showing bookshelves to maintain focus on the subject. The overall aesthetic is professional, studious, and approachable." src="https://lh3.googleusercontent.com/aida-public/AB6AXuA6gWRT0Tmldl-Snq045hc_SAj3S3lY7XWcY-NumkdN4P_tiMJt7-SSZavro0UYhAMxseKiaI6wTqYJEWRCV7fgk0keX-C95rK0WxQ7w2Cy7K6vXCK18cqcWBVJHdjeF2qjbNoRdgHxxOXNgHM-_PnLOGJ2giRGPHQ4oa_0-lJ7m6dXUPF3olNDu0Tiv_2bxfbjh_533en7ELdGmvC6EYXuKC_V01_0N98Ot-ntW4p7OZMemJk3K6pA"/>
+</div>
+</header>
+<!-- Canvas -->
+<main class="flex-1 overflow-y-auto p-4 md:p-gutter flex justify-center">
+<div class="w-full max-w-container-max max-w-[800px]">
+<!-- Page Header -->
+<div class="flex flex-col sm:flex-row sm:items-center justify-between mb-8 gap-4">
+<div>
+<h2 class="font-display-lg-mobile md:font-display-lg text-display-lg-mobile md:text-display-lg text-on-background">Notifications</h2>
+<p class="font-body-base text-body-base text-on-surface-variant mt-1">Stay updated on your academic progress.</p>
+</div>
+<button class="inline-flex items-center gap-2 px-4 py-2 bg-surface-container-lowest border border-outline-variant rounded-lg text-primary font-label-md text-label-md hover:bg-surface-container transition-colors shrink-0">
+<span class="material-symbols-outlined text-[18px]" data-icon="done_all">done_all</span>
+                        Mark all as read
+                    </button>
+</div>
+<!-- Notification List -->
+<div class="bg-surface-container-lowest border border-outline-variant rounded-xl overflow-hidden shadow-[0_4px_6px_-1px_rgb(0,0,0,0.05),0_2px_4px_-2px_rgb(0,0,0,0.05)]">
+<!-- Today Group -->
+<div class="bg-surface px-6 py-3 border-b border-outline-variant">
+<span class="font-label-xs text-label-xs text-on-surface-variant uppercase tracking-wider">Today</span>
+</div>
+<!-- Item 1: Unread Comment -->
+<div class="relative p-6 border-b border-outline-variant hover:bg-surface-container-low transition-colors cursor-pointer group bg-inverse-on-surface/30">
+<!-- Unread Dot -->
+<div class="absolute top-6 left-3 w-2 h-2 rounded-full bg-primary-container"></div>
+<div class="flex items-start gap-4 pl-2">
+<div class="w-10 h-10 rounded-full bg-primary-fixed flex items-center justify-center shrink-0 text-primary-container">
+<span class="material-symbols-outlined" data-icon="comment">comment</span>
+</div>
+<div class="flex-1 min-w-0">
+<div class="flex justify-between items-start gap-2 mb-1">
+<h4 class="font-section-header text-section-header text-on-background line-clamp-1">Supervisor Dr. Jenkins added a comment</h4>
+<span class="font-label-xs text-label-xs text-primary shrink-0">2 hours ago</span>
+</div>
+<p class="font-body-sm text-body-sm text-on-surface-variant line-clamp-2">"Please review the literature review section again. I think we need to include more recent citations from 2023 regarding the methodological approach."</p>
+<div class="mt-3 flex gap-2">
+<span class="inline-flex items-center px-2.5 py-1 rounded-full bg-surface border border-outline-variant font-label-xs text-label-xs text-on-surface-variant gap-1">
+<span class="material-symbols-outlined text-[14px]" data-icon="article">article</span>
+                                        Chapter_2_Draft_v4.pdf
+                                    </span>
+</div>
+</div>
+</div>
+</div>
+<!-- Item 2: Unread Status Update -->
+<div class="relative p-6 border-b border-outline-variant hover:bg-surface-container-low transition-colors cursor-pointer group bg-inverse-on-surface/30">
+<!-- Unread Dot -->
+<div class="absolute top-6 left-3 w-2 h-2 rounded-full bg-primary-container"></div>
+<div class="flex items-start gap-4 pl-2">
+<div class="w-10 h-10 rounded-full bg-tertiary-fixed flex items-center justify-center shrink-0 text-tertiary">
+<span class="material-symbols-outlined" data-icon="check_circle">check_circle</span>
+</div>
+<div class="flex-1 min-w-0">
+<div class="flex justify-between items-start gap-2 mb-1">
+<h4 class="font-section-header text-section-header text-on-background line-clamp-1">Your thesis status has been updated</h4>
+<span class="font-label-xs text-label-xs text-primary shrink-0">5 hours ago</span>
+</div>
+<p class="font-body-sm text-body-sm text-on-surface-variant">The review committee has moved your submission to the next stage.</p>
+<div class="mt-3 flex gap-2">
+<span class="inline-flex items-center px-2.5 py-1 rounded-full bg-primary-fixed/20 border border-primary-fixed font-label-xs text-label-xs text-primary gap-1">
+                                        Under Final Review
+                                    </span>
+</div>
+</div>
+</div>
+</div>
+<!-- Earlier Group -->
+<div class="bg-surface px-6 py-3 border-b border-outline-variant">
+<span class="font-label-xs text-label-xs text-on-surface-variant uppercase tracking-wider">Earlier this week</span>
+</div>
+<!-- Item 3: Read Submission -->
+<div class="relative p-6 border-b border-outline-variant hover:bg-surface-container-low transition-colors cursor-pointer group">
+<div class="flex items-start gap-4 pl-2">
+<div class="w-10 h-10 rounded-full bg-surface-variant flex items-center justify-center shrink-0 text-on-surface-variant">
+<span class="material-symbols-outlined" data-icon="upload_file">upload_file</span>
+</div>
+<div class="flex-1 min-w-0">
+<div class="flex justify-between items-start gap-2 mb-1">
+<h4 class="font-section-header text-section-header text-on-surface line-clamp-1">Document uploaded successfully</h4>
+<span class="font-label-xs text-label-xs text-outline shrink-0">Yesterday</span>
+</div>
+<p class="font-body-sm text-body-sm text-outline">You successfully uploaded 'Methodology_Final.docx' to the research repository.</p>
+</div>
+</div>
+</div>
+<!-- Item 4: Read System Alert -->
+<div class="relative p-6 hover:bg-surface-container-low transition-colors cursor-pointer group">
+<div class="flex items-start gap-4 pl-2">
+<div class="w-10 h-10 rounded-full bg-surface-variant flex items-center justify-center shrink-0 text-on-surface-variant">
+<span class="material-symbols-outlined" data-icon="info">info</span>
+</div>
+<div class="flex-1 min-w-0">
+<div class="flex justify-between items-start gap-2 mb-1">
+<h4 class="font-section-header text-section-header text-on-surface line-clamp-1">System Maintenance Scheduled</h4>
+<span class="font-label-xs text-label-xs text-outline shrink-0">Oct 24</span>
+</div>
+<p class="font-body-sm text-body-sm text-outline">ThesisFlow will be undergoing scheduled maintenance on Saturday at 2:00 AM EST for approximately 2 hours.</p>
+</div>
+</div>
+</div>
+</div>
+</div>
+</main>
+</div>
+</body></html>

@@ -1,0 +1,358 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Student Profile - ThesisFlow</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+          darkMode: "class",
+          theme: {
+            extend: {
+              "colors": {
+                      "primary-fixed-dim": "#c0c1ff",
+                      "on-secondary": "#ffffff",
+                      "inverse-primary": "#c0c1ff",
+                      "surface-container-lowest": "#ffffff",
+                      "surface-container-high": "#e9e6f3",
+                      "on-primary-fixed-variant": "#2a2bc4",
+                      "on-secondary-fixed": "#111c2d",
+                      "surface-container-highest": "#e4e1ed",
+                      "tertiary-fixed": "#ffdbd0",
+                      "on-tertiary-fixed": "#390c00",
+                      "surface-dim": "#dbd8e5",
+                      "surface": "#fbf8ff",
+                      "secondary": "#555f73",
+                      "error-container": "#ffdad6",
+                      "tertiary-container": "#932c00",
+                      "outline": "#767586",
+                      "tertiary-fixed-dim": "#ffb59d",
+                      "on-surface-variant": "#454555",
+                      "on-error-container": "#93000a",
+                      "on-secondary-fixed-variant": "#3d475a",
+                      "tertiary": "#6c1e00",
+                      "surface-bright": "#fbf8ff",
+                      "outline-variant": "#c6c5d7",
+                      "on-tertiary-container": "#ffaf95",
+                      "surface-variant": "#e4e1ed",
+                      "on-surface": "#1b1b23",
+                      "surface-container-low": "#f5f2fe",
+                      "on-secondary-container": "#596377",
+                      "on-tertiary-fixed-variant": "#832600",
+                      "on-error": "#ffffff",
+                      "primary-fixed": "#e1e0ff",
+                      "on-background": "#1b1b23",
+                      "on-primary-fixed": "#04006d",
+                      "surface-container": "#efecf9",
+                      "error": "#ba1a1a",
+                      "on-primary": "#ffffff",
+                      "surface-tint": "#4549dc",
+                      "on-tertiary": "#ffffff",
+                      "secondary-container": "#d6e0f8",
+                      "secondary-fixed-dim": "#bdc7de",
+                      "background": "#fbf8ff",
+                      "on-primary-container": "#bbbdff",
+                      "inverse-surface": "#303039",
+                      "secondary-fixed": "#d9e3fb",
+                      "primary-container": "#3538cd",
+                      "primary": "#1713b8",
+                      "inverse-on-surface": "#f2effc"
+              },
+              "borderRadius": {
+                      "DEFAULT": "0.25rem",
+                      "lg": "0.5rem",
+                      "xl": "0.75rem",
+                      "full": "9999px"
+              },
+              "spacing": {
+                      "sidebar-collapsed": "64px",
+                      "stack-gap": "12px",
+                      "section-gap": "40px",
+                      "container-max": "1200px",
+                      "gutter": "24px",
+                      "sidebar-width": "280px",
+                      "margin-mobile": "16px"
+              },
+              "fontFamily": {
+                      "label-md": ["Inter"],
+                      "display-lg-mobile": ["Inter"],
+                      "display-lg": ["Inter"],
+                      "label-xs": ["Inter"],
+                      "body-sm": ["Inter"],
+                      "section-header": ["Inter"],
+                      "body-base": ["Inter"],
+                      "headline-md": ["Inter"]
+              },
+              "fontSize": {
+                      "label-md": ["14px", {"lineHeight": "20px", "fontWeight": "500"}],
+                      "display-lg-mobile": ["30px", {"lineHeight": "38px", "letterSpacing": "-0.02em", "fontWeight": "700"}],
+                      "display-lg": ["36px", {"lineHeight": "44px", "letterSpacing": "-0.02em", "fontWeight": "700"}],
+                      "label-xs": ["12px", {"lineHeight": "18px", "fontWeight": "600"}],
+                      "body-sm": ["14px", {"lineHeight": "20px", "fontWeight": "400"}],
+                      "section-header": ["18px", {"lineHeight": "28px", "fontWeight": "600"}],
+                      "body-base": ["16px", {"lineHeight": "24px", "fontWeight": "400"}],
+                      "headline-md": ["24px", {"lineHeight": "32px", "letterSpacing": "-0.01em", "fontWeight": "600"}]
+              }
+            }
+          }
+        }
+    </script>
+<style>
+        /* Ambient shadow for floating elements */
+        .ambient-shadow {
+            box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.05), 0 2px 4px -2px rgb(0 0 0 / 0.05);
+        }
+        /* Input focus glow */
+        .input-glow:focus {
+            box-shadow: 0 0 0 3px rgba(23, 19, 184, 0.1);
+        }
+    </style>
+</head>
+<body class="bg-background text-on-background font-body-base antialiased selection:bg-primary-container selection:text-white flex min-h-screen">
+<!-- SideNavBar -->
+<nav class="hidden md:flex flex-col bg-surface fixed left-0 top-0 h-full w-sidebar-width border-r border-outline-variant p-4 gap-stack-gap z-20">
+<div class="mb-8 px-2 flex items-center gap-3">
+<div class="w-10 h-10 rounded-lg bg-primary-container flex items-center justify-center text-white font-bold text-xl shrink-0">
+                TF
+            </div>
+<div>
+<h1 class="font-headline-md text-headline-md text-primary tracking-tight">ThesisFlow</h1>
+<p class="font-body-sm text-body-sm text-secondary">Supervisor Portal</p>
+</div>
+</div>
+<div class="flex flex-col gap-1 w-full">
+<a class="flex items-center gap-3 px-3 py-2 rounded-lg text-secondary hover:bg-surface-container-low transition-colors group" href="#">
+<span class="material-symbols-outlined text-[20px]" data-icon="dashboard">dashboard</span>
+<span class="font-label-md text-label-md">Dashboard</span>
+</a>
+<a class="flex items-center gap-3 px-3 py-2 rounded-lg bg-secondary-container text-on-secondary-container font-bold hover:bg-surface-container-low transition-colors group" href="#">
+<span class="material-symbols-outlined text-[20px]" data-icon="group" data-weight="fill" style="font-variation-settings: 'FILL' 1;">group</span>
+<span class="font-label-md text-label-md">My Students</span>
+</a>
+<a class="flex items-center gap-3 px-3 py-2 rounded-lg text-secondary hover:bg-surface-container-low transition-colors group" href="#">
+<span class="material-symbols-outlined text-[20px]" data-icon="chat">chat</span>
+<span class="font-label-md text-label-md">Communications</span>
+</a>
+<a class="flex items-center gap-3 px-3 py-2 rounded-lg text-secondary hover:bg-surface-container-low transition-colors group" href="#">
+<span class="material-symbols-outlined text-[20px]" data-icon="settings">settings</span>
+<span class="font-label-md text-label-md">Settings</span>
+</a>
+</div>
+</nav>
+<!-- Main Content Area Wrapper -->
+<div class="flex-1 flex flex-col min-w-0 md:ml-sidebar-width w-full md:w-[calc(100%-280px)] min-h-screen">
+<!-- TopNavBar -->
+<header class="hidden md:flex justify-between items-center h-16 px-gutter bg-surface border-b border-outline-variant sticky top-0 z-10 w-full">
+<div class="flex items-center w-full max-w-md">
+<div class="relative w-full">
+<span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-on-surface-variant text-[20px]" data-icon="search">search</span>
+<input class="w-full pl-10 pr-4 py-2 bg-surface-container-lowest border border-outline-variant rounded-DEFAULT font-body-sm text-body-sm text-on-surface placeholder:text-on-surface-variant focus:outline-none focus:border-primary focus:ring-0 input-glow transition-all" placeholder="Search students, theses..." type="text"/>
+</div>
+</div>
+<div class="flex items-center gap-4 ml-auto">
+<button class="text-on-surface-variant hover:text-primary transition-colors p-2 rounded-full hover:bg-surface-container-low">
+<span class="material-symbols-outlined text-[24px]" data-icon="notifications">notifications</span>
+</button>
+<button class="text-on-surface-variant hover:text-primary transition-colors p-2 rounded-full hover:bg-surface-container-low">
+<span class="material-symbols-outlined text-[24px]" data-icon="account_circle">account_circle</span>
+</button>
+</div>
+</header>
+<!-- Main Content -->
+<main class="flex-1 p-margin-mobile md:p-gutter max-w-container-max mx-auto w-full flex flex-col gap-section-gap overflow-x-hidden">
+<!-- Breadcrumbs & Header -->
+<div>
+<nav class="flex text-sm text-secondary mb-4 items-center gap-2">
+<a class="hover:text-primary transition-colors" href="#">My Students</a>
+<span class="material-symbols-outlined text-[16px]">chevron_right</span>
+<span class="text-on-surface font-medium">Sarah Chen</span>
+</nav>
+<div class="flex justify-between items-end flex-wrap gap-4">
+<h2 class="font-display-lg-mobile md:font-display-lg text-display-lg-mobile md:text-display-lg text-on-background">Student Profile</h2>
+<button class="inline-flex items-center justify-center gap-2 px-4 py-2 bg-surface-container-lowest border border-outline-variant rounded-DEFAULT font-label-md text-label-md text-secondary hover:bg-surface-container-low hover:text-primary transition-colors h-10">
+<span class="material-symbols-outlined text-[18px]">mail</span>
+                        Message Student
+                    </button>
+</div>
+</div>
+<!-- Profile Card -->
+<section class="bg-surface-container-lowest rounded-lg border border-outline-variant p-6 md:p-8 flex flex-col md:flex-row gap-8 hover:border-outline transition-colors ambient-shadow">
+<!-- Avatar -->
+<div class="shrink-0 flex flex-col items-center gap-3">
+<img class="w-32 h-32 rounded-full object-cover border-4 border-surface-container-low shadow-sm" data-alt="A professional headshot of a young female graduate student, Sarah Chen. She has dark hair, a warm smile, and is wearing a neat, light-colored blouse. The lighting is soft and natural, suggesting an academic or office environment. The image is clean and highly detailed." src="https://lh3.googleusercontent.com/aida-public/AB6AXuBGc-tArXSHZoq_v7CbEPBEzgc4P18JKgVOXhBTv_0AuBAyo14rCAzYdMd_qGE0uLbQigihxHq6Hz0BzeWvqU1gWP-HL_T2icJXNqrOiLjpxGB7UwzP1pZp12zcQ4CFzTey68QiPVCY2V89LZudAwTbWcmi5WhcY9pwB9_O39WJfqtLv6EV5GCEXAzg5bhurwsdvDJInPCPd4M_rSuEDjYoFc4Anpx4nUPkIhSmPU3ySM7x7vUYF5bb"/>
+<span class="px-3 py-1 bg-[#F2F4F7] text-secondary rounded-full font-label-xs text-label-xs uppercase tracking-wider font-semibold">Active Student</span>
+</div>
+<!-- Info Grid -->
+<div class="flex-1 grid grid-cols-1 md:grid-cols-2 gap-y-6 gap-x-12">
+<div class="col-span-1 md:col-span-2 border-b border-[#F2F4F7] pb-4">
+<h3 class="font-headline-md text-headline-md text-on-surface mb-1">Sarah Chen</h3>
+<p class="font-body-base text-body-base text-secondary flex items-center gap-2">
+<span class="material-symbols-outlined text-[18px]">school</span>
+                            Ph.D. Candidate, Computer Science
+                        </p>
+</div>
+<div class="flex flex-col gap-1">
+<span class="font-label-xs text-label-xs text-secondary uppercase tracking-wider">University Email</span>
+<a class="font-body-base text-body-base text-primary hover:underline flex items-center gap-2" href="mailto:s.chen@university.edu">
+                            s.chen@university.edu
+                            <span class="material-symbols-outlined text-[16px] text-outline">content_copy</span>
+</a>
+</div>
+<div class="flex flex-col gap-1">
+<span class="font-label-xs text-label-xs text-secondary uppercase tracking-wider">Student ID</span>
+<span class="font-body-base text-body-base text-on-surface font-medium">#982-104-55</span>
+</div>
+<div class="flex flex-col gap-1">
+<span class="font-label-xs text-label-xs text-secondary uppercase tracking-wider">Primary Supervisor</span>
+<span class="font-body-base text-body-base text-on-surface">Dr. Sarah Jenkins</span>
+</div>
+<div class="flex flex-col gap-1">
+<span class="font-label-xs text-label-xs text-secondary uppercase tracking-wider">Expected Graduation</span>
+<span class="font-body-base text-body-base text-on-surface">Spring 2025</span>
+</div>
+</div>
+</section>
+<!-- Thesis History Table Section -->
+<section class="flex flex-col gap-4">
+<div class="flex justify-between items-center border-b border-outline-variant pb-2">
+<h3 class="font-section-header text-section-header text-on-surface flex items-center gap-2">
+<span class="material-symbols-outlined text-secondary">history</span>
+                        Thesis History
+                    </h3>
+<span class="font-body-sm text-body-sm text-secondary">Showing all submitted versions</span>
+</div>
+<div class="bg-surface-container-lowest rounded-lg border border-outline-variant overflow-hidden ambient-shadow">
+<div class="overflow-x-auto w-full">
+<table class="w-full text-left border-collapse min-w-[700px]">
+<thead>
+<tr class="bg-[#F9FAFB] border-b border-[#F2F4F7]">
+<th class="py-3 px-4 font-label-xs text-label-xs text-secondary uppercase tracking-wider w-24">Version</th>
+<th class="py-3 px-4 font-label-xs text-label-xs text-secondary uppercase tracking-wider">Submission Date</th>
+<th class="py-3 px-4 font-label-xs text-label-xs text-secondary uppercase tracking-wider">Chapter/Focus</th>
+<th class="py-3 px-4 font-label-xs text-label-xs text-secondary uppercase tracking-wider">Status</th>
+<th class="py-3 px-4 font-label-xs text-label-xs text-secondary uppercase tracking-wider text-right">Actions</th>
+</tr>
+</thead>
+<tbody class="divide-y divide-[#F2F4F7]">
+<!-- Row 1 -->
+<tr class="hover:bg-surface-container-low transition-colors group">
+<td class="py-4 px-4">
+<span class="font-body-base text-body-base text-on-surface font-medium">v3.0</span>
+</td>
+<td class="py-4 px-4 font-body-sm text-body-sm text-secondary">
+                                        Oct 24, 2023
+                                    </td>
+<td class="py-4 px-4 font-body-sm text-body-sm text-on-surface">
+                                        Methodology (Complete Draft)
+                                    </td>
+<td class="py-4 px-4">
+<span class="inline-flex items-center px-2 py-1 rounded-full font-label-xs text-label-xs bg-[#FEF3F2] text-[#B42318] border border-[#FEE4E2]">
+                                            Needs Revision
+                                        </span>
+</td>
+<td class="py-4 px-4 text-right">
+<button class="inline-flex items-center justify-center gap-1 px-3 py-1.5 text-primary hover:bg-primary-fixed rounded-DEFAULT font-label-md text-label-md transition-colors">
+                                            View Feedback
+                                            <span class="material-symbols-outlined text-[16px]">arrow_forward</span>
+</button>
+</td>
+</tr>
+<!-- Row 2 -->
+<tr class="hover:bg-surface-container-low transition-colors group">
+<td class="py-4 px-4">
+<span class="font-body-base text-body-base text-on-surface font-medium">v2.1</span>
+</td>
+<td class="py-4 px-4 font-body-sm text-body-sm text-secondary">
+                                        Sep 15, 2023
+                                    </td>
+<td class="py-4 px-4 font-body-sm text-body-sm text-on-surface">
+                                        Lit Review (Incorporated Feedback)
+                                    </td>
+<td class="py-4 px-4">
+<span class="inline-flex items-center px-2 py-1 rounded-full font-label-xs text-label-xs bg-[#ECFDF3] text-[#027A48] border border-[#D1FADF]">
+                                            Approved
+                                        </span>
+</td>
+<td class="py-4 px-4 text-right">
+<button class="inline-flex items-center justify-center gap-1 px-3 py-1.5 text-secondary hover:bg-surface-variant rounded-DEFAULT font-label-md text-label-md transition-colors">
+                                            View Feedback
+                                        </button>
+</td>
+</tr>
+<!-- Row 3 -->
+<tr class="hover:bg-surface-container-low transition-colors group">
+<td class="py-4 px-4">
+<span class="font-body-base text-body-base text-on-surface font-medium">v2.0</span>
+</td>
+<td class="py-4 px-4 font-body-sm text-body-sm text-secondary">
+                                        Aug 30, 2023
+                                    </td>
+<td class="py-4 px-4 font-body-sm text-body-sm text-on-surface">
+                                        Lit Review (Initial Draft)
+                                    </td>
+<td class="py-4 px-4">
+<span class="inline-flex items-center px-2 py-1 rounded-full font-label-xs text-label-xs bg-[#FFFAEB] text-[#B54708] border border-[#FEF0C7]">
+                                            Pending Review
+                                        </span>
+</td>
+<td class="py-4 px-4 text-right">
+<button class="inline-flex items-center justify-center gap-1 px-3 py-1.5 text-primary hover:bg-primary-fixed rounded-DEFAULT font-label-md text-label-md transition-colors">
+                                            Review Now
+                                            <span class="material-symbols-outlined text-[16px]">edit_document</span>
+</button>
+</td>
+</tr>
+<!-- Row 4 -->
+<tr class="hover:bg-surface-container-low transition-colors group">
+<td class="py-4 px-4">
+<span class="font-body-base text-body-base text-on-surface font-medium">v1.0</span>
+</td>
+<td class="py-4 px-4 font-body-sm text-body-sm text-secondary">
+                                        May 10, 2023
+                                    </td>
+<td class="py-4 px-4 font-body-sm text-body-sm text-on-surface">
+                                        Proposal
+                                    </td>
+<td class="py-4 px-4">
+<span class="inline-flex items-center px-2 py-1 rounded-full font-label-xs text-label-xs bg-[#ECFDF3] text-[#027A48] border border-[#D1FADF]">
+                                            Approved
+                                        </span>
+</td>
+<td class="py-4 px-4 text-right">
+<button class="inline-flex items-center justify-center gap-1 px-3 py-1.5 text-secondary hover:bg-surface-variant rounded-DEFAULT font-label-md text-label-md transition-colors">
+                                            View Feedback
+                                        </button>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</section>
+</main>
+</div>
+<!-- Mobile Bottom Navigation (Visible only on md:hidden) -->
+<nav class="md:hidden fixed bottom-0 left-0 w-full bg-surface border-t border-outline-variant flex justify-around items-center h-16 pb-safe z-20">
+<a class="flex flex-col items-center justify-center w-full h-full text-secondary hover:text-primary transition-colors" href="#">
+<span class="material-symbols-outlined text-[24px]" data-icon="dashboard">dashboard</span>
+<span class="text-[10px] font-medium mt-1">Dashboard</span>
+</a>
+<a class="flex flex-col items-center justify-center w-full h-full text-primary transition-colors relative" href="#">
+<div class="absolute inset-0 bg-primary-container/10 -z-10"></div>
+<span class="material-symbols-outlined text-[24px]" data-icon="group" data-weight="fill" style="font-variation-settings: 'FILL' 1;">group</span>
+<span class="text-[10px] font-medium mt-1">Students</span>
+</a>
+<a class="flex flex-col items-center justify-center w-full h-full text-secondary hover:text-primary transition-colors" href="#">
+<span class="material-symbols-outlined text-[24px]" data-icon="chat">chat</span>
+<span class="text-[10px] font-medium mt-1">Chat</span>
+</a>
+<a class="flex flex-col items-center justify-center w-full h-full text-secondary hover:text-primary transition-colors" href="#">
+<span class="material-symbols-outlined text-[24px]" data-icon="settings">settings</span>
+<span class="text-[10px] font-medium mt-1">Settings</span>
+</a>
+</nav>
+</body></html>

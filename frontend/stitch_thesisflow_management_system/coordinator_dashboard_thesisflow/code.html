@@ -1,0 +1,430 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>ThesisFlow - Department Overview</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            "colors": {
+                    "on-primary": "#ffffff",
+                    "on-error": "#ffffff",
+                    "inverse-surface": "#303039",
+                    "tertiary-container": "#932c00",
+                    "surface-container-lowest": "#ffffff",
+                    "inverse-on-surface": "#f2effc",
+                    "surface-bright": "#fbf8ff",
+                    "on-secondary": "#ffffff",
+                    "surface-container-highest": "#e4e1ed",
+                    "primary-fixed-dim": "#c0c1ff",
+                    "on-tertiary": "#ffffff",
+                    "primary-container": "#3538cd",
+                    "on-secondary-container": "#596377",
+                    "primary-fixed": "#e1e0ff",
+                    "primary": "#1713b8",
+                    "surface-container": "#efecf9",
+                    "on-tertiary-fixed": "#390c00",
+                    "on-background": "#1b1b23",
+                    "surface-tint": "#4549dc",
+                    "on-primary-fixed-variant": "#2a2bc4",
+                    "tertiary": "#6c1e00",
+                    "on-primary-container": "#bbbdff",
+                    "on-error-container": "#93000a",
+                    "error-container": "#ffdad6",
+                    "secondary-container": "#d6e0f8",
+                    "on-tertiary-fixed-variant": "#832600",
+                    "inverse-primary": "#c0c1ff",
+                    "on-secondary-fixed-variant": "#3d475a",
+                    "on-secondary-fixed": "#111c2d",
+                    "surface-dim": "#dbd8e5",
+                    "surface": "#fbf8ff",
+                    "on-surface": "#1b1b23",
+                    "surface-container-low": "#f5f2fe",
+                    "secondary-fixed-dim": "#bdc7de",
+                    "secondary-fixed": "#d9e3fb",
+                    "outline": "#767586",
+                    "surface-container-high": "#e9e6f3",
+                    "tertiary-fixed": "#ffdbd0",
+                    "outline-variant": "#c6c5d7",
+                    "on-tertiary-container": "#ffaf95",
+                    "error": "#ba1a1a",
+                    "surface-variant": "#e4e1ed",
+                    "secondary": "#555f73",
+                    "on-surface-variant": "#454555",
+                    "tertiary-fixed-dim": "#ffb59d",
+                    "on-primary-fixed": "#04006d",
+                    "background": "#fbf8ff"
+            },
+            "borderRadius": {
+                    "DEFAULT": "0.25rem",
+                    "lg": "0.5rem",
+                    "xl": "0.75rem",
+                    "full": "9999px"
+            },
+            "spacing": {
+                    "stack-gap": "12px",
+                    "sidebar-width": "280px",
+                    "sidebar-collapsed": "64px",
+                    "gutter": "24px",
+                    "section-gap": "40px",
+                    "margin-mobile": "16px",
+                    "container-max": "1200px"
+            },
+            "fontFamily": {
+                    "display-lg": ["Inter"],
+                    "body-sm": ["Inter"],
+                    "label-xs": ["Inter"],
+                    "label-md": ["Inter"],
+                    "headline-md": ["Inter"],
+                    "display-lg-mobile": ["Inter"],
+                    "body-base": ["Inter"],
+                    "section-header": ["Inter"]
+            },
+            "fontSize": {
+                    "display-lg": ["36px", {"lineHeight": "44px", "letterSpacing": "-0.02em", "fontWeight": "700"}],
+                    "body-sm": ["14px", {"lineHeight": "20px", "fontWeight": "400"}],
+                    "label-xs": ["12px", {"lineHeight": "18px", "fontWeight": "600"}],
+                    "label-md": ["14px", {"lineHeight": "20px", "fontWeight": "500"}],
+                    "headline-md": ["24px", {"lineHeight": "32px", "letterSpacing": "-0.01em", "fontWeight": "600"}],
+                    "display-lg-mobile": ["30px", {"lineHeight": "38px", "letterSpacing": "-0.02em", "fontWeight": "700"}],
+                    "body-base": ["16px", {"lineHeight": "24px", "fontWeight": "400"}],
+                    "section-header": ["18px", {"lineHeight": "28px", "fontWeight": "600"}]
+            }
+          }
+        }
+      }
+    </script>
+<style>
+        body { background-color: #fbf8ff; color: #1b1b23; }
+        .card-shadow { box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1); }
+        .bar-chart-bg { background-image: repeating-linear-gradient(0deg, transparent, transparent 39px, #e4e1ed 39px, #e4e1ed 40px); }
+    </style>
+</head>
+<body class="bg-background text-on-background font-body-base antialiased flex h-screen overflow-hidden">
+<!-- SideNavBar -->
+<aside class="hidden md:flex w-sidebar-width h-full fixed left-0 top-0 bg-surface dark:bg-on-background border-r border-outline-variant dark:border-outline flex-col p-4 gap-stack-gap transition-all duration-200 ease-in-out z-20">
+<div class="mb-8 px-4 flex items-center gap-3">
+<div class="w-8 h-8 rounded bg-primary-container text-on-primary-container flex items-center justify-center font-bold">TF</div>
+<div>
+<div class="font-headline-md text-headline-md font-bold text-primary dark:text-primary-fixed">ThesisFlow</div>
+<div class="font-label-xs text-label-xs text-secondary">Coordinator Portal</div>
+</div>
+</div>
+<nav class="flex-1 flex flex-col gap-1">
+<a class="flex items-center gap-3 px-4 py-3 bg-secondary-container text-on-secondary-container font-semibold rounded-lg transition-colors group" href="#">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">dashboard</span>
+<span class="font-label-md text-label-md">Department Dashboard</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 text-secondary hover:bg-surface-container-high transition-colors rounded-lg group" href="#">
+<span class="material-symbols-outlined">group</span>
+<span class="font-label-md text-label-md">User Management</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 text-secondary hover:bg-surface-container-high transition-colors rounded-lg group" href="#">
+<span class="material-symbols-outlined">settings</span>
+<span class="font-label-md text-label-md">Department Settings</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 text-secondary hover:bg-surface-container-high transition-colors rounded-lg group" href="#">
+<span class="material-symbols-outlined">assessment</span>
+<span class="font-label-md text-label-md">Reports</span>
+</a>
+</nav>
+<div class="mt-auto flex flex-col gap-1 pt-4 border-t border-outline-variant">
+<a class="flex items-center gap-3 px-4 py-3 text-secondary hover:bg-surface-container-high transition-colors rounded-lg group" href="#">
+<span class="material-symbols-outlined">help</span>
+<span class="font-label-md text-label-md">Help Center</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 text-secondary hover:bg-surface-container-high transition-colors rounded-lg group" href="#">
+<span class="material-symbols-outlined">logout</span>
+<span class="font-label-md text-label-md">Sign Out</span>
+</a>
+</div>
+</aside>
+<!-- Main Content Wrapper -->
+<div class="flex-1 flex flex-col md:ml-sidebar-width w-full h-full">
+<!-- TopNavBar -->
+<header class="h-16 flex items-center justify-between px-gutter w-full bg-surface dark:bg-on-background border-b border-outline-variant dark:border-outline z-10 shrink-0">
+<div class="flex items-center gap-4">
+<h1 class="md:hidden font-headline-md text-headline-md font-bold text-primary dark:text-primary-fixed">ThesisFlow</h1>
+</div>
+<div class="flex items-center gap-4">
+<div class="relative hidden sm:block">
+<span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-outline">search</span>
+<input class="w-64 pl-10 pr-4 py-2 bg-surface-container-low border border-outline-variant rounded-full font-body-sm text-body-sm text-on-surface focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary transition-all" placeholder="Search theses, students..." type="text"/>
+</div>
+<button class="p-2 text-on-surface-variant hover:text-primary hover:bg-surface-container-high rounded-full transition-colors relative">
+<span class="material-symbols-outlined">notifications</span>
+<span class="absolute top-1.5 right-1.5 w-2 h-2 bg-error rounded-full"></span>
+</button>
+<button class="p-2 text-on-surface-variant hover:text-primary hover:bg-surface-container-high rounded-full transition-colors">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">account_circle</span>
+</button>
+</div>
+</header>
+<!-- Page Content -->
+<main class="flex-1 overflow-y-auto p-4 md:p-gutter">
+<div class="max-w-container-max mx-auto flex flex-col gap-section-gap">
+<!-- Page Header -->
+<div class="flex flex-col sm:flex-row sm:items-end justify-between gap-4">
+<div>
+<h2 class="font-display-lg-mobile md:font-display-lg text-display-lg-mobile md:text-display-lg text-on-surface">Department Overview</h2>
+<p class="font-body-base text-body-base text-secondary mt-1">Monitor thesis progress and departmental performance metrics.</p>
+</div>
+<div class="flex gap-3">
+<button class="px-4 py-2 bg-surface border border-outline-variant text-on-surface font-label-md text-label-md rounded-lg hover:bg-surface-container-high transition-colors flex items-center gap-2">
+<span class="material-symbols-outlined text-sm">download</span>
+                            Export
+                        </button>
+<button class="px-4 py-2 bg-primary-container text-on-primary font-label-md text-label-md rounded-lg hover:bg-primary transition-colors flex items-center gap-2">
+<span class="material-symbols-outlined text-sm">add</span>
+                            New Action
+                        </button>
+</div>
+</div>
+<!-- KPI Cards (Top Row) -->
+<div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-stack-gap">
+<!-- Card 1 -->
+<div class="bg-surface border border-outline-variant rounded-lg p-5 card-shadow flex flex-col gap-2 hover:border-outline transition-colors group">
+<div class="flex items-center justify-between">
+<span class="font-label-md text-label-md text-secondary">Total Active Theses</span>
+<span class="material-symbols-outlined text-primary-container bg-primary-fixed p-1.5 rounded-full text-sm">school</span>
+</div>
+<div class="font-headline-md text-headline-md text-on-surface mt-2">124</div>
+<div class="flex items-center gap-1 font-label-xs text-label-xs text-[#059669]">
+<span class="material-symbols-outlined text-[16px]">trending_up</span>
+<span>+12% from last month</span>
+</div>
+</div>
+<!-- Card 2 -->
+<div class="bg-surface border border-outline-variant rounded-lg p-5 card-shadow flex flex-col gap-2 hover:border-outline transition-colors group">
+<div class="flex items-center justify-between">
+<span class="font-label-md text-label-md text-secondary">Pending Reviews</span>
+<span class="material-symbols-outlined text-tertiary bg-tertiary-fixed p-1.5 rounded-full text-sm">pending_actions</span>
+</div>
+<div class="font-headline-md text-headline-md text-on-surface mt-2">18</div>
+<div class="flex items-center gap-1 font-label-xs text-label-xs text-error">
+<span class="material-symbols-outlined text-[16px]">trending_up</span>
+<span>+3 require attention</span>
+</div>
+</div>
+<!-- Card 3 -->
+<div class="bg-surface border border-outline-variant rounded-lg p-5 card-shadow flex flex-col gap-2 hover:border-outline transition-colors group">
+<div class="flex items-center justify-between">
+<span class="font-label-md text-label-md text-secondary">Approved this Month</span>
+<span class="material-symbols-outlined text-[#059669] bg-[#D1FAE5] p-1.5 rounded-full text-sm">check_circle</span>
+</div>
+<div class="font-headline-md text-headline-md text-on-surface mt-2">12</div>
+<div class="flex items-center gap-1 font-label-xs text-label-xs text-secondary">
+<span class="material-symbols-outlined text-[16px]">horizontal_rule</span>
+<span>On track for targets</span>
+</div>
+</div>
+<!-- Card 4 -->
+<div class="bg-surface border border-outline-variant rounded-lg p-5 card-shadow flex flex-col gap-2 hover:border-outline transition-colors group">
+<div class="flex items-center justify-between">
+<span class="font-label-md text-label-md text-secondary">Avg. Completion Time</span>
+<span class="material-symbols-outlined text-primary-container bg-primary-fixed p-1.5 rounded-full text-sm">schedule</span>
+</div>
+<div class="font-headline-md text-headline-md text-on-surface mt-2">7.2 <span class="text-lg font-normal text-secondary">months</span></div>
+<div class="flex items-center gap-1 font-label-xs text-label-xs text-[#059669]">
+<span class="material-symbols-outlined text-[16px]">trending_down</span>
+<span>-0.4 months vs avg</span>
+</div>
+</div>
+</div>
+<!-- Charts (Middle Row) -->
+<div class="grid grid-cols-1 lg:grid-cols-3 gap-stack-gap">
+<!-- Left Column (Bar Chart) -->
+<div class="lg:col-span-2 bg-surface border border-outline-variant rounded-lg p-6 card-shadow flex flex-col h-[400px]">
+<div class="flex items-center justify-between mb-6">
+<h3 class="font-section-header text-section-header text-on-surface">Thesis Submissions by Department</h3>
+<select class="bg-surface-container-low border border-outline-variant rounded-md px-3 py-1 font-label-sm text-label-sm focus:ring-1 focus:ring-primary outline-none">
+<option>Current Year</option>
+<option>Last Year</option>
+</select>
+</div>
+<!-- Simplified CSS Bar Chart Representation -->
+<div class="flex-1 relative bar-chart-bg pt-8">
+<div class="absolute inset-0 flex items-end justify-around px-8 pb-8 pt-8">
+<div class="w-16 bg-primary-container rounded-t-md h-[80%] hover:bg-primary transition-colors relative group">
+<div class="absolute -top-8 left-1/2 -translate-x-1/2 opacity-0 group-hover:opacity-100 transition-opacity bg-inverse-surface text-on-secondary px-2 py-1 rounded text-xs font-medium">45</div>
+</div>
+<div class="w-16 bg-secondary-fixed-dim rounded-t-md h-[40%] hover:bg-secondary-fixed transition-colors relative group">
+<div class="absolute -top-8 left-1/2 -translate-x-1/2 opacity-0 group-hover:opacity-100 transition-opacity bg-inverse-surface text-on-secondary px-2 py-1 rounded text-xs font-medium">22</div>
+</div>
+<div class="w-16 bg-primary-fixed-dim rounded-t-md h-[60%] hover:bg-primary-fixed transition-colors relative group">
+<div class="absolute -top-8 left-1/2 -translate-x-1/2 opacity-0 group-hover:opacity-100 transition-opacity bg-inverse-surface text-on-secondary px-2 py-1 rounded text-xs font-medium">34</div>
+</div>
+<div class="w-16 bg-surface-variant rounded-t-md h-[90%] hover:bg-surface-dim transition-colors relative group">
+<div class="absolute -top-8 left-1/2 -translate-x-1/2 opacity-0 group-hover:opacity-100 transition-opacity bg-inverse-surface text-on-secondary px-2 py-1 rounded text-xs font-medium">51</div>
+</div>
+</div>
+<div class="absolute bottom-0 left-0 right-0 h-8 border-t border-outline-variant flex justify-around items-center px-8">
+<span class="font-label-xs text-label-xs text-secondary truncate w-16 text-center">CS</span>
+<span class="font-label-xs text-label-xs text-secondary truncate w-16 text-center">Math</span>
+<span class="font-label-xs text-label-xs text-secondary truncate w-16 text-center">Physics</span>
+<span class="font-label-xs text-label-xs text-secondary truncate w-16 text-center">Eng</span>
+</div>
+</div>
+</div>
+<!-- Right Column (Donut Chart) -->
+<div class="bg-surface border border-outline-variant rounded-lg p-6 card-shadow flex flex-col h-[400px]">
+<div class="flex items-center justify-between mb-6">
+<h3 class="font-section-header text-section-header text-on-surface">Theses by Status</h3>
+<button class="p-1 hover:bg-surface-container-high rounded text-secondary transition-colors"><span class="material-symbols-outlined text-sm">more_vert</span></button>
+</div>
+<!-- Simplified CSS Donut Representation -->
+<div class="flex-1 flex flex-col items-center justify-center">
+<div class="w-48 h-48 rounded-full border-[24px] border-surface-container-low relative flex items-center justify-center mb-6" style="border-top-color: #3538cd; border-right-color: #d6e0f8; border-bottom-color: #e4e1ed; border-left-color: #c0c1ff; transform: rotate(45deg);">
+<div class="absolute inset-0 m-auto w-full h-full flex flex-col items-center justify-center" style="transform: rotate(-45deg);">
+<span class="font-headline-md text-headline-md text-on-surface">124</span>
+<span class="font-label-xs text-label-xs text-secondary">Total</span>
+</div>
+</div>
+<div class="w-full grid grid-cols-2 gap-y-2 gap-x-4">
+<div class="flex items-center gap-2">
+<div class="w-3 h-3 rounded-full bg-primary-container"></div>
+<span class="font-label-xs text-label-xs text-secondary">Under Review (35%)</span>
+</div>
+<div class="flex items-center gap-2">
+<div class="w-3 h-3 rounded-full bg-primary-fixed-dim"></div>
+<span class="font-label-xs text-label-xs text-secondary">Submitted (25%)</span>
+</div>
+<div class="flex items-center gap-2">
+<div class="w-3 h-3 rounded-full bg-secondary-container"></div>
+<span class="font-label-xs text-label-xs text-secondary">Draft (20%)</span>
+</div>
+<div class="flex items-center gap-2">
+<div class="w-3 h-3 rounded-full bg-surface-variant"></div>
+<span class="font-label-xs text-label-xs text-secondary">Approved (20%)</span>
+</div>
+</div>
+</div>
+</div>
+</div>
+<!-- Bottom Row (Table) -->
+<div class="bg-surface border border-outline-variant rounded-lg overflow-hidden card-shadow">
+<div class="p-6 border-b border-outline-variant flex items-center justify-between bg-surface">
+<h3 class="font-section-header text-section-header text-on-surface">Recent Activity</h3>
+<a class="font-label-md text-label-md text-primary hover:underline" href="#">View All</a>
+</div>
+<div class="overflow-x-auto">
+<table class="w-full text-left border-collapse">
+<thead>
+<tr class="bg-surface-container-low border-b border-outline-variant">
+<th class="py-3 px-6 font-label-xs text-label-xs text-secondary uppercase tracking-wider">Student Name</th>
+<th class="py-3 px-6 font-label-xs text-label-xs text-secondary uppercase tracking-wider">Supervisor</th>
+<th class="py-3 px-6 font-label-xs text-label-xs text-secondary uppercase tracking-wider">Action</th>
+<th class="py-3 px-6 font-label-xs text-label-xs text-secondary uppercase tracking-wider">Timestamp</th>
+</tr>
+</thead>
+<tbody class="divide-y divide-outline-variant">
+<tr class="hover:bg-surface-container-low transition-colors group">
+<td class="py-4 px-6">
+<div class="flex items-center gap-3">
+<div class="w-8 h-8 rounded-full bg-primary-fixed text-primary-fixed-dim flex items-center justify-center font-label-md text-label-md">ES</div>
+<div>
+<div class="font-label-md text-label-md text-on-surface">Emma Stone</div>
+<div class="font-body-sm text-body-sm text-secondary">Computer Science</div>
+</div>
+</div>
+</td>
+<td class="py-4 px-6 font-body-sm text-body-sm text-on-surface">Dr. Alan Turing</td>
+<td class="py-4 px-6">
+<span class="inline-flex items-center px-2.5 py-0.5 rounded-full font-label-xs text-label-xs bg-secondary-fixed text-on-secondary-fixed">
+                                            Submitted v2.0
+                                        </span>
+</td>
+<td class="py-4 px-6 font-body-sm text-body-sm text-secondary">2 hours ago</td>
+</tr>
+<tr class="hover:bg-surface-container-low transition-colors group">
+<td class="py-4 px-6">
+<div class="flex items-center gap-3">
+<div class="w-8 h-8 rounded-full bg-secondary-container text-on-secondary-container flex items-center justify-center font-label-md text-label-md">JD</div>
+<div>
+<div class="font-label-md text-label-md text-on-surface">John Doe</div>
+<div class="font-body-sm text-body-sm text-secondary">Mathematics</div>
+</div>
+</div>
+</td>
+<td class="py-4 px-6 font-body-sm text-body-sm text-on-surface">Prof. Euler</td>
+<td class="py-4 px-6">
+<span class="inline-flex items-center px-2.5 py-0.5 rounded-full font-label-xs text-label-xs bg-error-container text-on-error-container">
+                                            Revisions Requested
+                                        </span>
+</td>
+<td class="py-4 px-6 font-body-sm text-body-sm text-secondary">5 hours ago</td>
+</tr>
+<tr class="hover:bg-surface-container-low transition-colors group">
+<td class="py-4 px-6">
+<div class="flex items-center gap-3">
+<img class="w-8 h-8 rounded-full object-cover" data-alt="A small circular avatar of a female student with dark hair, looking professional against a neutral background. Corporate modern style." src="https://lh3.googleusercontent.com/aida-public/AB6AXuCWcdXig-06osk0xRKnpQpEM9JGLNfikarT3TVVw_kG1yPnW7pfr3SFSYY5hcUDgMXNX5QWpL62VBhvYAWo9adWttEWWGyNubw0Q8IvuqcboqIGGE2jdNnP0-IbZl4bdCuCnBo7hqkDmNRWXi7HUFWOPcOSv7zU2zckQeat3bZanH5956RGfq8iH--kdgLZjmeC1JV3P28c1h6FTL3Apjl-ayzL1EJhc5KX3zV9wDO8Pfj74kXdJFNO"/>
+<div>
+<div class="font-label-md text-label-md text-on-surface">Alice Smith</div>
+<div class="font-body-sm text-body-sm text-secondary">Physics</div>
+</div>
+</div>
+</td>
+<td class="py-4 px-6 font-body-sm text-body-sm text-on-surface">Dr. Marie Curie</td>
+<td class="py-4 px-6">
+<span class="inline-flex items-center px-2.5 py-0.5 rounded-full font-label-xs text-label-xs bg-[#D1FAE5] text-[#065F46]">
+                                            Approved
+                                        </span>
+</td>
+<td class="py-4 px-6 font-body-sm text-body-sm text-secondary">Yesterday, 14:30</td>
+</tr>
+<tr class="hover:bg-surface-container-low transition-colors group">
+<td class="py-4 px-6">
+<div class="flex items-center gap-3">
+<div class="w-8 h-8 rounded-full bg-surface-variant text-on-surface-variant flex items-center justify-center font-label-md text-label-md">RB</div>
+<div>
+<div class="font-label-md text-label-md text-on-surface">Robert Brown</div>
+<div class="font-body-sm text-body-sm text-secondary">Engineering</div>
+</div>
+</div>
+</td>
+<td class="py-4 px-6 font-body-sm text-body-sm text-on-surface">Prof. Tesla</td>
+<td class="py-4 px-6">
+<span class="inline-flex items-center px-2.5 py-0.5 rounded-full font-label-xs text-label-xs bg-surface-variant text-on-surface-variant">
+                                            Draft Saved
+                                        </span>
+</td>
+<td class="py-4 px-6 font-body-sm text-body-sm text-secondary">Yesterday, 09:15</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</div>
+<!-- Bottom spacing for mobile -->
+<div class="h-24 md:h-8"></div>
+</main>
+</div>
+<!-- Mobile Bottom Nav Bar (Fallback if SideNav is hidden on small screens) -->
+<nav class="md:hidden fixed bottom-0 left-0 right-0 h-16 bg-surface border-t border-outline-variant flex items-center justify-around z-30">
+<a class="flex flex-col items-center justify-center w-full h-full text-primary" href="#">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">dashboard</span>
+<span class="font-label-xs text-[10px] mt-1">Dashboard</span>
+</a>
+<a class="flex flex-col items-center justify-center w-full h-full text-on-surface-variant hover:text-primary transition-colors" href="#">
+<span class="material-symbols-outlined">group</span>
+<span class="font-label-xs text-[10px] mt-1">Users</span>
+</a>
+<a class="flex flex-col items-center justify-center w-full h-full text-on-surface-variant hover:text-primary transition-colors" href="#">
+<span class="material-symbols-outlined">settings</span>
+<span class="font-label-xs text-[10px] mt-1">Settings</span>
+</a>
+<a class="flex flex-col items-center justify-center w-full h-full text-on-surface-variant hover:text-primary transition-colors" href="#">
+<span class="material-symbols-outlined">more_horiz</span>
+<span class="font-label-xs text-[10px] mt-1">More</span>
+</a>
+</nav>
+</body></html>

@@ -1,0 +1,394 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Thesis Workspace - ThesisFlow</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "tertiary-container": "#932c00",
+                        "surface-container-highest": "#e4e1ed",
+                        "on-surface-variant": "#454555",
+                        "on-secondary-fixed": "#111c2d",
+                        "inverse-surface": "#303039",
+                        "primary-fixed": "#e1e0ff",
+                        "tertiary-fixed": "#ffdbd0",
+                        "on-secondary-container": "#596377",
+                        "on-primary-container": "#bbbdff",
+                        "surface-dim": "#dbd8e5",
+                        "on-primary-fixed-variant": "#2a2bc4",
+                        "on-primary-fixed": "#04006d",
+                        "secondary-container": "#d6e0f8",
+                        "on-surface": "#1b1b23",
+                        "surface-bright": "#fbf8ff",
+                        "on-primary": "#ffffff",
+                        "primary": "#1713b8",
+                        "on-tertiary-fixed-variant": "#832600",
+                        "tertiary-fixed-dim": "#ffb59d",
+                        "secondary-fixed-dim": "#bdc7de",
+                        "on-tertiary-fixed": "#390c00",
+                        "tertiary": "#6c1e00",
+                        "surface-variant": "#e4e1ed",
+                        "outline": "#767586",
+                        "inverse-on-surface": "#f2effc",
+                        "surface-container-lowest": "#ffffff",
+                        "on-tertiary-container": "#ffaf95",
+                        "surface": "#fbf8ff",
+                        "on-secondary-fixed-variant": "#3d475a",
+                        "primary-fixed-dim": "#c0c1ff",
+                        "on-error-container": "#93000a",
+                        "surface-container-low": "#f5f2fe",
+                        "surface-container-high": "#e9e6f3",
+                        "secondary-fixed": "#d9e3fb",
+                        "outline-variant": "#c6c5d7",
+                        "on-tertiary": "#ffffff",
+                        "surface-tint": "#4549dc",
+                        "on-background": "#1b1b23",
+                        "background": "#fbf8ff",
+                        "inverse-primary": "#c0c1ff",
+                        "secondary": "#555f73",
+                        "primary-container": "#3538cd",
+                        "on-secondary": "#ffffff",
+                        "surface-container": "#efecf9",
+                        "error-container": "#ffdad6",
+                        "on-error": "#ffffff",
+                        "error": "#ba1a1a"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "full": "9999px"
+                    },
+                    "spacing": {
+                        "stack-gap": "12px",
+                        "sidebar-width": "280px",
+                        "gutter": "24px",
+                        "margin-mobile": "16px",
+                        "container-max": "1200px",
+                        "sidebar-collapsed": "64px",
+                        "section-gap": "40px"
+                    },
+                    "fontFamily": {
+                        "display-lg": ["Inter"],
+                        "section-header": ["Inter"],
+                        "label-md": ["Inter"],
+                        "body-base": ["Inter"],
+                        "headline-md": ["Inter"],
+                        "display-lg-mobile": ["Inter"],
+                        "label-xs": ["Inter"],
+                        "body-sm": ["Inter"]
+                    },
+                    "fontSize": {
+                        "display-lg": ["36px", { "lineHeight": "44px", "letterSpacing": "-0.02em", "fontWeight": "700" }],
+                        "section-header": ["18px", { "lineHeight": "28px", "fontWeight": "600" }],
+                        "label-md": ["14px", { "lineHeight": "20px", "fontWeight": "500" }],
+                        "body-base": ["16px", { "lineHeight": "24px", "fontWeight": "400" }],
+                        "headline-md": ["24px", { "lineHeight": "32px", "letterSpacing": "-0.01em", "fontWeight": "600" }],
+                        "display-lg-mobile": ["30px", { "lineHeight": "38px", "letterSpacing": "-0.02em", "fontWeight": "700" }],
+                        "label-xs": ["12px", { "lineHeight": "18px", "fontWeight": "600" }],
+                        "body-sm": ["14px", { "lineHeight": "20px", "fontWeight": "400" }]
+                    }
+                }
+            }
+        }
+    </script>
+<style>
+        .timeline-line {
+            position: absolute;
+            top: 50%;
+            left: 0;
+            right: 0;
+            height: 2px;
+            background-color: theme('colors.outline-variant');
+            transform: translateY(-50%);
+            z-index: 0;
+        }
+        .timeline-line-active {
+            position: absolute;
+            top: 50%;
+            left: 0;
+            height: 2px;
+            background-color: theme('colors.primary');
+            transform: translateY(-50%);
+            z-index: 0;
+            width: 75%; /* Matches up to Revisions Requested */
+        }
+        .ambient-shadow {
+            box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+        }
+        .glow-focus:focus-within {
+            border-color: theme('colors.primary');
+            box-shadow: 0 0 0 3px theme('colors.primary-fixed');
+        }
+    </style>
+</head>
+<body class="bg-background text-on-background font-body-base text-body-base antialiased flex h-screen overflow-hidden">
+<!-- SideNavBar -->
+<nav class="hidden md:flex h-screen w-sidebar-width flex-shrink-0 sticky top-0 border-r border-outline-variant bg-surface-container-lowest flex flex-col py-gutter px-4 z-50">
+<!-- Brand -->
+<div class="flex items-center gap-3 mb-8 px-2">
+<div class="w-8 h-8 rounded-lg bg-primary flex items-center justify-center text-on-primary font-bold">
+                TF
+            </div>
+<div>
+<div class="font-headline-md text-headline-md text-primary font-bold leading-tight">ThesisFlow</div>
+<div class="font-label-xs text-label-xs text-secondary leading-tight">Academic Portal</div>
+</div>
+</div>
+<!-- Navigation Links -->
+<div class="flex flex-col gap-2 flex-grow">
+<a class="flex items-center gap-3 px-3 py-2 rounded-lg text-secondary hover:bg-surface-container-high transition-colors font-label-md text-label-md scale-95 active:transition-transform" href="#">
+<span class="material-symbols-outlined">dashboard</span>
+                Dashboard
+            </a>
+<a class="flex items-center gap-3 px-3 py-2 rounded-lg text-secondary hover:bg-surface-container-high transition-colors font-label-md text-label-md scale-95 active:transition-transform" href="#">
+<span class="material-symbols-outlined">menu_book</span>
+                Research Library
+            </a>
+<!-- Active Tab -->
+<a class="flex items-center gap-3 px-3 py-2 bg-secondary-container text-on-secondary-container rounded-lg font-semibold font-label-md text-label-md scale-95 active:transition-transform" href="#">
+<span class="material-symbols-outlined">article</span>
+                My Thesis
+            </a>
+<a class="flex items-center gap-3 px-3 py-2 rounded-lg text-secondary hover:bg-surface-container-high transition-colors font-label-md text-label-md scale-95 active:transition-transform" href="#">
+<span class="material-symbols-outlined">forum</span>
+                Communications
+            </a>
+<a class="flex items-center gap-3 px-3 py-2 rounded-lg text-secondary hover:bg-surface-container-high transition-colors font-label-md text-label-md scale-95 active:transition-transform" href="#">
+<span class="material-symbols-outlined">publish</span>
+                Submissions
+            </a>
+<a class="flex items-center gap-3 px-3 py-2 rounded-lg text-secondary hover:bg-surface-container-high transition-colors font-label-md text-label-md scale-95 active:transition-transform" href="#">
+<span class="material-symbols-outlined">insights</span>
+                Analytics
+            </a>
+</div>
+<!-- Bottom Actions -->
+<div class="mt-auto flex flex-col gap-4 pt-4 border-t border-outline-variant">
+<button class="w-full py-2 bg-primary-container text-on-primary rounded-lg font-label-md text-label-md flex items-center justify-center gap-2 ambient-shadow hover:opacity-90 transition-opacity">
+<span class="material-symbols-outlined text-[18px]">add</span>
+                New Entry
+            </button>
+<div class="flex flex-col gap-2">
+<a class="flex items-center gap-3 px-3 py-2 rounded-lg text-secondary hover:bg-surface-container-high transition-colors font-label-md text-label-md scale-95 active:transition-transform" href="#">
+<span class="material-symbols-outlined">settings</span>
+                    Settings
+                </a>
+<a class="flex items-center gap-3 px-3 py-2 rounded-lg text-secondary hover:bg-surface-container-high transition-colors font-label-md text-label-md scale-95 active:transition-transform" href="#">
+<span class="material-symbols-outlined">help</span>
+                    Support
+                </a>
+</div>
+</div>
+</nav>
+<!-- Main Content Wrapper -->
+<div class="flex flex-col flex-grow min-w-0 h-screen overflow-hidden">
+<!-- TopAppBar -->
+<header class="flex justify-between items-center h-16 px-gutter w-full sticky top-0 z-40 bg-surface-bright border-b border-outline-variant flex-shrink-0">
+<!-- Search -->
+<div class="flex-1 max-w-md">
+<div class="relative flex items-center w-full h-10 rounded-lg border border-outline-variant bg-surface-container-lowest overflow-hidden glow-focus transition-all">
+<span class="material-symbols-outlined absolute left-3 text-on-surface-variant">search</span>
+<input class="w-full h-full pl-10 pr-4 bg-transparent border-none focus:ring-0 font-body-sm text-body-sm text-on-surface outline-none" placeholder="Search documents, comments..." type="text"/>
+</div>
+</div>
+<!-- Actions -->
+<div class="flex items-center gap-4">
+<button class="text-on-surface-variant hover:text-primary cursor-pointer opacity-80 hover:opacity-100 transition-opacity flex items-center justify-center">
+<span class="material-symbols-outlined">notifications</span>
+</button>
+<button class="text-on-surface-variant hover:text-primary cursor-pointer opacity-80 hover:opacity-100 transition-opacity flex items-center justify-center">
+<span class="material-symbols-outlined">history</span>
+</button>
+<button class="text-on-surface-variant hover:text-primary cursor-pointer opacity-80 hover:opacity-100 transition-opacity flex items-center justify-center">
+<span class="material-symbols-outlined">help_outline</span>
+</button>
+<div class="w-8 h-8 rounded-full overflow-hidden border border-outline-variant cursor-pointer ml-2">
+<img alt="User avatar" class="w-full h-full object-cover" data-alt="A highly detailed portrait of an academic professional in a bright, minimalist office setting. They are wearing smart-casual clothing. The lighting is soft and natural, emphasizing a high-key, modern aesthetic with neutral colors. The image feels clean, focused, and professional." src="https://lh3.googleusercontent.com/aida-public/AB6AXuDY9Y5d1IFkBN8BIbeMjssuRahUosHaDGrwfy4VEyQWU-iD-7VLSq3AN9jZEth3nzgG6BA3cspHNM7PgyXv16Cn4FV4Ie2rJOuFf98lH07T_dIkssA9eHnuNowQ7xCSWLcV50Vg0GmFMAEDMMJz1p6KMswQkpX8RaNZIv6wwem9HqnwRekpCpFahlz88zd8v2dz0QfNnv5snP12kwGF_TSYopGSCAMOhJjM_Nx26O3rKinU-5XHMjg6"/>
+</div>
+</div>
+</header>
+<!-- Main Workspace Area -->
+<main class="flex-grow overflow-y-auto p-gutter bg-surface">
+<div class="max-w-[container-max] mx-auto w-full flex flex-col h-full gap-stack-gap">
+<!-- Workspace Header & Timeline -->
+<div class="flex flex-col gap-6 mb-4">
+<div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
+<div>
+<h1 class="font-section-header text-section-header text-on-surface">Chapter 3: Methodology Draft</h1>
+<p class="font-body-sm text-body-sm text-secondary mt-1">Submitted on Oct 12, 2023 • v1.4</p>
+</div>
+<button class="px-5 py-2.5 bg-primary-container text-on-primary rounded-lg font-label-md text-label-md flex items-center gap-2 ambient-shadow hover:bg-primary transition-colors">
+<span class="material-symbols-outlined text-[18px]">upload_file</span>
+                            Upload/Resubmit
+                        </button>
+</div>
+<!-- Status Timeline Component -->
+<div class="w-full relative py-6 px-4 bg-surface-container-lowest rounded-lg border border-outline-variant">
+<div class="relative flex justify-between items-center w-full max-w-4xl mx-auto">
+<div class="timeline-line"></div>
+<div class="timeline-line-active"></div>
+<!-- Step 1 -->
+<div class="relative z-10 flex flex-col items-center gap-2">
+<div class="w-8 h-8 rounded-full bg-primary text-on-primary flex items-center justify-center border-2 border-primary">
+<span class="material-symbols-outlined text-[16px]">check</span>
+</div>
+<span class="font-label-xs text-label-xs text-on-surface uppercase tracking-wider absolute top-10 whitespace-nowrap">Draft</span>
+</div>
+<!-- Step 2 -->
+<div class="relative z-10 flex flex-col items-center gap-2">
+<div class="w-8 h-8 rounded-full bg-primary text-on-primary flex items-center justify-center border-2 border-primary">
+<span class="material-symbols-outlined text-[16px]">check</span>
+</div>
+<span class="font-label-xs text-label-xs text-on-surface uppercase tracking-wider absolute top-10 whitespace-nowrap">Submitted</span>
+</div>
+<!-- Step 3 -->
+<div class="relative z-10 flex flex-col items-center gap-2">
+<div class="w-8 h-8 rounded-full bg-primary text-on-primary flex items-center justify-center border-2 border-primary">
+<span class="material-symbols-outlined text-[16px]">check</span>
+</div>
+<span class="font-label-xs text-label-xs text-on-surface uppercase tracking-wider absolute top-10 whitespace-nowrap">Under Review</span>
+</div>
+<!-- Step 4 (Active: Revisions Requested) -->
+<div class="relative z-10 flex flex-col items-center gap-2">
+<div class="w-8 h-8 rounded-full bg-error-container text-error flex items-center justify-center border-2 border-error ring-4 ring-error-container/30">
+<span class="material-symbols-outlined text-[18px]" style="font-variation-settings: 'FILL' 1;">warning</span>
+</div>
+<span class="font-label-xs text-label-xs text-error font-bold uppercase tracking-wider absolute top-10 whitespace-nowrap">Revisions Requested</span>
+</div>
+<!-- Step 5 -->
+<div class="relative z-10 flex flex-col items-center gap-2">
+<div class="w-8 h-8 rounded-full bg-surface-container-highest text-outline flex items-center justify-center border-2 border-outline-variant">
+<span class="material-symbols-outlined text-[16px]">task_alt</span>
+</div>
+<span class="font-label-xs text-label-xs text-outline uppercase tracking-wider absolute top-10 whitespace-nowrap">Approved</span>
+</div>
+</div>
+</div>
+</div>
+<!-- Two Column Layout Area -->
+<div class="flex flex-col lg:flex-row gap-gutter flex-grow min-h-[600px]">
+<!-- Left: Document Preview Area -->
+<div class="flex-grow lg:w-2/3 flex flex-col bg-surface-container-lowest rounded-xl border border-outline-variant overflow-hidden ambient-shadow">
+<!-- PDF Toolbar -->
+<div class="h-12 border-b border-outline-variant bg-surface-container-low flex items-center justify-between px-4 flex-shrink-0">
+<div class="flex items-center gap-4 text-on-surface-variant">
+<button class="hover:text-primary transition-colors flex items-center"><span class="material-symbols-outlined text-[20px]">zoom_out</span></button>
+<span class="font-label-md text-label-md">100%</span>
+<button class="hover:text-primary transition-colors flex items-center"><span class="material-symbols-outlined text-[20px]">zoom_in</span></button>
+</div>
+<div class="flex items-center gap-2 font-label-md text-label-md text-on-surface-variant">
+<button class="hover:text-primary transition-colors flex items-center"><span class="material-symbols-outlined text-[20px]">navigate_before</span></button>
+<span>Page 1 of 42</span>
+<button class="hover:text-primary transition-colors flex items-center"><span class="material-symbols-outlined text-[20px]">navigate_next</span></button>
+</div>
+<div class="flex items-center gap-3 text-on-surface-variant">
+<button class="hover:text-primary transition-colors flex items-center"><span class="material-symbols-outlined text-[20px]">search</span></button>
+<button class="hover:text-primary transition-colors flex items-center"><span class="material-symbols-outlined text-[20px]">download</span></button>
+</div>
+</div>
+<!-- PDF Canvas -->
+<div class="flex-grow bg-[#E5E7EB] overflow-auto p-8 flex justify-center items-start">
+<!-- Simulated PDF Page -->
+<div class="w-full max-w-[800px] aspect-[1/1.414] bg-white shadow-lg border border-outline-variant p-12 flex flex-col gap-6 relative">
+<!-- Annotated Highlight overlay -->
+<div class="absolute top-[25%] left-[10%] right-[10%] h-8 bg-error-container/30 border border-error/50 rounded cursor-pointer group">
+<div class="absolute -right-2 -top-2 w-4 h-4 bg-error rounded-full hidden group-hover:block shadow-sm"></div>
+</div>
+<div class="w-1/2 h-8 bg-surface-container-high rounded mb-8"></div>
+<div class="w-full h-4 bg-surface-container-low rounded"></div>
+<div class="w-full h-4 bg-surface-container-low rounded"></div>
+<div class="w-11/12 h-4 bg-surface-container-low rounded"></div>
+<div class="w-full h-4 bg-surface-container-low rounded"></div>
+<div class="w-4/5 h-4 bg-surface-container-low rounded mb-6"></div>
+<div class="w-1/3 h-6 bg-surface-container-high rounded mb-4 mt-4"></div>
+<div class="w-full h-4 bg-surface-container-low rounded"></div>
+<div class="w-full h-4 bg-surface-container-low rounded"></div>
+<div class="w-10/12 h-4 bg-surface-container-low rounded"></div>
+<div class="mt-auto w-full flex justify-center">
+<div class="w-8 h-4 bg-surface-container-highest rounded"></div>
+</div>
+</div>
+</div>
+</div>
+<!-- Right: Comments Panel -->
+<div class="w-full lg:w-[400px] flex-shrink-0 flex flex-col bg-surface-container-lowest rounded-xl border border-outline-variant overflow-hidden ambient-shadow">
+<!-- Panel Header -->
+<div class="h-14 border-b border-outline-variant flex items-center px-5 flex-shrink-0 bg-surface-bright">
+<h2 class="font-section-header text-section-header text-on-surface flex items-center gap-2">
+<span class="material-symbols-outlined text-primary text-[20px]">forum</span>
+                                Supervisor Feedback
+                            </h2>
+<span class="ml-auto bg-error-container text-error font-label-xs text-label-xs px-2 py-1 rounded-full">3 Unresolved</span>
+</div>
+<!-- Comments Thread -->
+<div class="flex-grow overflow-y-auto p-5 flex flex-col gap-6">
+<!-- Comment 1 -->
+<div class="flex gap-4">
+<img alt="Prof. Sterling" class="w-10 h-10 rounded-full object-cover border border-outline-variant flex-shrink-0" data-alt="A close-up headshot of a distinguished older male professor wearing a tweed jacket and glasses, set against a blurred library background. High key, minimalist aesthetic." src="https://lh3.googleusercontent.com/aida-public/AB6AXuC_LOfMyzSnwxz0nK6loEfTOQ7Xy9g6L8CgCXIemPpuhLSuhqvoKNLTi4280bHm9K4NGch48XCSPB1P3rpWAO2DQ2eAhoW99EtwVYPXF6ltj37R1u5i8KC4llbk02qeaOJ-Y0usvjBX_uORQTOg2X-k10qOXbz4JTgzDLzHPb9f__eZfI7nB-P_emLrOx6GuQ9feB5MGHMIYd8f1dKuEepajvTCLH4jnLLzKPy_HCYKdlxb_fudxwrJ"/>
+<div class="flex flex-col w-full">
+<div class="flex justify-between items-baseline mb-1">
+<span class="font-label-md text-label-md text-on-surface font-semibold">Prof. Sterling</span>
+<span class="font-label-xs text-label-xs text-secondary">2 days ago</span>
+</div>
+<span class="font-label-xs text-label-xs text-primary mb-2">Primary Supervisor</span>
+<div class="bg-surface-container p-3 rounded-r-lg rounded-bl-lg font-body-sm text-body-sm text-on-surface border border-outline-variant/50 relative">
+<p>The transition between paragraph two and three here feels disjointed. You need to explicitly link the qualitative framework back to your initial hypothesis before introducing the dataset.</p>
+<button class="absolute -right-3 -bottom-3 w-8 h-8 bg-surface-container-lowest border border-outline-variant rounded-full flex items-center justify-center text-secondary hover:text-primary ambient-shadow transition-colors">
+<span class="material-symbols-outlined text-[16px]">reply</span>
+</button>
+</div>
+</div>
+</div>
+<!-- Comment 2 -->
+<div class="flex gap-4">
+<img alt="Dr. Aris" class="w-10 h-10 rounded-full object-cover border border-outline-variant flex-shrink-0" data-alt="A professional portrait of a female academic researcher in a modern, well-lit university office. Clean, bright corporate modern style." src="https://lh3.googleusercontent.com/aida-public/AB6AXuAwZd5DUjIFD8aW6PBTRSKbDQWyyhtxdgw5OH2g27pg4c2i-3-yKrhpzlM03XKkmOdJar4Ygl1LgR-0id4mBxoHr4o0l4Y4ZYX6wrRDlrx6Kve8GOw0VoU8SyOvR5hm8vYrTVpHYEBqDHRefZkvu3Tn26IXcuDnrsdFd61n81D_3SfDvgREmo8qtJBUOcQp0pxOQIkI55tF9sVPXUk676otbT39zK7zRFoOY-vFoalcAb_jaf3UmYAv"/>
+<div class="flex flex-col w-full">
+<div class="flex justify-between items-baseline mb-1">
+<span class="font-label-md text-label-md text-on-surface font-semibold">Dr. Aris</span>
+<span class="font-label-xs text-label-xs text-secondary">Yesterday</span>
+</div>
+<span class="font-label-xs text-label-xs text-secondary mb-2">Co-Supervisor</span>
+<div class="bg-error-container/30 p-3 rounded-r-lg rounded-bl-lg font-body-sm text-body-sm text-on-surface border border-error/20 relative">
+<p class="font-medium text-error mb-1">Action Required</p>
+<p>The statistical significance threshold cited here (p &lt; 0.05) contradicts the rigorous standard established in your methodology chapter. Please revise this section to reflect a p &lt; 0.01 threshold as agreed.</p>
+</div>
+<div class="mt-2 flex gap-2 pl-2">
+<button class="font-label-xs text-label-xs text-secondary hover:text-primary">Resolve</button>
+<span class="text-outline-variant">•</span>
+<button class="font-label-xs text-label-xs text-secondary hover:text-primary">Reply</button>
+</div>
+</div>
+</div>
+</div>
+<!-- Reply Input -->
+<div class="p-4 border-t border-outline-variant bg-surface-bright flex-shrink-0">
+<div class="border border-outline-variant rounded-lg bg-surface-container-lowest overflow-hidden glow-focus focus-within:border-primary transition-all">
+<textarea class="w-full p-3 bg-transparent border-none focus:ring-0 resize-none font-body-sm text-body-sm text-on-surface outline-none" placeholder="Write a reply or add a general comment..." rows="2"></textarea>
+<div class="flex justify-between items-center px-3 py-2 border-t border-outline-variant/30 bg-surface-container-low">
+<div class="flex gap-1">
+<button class="text-on-surface-variant hover:text-primary p-1 rounded transition-colors"><span class="material-symbols-outlined text-[18px]">format_bold</span></button>
+<button class="text-on-surface-variant hover:text-primary p-1 rounded transition-colors"><span class="material-symbols-outlined text-[18px]">format_italic</span></button>
+<button class="text-on-surface-variant hover:text-primary p-1 rounded transition-colors"><span class="material-symbols-outlined text-[18px]">attach_file</span></button>
+</div>
+<button class="bg-primary text-on-primary px-3 py-1.5 rounded font-label-md text-label-md hover:opacity-90 transition-opacity">
+                                        Post
+                                    </button>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</main>
+</div>
+</body></html>

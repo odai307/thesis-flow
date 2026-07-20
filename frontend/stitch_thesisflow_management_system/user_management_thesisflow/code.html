@@ -1,0 +1,334 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>User Management - ThesisFlow</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+          darkMode: "class",
+          theme: {
+            extend: {
+              "colors": {
+                      "on-primary": "#ffffff",
+                      "on-error": "#ffffff",
+                      "inverse-surface": "#303039",
+                      "tertiary-container": "#932c00",
+                      "surface-container-lowest": "#ffffff",
+                      "inverse-on-surface": "#f2effc",
+                      "surface-bright": "#fbf8ff",
+                      "on-secondary": "#ffffff",
+                      "surface-container-highest": "#e4e1ed",
+                      "primary-fixed-dim": "#c0c1ff",
+                      "on-tertiary": "#ffffff",
+                      "primary-container": "#3538cd",
+                      "on-secondary-container": "#596377",
+                      "primary-fixed": "#e1e0ff",
+                      "primary": "#1713b8",
+                      "surface-container": "#efecf9",
+                      "on-tertiary-fixed": "#390c00",
+                      "on-background": "#1b1b23",
+                      "surface-tint": "#4549dc",
+                      "on-primary-fixed-variant": "#2a2bc4",
+                      "tertiary": "#6c1e00",
+                      "on-primary-container": "#bbbdff",
+                      "on-error-container": "#93000a",
+                      "error-container": "#ffdad6",
+                      "secondary-container": "#d6e0f8",
+                      "on-tertiary-fixed-variant": "#832600",
+                      "inverse-primary": "#c0c1ff",
+                      "on-secondary-fixed-variant": "#3d475a",
+                      "on-secondary-fixed": "#111c2d",
+                      "surface-dim": "#dbd8e5",
+                      "surface": "#fbf8ff",
+                      "on-surface": "#1b1b23",
+                      "surface-container-low": "#f5f2fe",
+                      "secondary-fixed-dim": "#bdc7de",
+                      "secondary-fixed": "#d9e3fb",
+                      "outline": "#767586",
+                      "surface-container-high": "#e9e6f3",
+                      "tertiary-fixed": "#ffdbd0",
+                      "outline-variant": "#c6c5d7",
+                      "on-tertiary-container": "#ffaf95",
+                      "error": "#ba1a1a",
+                      "surface-variant": "#e4e1ed",
+                      "secondary": "#555f73",
+                      "on-surface-variant": "#454555",
+                      "tertiary-fixed-dim": "#ffb59d",
+                      "on-primary-fixed": "#04006d",
+                      "background": "#fbf8ff"
+              },
+              "borderRadius": {
+                      "DEFAULT": "0.25rem",
+                      "lg": "0.5rem",
+                      "xl": "0.75rem",
+                      "full": "9999px"
+              },
+              "spacing": {
+                      "stack-gap": "12px",
+                      "sidebar-width": "280px",
+                      "sidebar-collapsed": "64px",
+                      "gutter": "24px",
+                      "section-gap": "40px",
+                      "margin-mobile": "16px",
+                      "container-max": "1200px"
+              },
+              "fontFamily": {
+                      "display-lg": ["Inter"],
+                      "body-sm": ["Inter"],
+                      "label-xs": ["Inter"],
+                      "label-md": ["Inter"],
+                      "headline-md": ["Inter"],
+                      "display-lg-mobile": ["Inter"],
+                      "body-base": ["Inter"],
+                      "section-header": ["Inter"]
+              },
+              "fontSize": {
+                      "display-lg": ["36px", {"lineHeight": "44px", "letterSpacing": "-0.02em", "fontWeight": "700"}],
+                      "body-sm": ["14px", {"lineHeight": "20px", "fontWeight": "400"}],
+                      "label-xs": ["12px", {"lineHeight": "18px", "fontWeight": "600"}],
+                      "label-md": ["14px", {"lineHeight": "20px", "fontWeight": "500"}],
+                      "headline-md": ["24px", {"lineHeight": "32px", "letterSpacing": "-0.01em", "fontWeight": "600"}],
+                      "display-lg-mobile": ["30px", {"lineHeight": "38px", "letterSpacing": "-0.02em", "fontWeight": "700"}],
+                      "body-base": ["16px", {"lineHeight": "24px", "fontWeight": "400"}],
+                      "section-header": ["18px", {"lineHeight": "28px", "fontWeight": "600"}]
+              }
+            }
+          }
+        }
+    </script>
+<style>
+        body { font-family: 'Inter', sans-serif; background-color: #F9FAFB; color: #1b1b23; }
+        .glass-panel { background: rgba(255, 255, 255, 0.8); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); border: 1px solid #EAECF0; box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.05); }
+        .table-row-hover:hover { background-color: #F9FAFB; }
+        .status-badge-active { background-color: rgba(53, 56, 205, 0.1); color: #3538cd; }
+        .status-badge-deactivated { background-color: rgba(118, 117, 134, 0.1); color: #767586; }
+        
+        /* Layout overrides to ensure content fits alongside sidebar/topbar */
+        .content-area { padding-left: 280px; padding-top: 64px; }
+        @media (max-width: 768px) { .content-area { padding-left: 0; padding-bottom: 64px; } }
+    </style>
+</head>
+<body class="bg-background min-h-screen">
+<!-- TopNavBar (JSON execution) -->
+<header class="h-16 fixed top-0 right-0 md:left-sidebar-width left-0 border-b border-outline-variant dark:border-outline flex items-center justify-between px-gutter w-full md:w-[calc(100%-280px)] bg-surface dark:bg-on-background z-40 transition-all duration-200 ease-in-out">
+<div class="flex items-center gap-4">
+<div class="relative max-w-md w-full focus-within:ring-2 focus-within:ring-primary-container rounded-lg">
+<span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-on-surface-variant" style="font-variation-settings: 'FILL' 0;">search</span>
+<input class="w-full pl-10 pr-4 py-2 bg-surface-container-low border border-outline-variant rounded-lg text-body-sm text-on-surface placeholder-on-surface-variant focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary transition-all" placeholder="Search..." type="text"/>
+</div>
+</div>
+<div class="flex items-center gap-4">
+<button class="p-2 text-on-surface-variant hover:text-primary transition-colors rounded-full hover:bg-surface-container-high">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 0;">notifications</span>
+</button>
+<button class="p-2 text-on-surface-variant hover:text-primary transition-colors rounded-full hover:bg-surface-container-high">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 0;">account_circle</span>
+</button>
+</div>
+</header>
+<!-- SideNavBar (JSON execution) - Hidden on mobile, shown on md up -->
+<nav class="w-sidebar-width h-full fixed left-0 top-0 border-r border-outline-variant dark:border-outline bg-surface dark:bg-on-background hidden md:flex flex-col p-4 gap-stack-gap z-50 transition-all duration-200 ease-in-out">
+<div class="flex items-center gap-3 mb-8 px-2">
+<div class="w-8 h-8 rounded bg-primary flex items-center justify-center text-on-primary font-bold">TF</div>
+<div>
+<h1 class="font-display-lg text-[20px] leading-tight font-bold text-primary dark:text-primary-fixed tracking-tight">ThesisFlow</h1>
+<p class="font-label-xs text-secondary mt-0.5">Coordinator Portal</p>
+</div>
+</div>
+<div class="flex-1 flex flex-col gap-1">
+<a class="flex items-center gap-3 px-3 py-2.5 rounded-lg text-secondary hover:bg-surface-container-high transition-colors font-body-sm" href="#">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 0;">dashboard</span>
+                Department Dashboard
+            </a>
+<a class="flex items-center gap-3 px-3 py-2.5 bg-secondary-container text-on-secondary-container font-semibold rounded-lg font-body-sm transition-all duration-200 ease-in-out" href="#">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">group</span>
+                User Management
+            </a>
+<a class="flex items-center gap-3 px-3 py-2.5 rounded-lg text-secondary hover:bg-surface-container-high transition-colors font-body-sm" href="#">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 0;">settings</span>
+                Department Settings
+            </a>
+<a class="flex items-center gap-3 px-3 py-2.5 rounded-lg text-secondary hover:bg-surface-container-high transition-colors font-body-sm" href="#">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 0;">assessment</span>
+                Reports
+            </a>
+</div>
+<div class="mt-auto border-t border-outline-variant pt-4 flex flex-col gap-1">
+<a class="flex items-center gap-3 px-3 py-2.5 rounded-lg text-secondary hover:bg-surface-container-high transition-colors font-body-sm" href="#">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 0;">help</span>
+                Help Center
+            </a>
+<a class="flex items-center gap-3 px-3 py-2.5 rounded-lg text-secondary hover:bg-surface-container-high transition-colors font-body-sm" href="#">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 0;">logout</span>
+                Sign Out
+            </a>
+</div>
+</nav>
+<!-- Main Content Area -->
+<main class="content-area min-h-screen">
+<div class="max-w-[container-max] mx-auto p-6 md:p-8">
+<!-- Page Header -->
+<div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-8">
+<div>
+<h2 class="font-headline-md text-headline-md text-on-surface">User Management</h2>
+<p class="font-body-sm text-on-surface-variant mt-1">Manage department users, roles, and access levels.</p>
+</div>
+<button class="inline-flex items-center justify-center gap-2 px-4 py-2.5 bg-primary text-on-primary font-label-md rounded-lg hover:bg-primary-container transition-colors shadow-sm self-start sm:self-auto">
+<span class="material-symbols-outlined text-[18px]" style="font-variation-settings: 'FILL' 0;">add</span>
+                    Add User
+                </button>
+</div>
+<!-- Toolbar: Filters & Search -->
+<div class="glass-panel rounded-xl p-4 mb-6 flex flex-col md:flex-row justify-between items-center gap-4">
+<div class="flex flex-wrap items-center gap-2 w-full md:w-auto">
+<button class="px-4 py-1.5 rounded-full bg-surface-variant text-on-surface font-label-xs hover:bg-surface-container-high transition-colors">All</button>
+<button class="px-4 py-1.5 rounded-full border border-outline-variant text-secondary bg-surface font-label-xs hover:bg-surface-container-high transition-colors">Students</button>
+<button class="px-4 py-1.5 rounded-full border border-outline-variant text-secondary bg-surface font-label-xs hover:bg-surface-container-high transition-colors">Supervisors</button>
+<button class="px-4 py-1.5 rounded-full border border-outline-variant text-secondary bg-surface font-label-xs hover:bg-surface-container-high transition-colors">Coordinators</button>
+</div>
+<div class="relative w-full md:w-72">
+<span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-on-surface-variant text-[20px]" style="font-variation-settings: 'FILL' 0;">search</span>
+<input class="w-full pl-10 pr-4 py-2 bg-surface border border-outline-variant rounded-lg font-body-sm text-on-surface placeholder-on-surface-variant focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary transition-all" placeholder="Search users by name or email..." type="text"/>
+</div>
+</div>
+<!-- Data Table Container -->
+<div class="bg-surface rounded-xl border border-outline-variant overflow-hidden shadow-sm">
+<div class="overflow-x-auto">
+<table class="w-full text-left border-collapse">
+<thead>
+<tr class="bg-surface-container-low border-b border-outline-variant">
+<th class="py-3 px-6 font-label-xs text-secondary uppercase tracking-wider">Name</th>
+<th class="py-3 px-6 font-label-xs text-secondary uppercase tracking-wider">Email</th>
+<th class="py-3 px-6 font-label-xs text-secondary uppercase tracking-wider">Role</th>
+<th class="py-3 px-6 font-label-xs text-secondary uppercase tracking-wider">Department</th>
+<th class="py-3 px-6 font-label-xs text-secondary uppercase tracking-wider">Status</th>
+<th class="py-3 px-6 font-label-xs text-secondary uppercase tracking-wider text-right">Actions</th>
+</tr>
+</thead>
+<tbody class="font-body-sm text-on-surface divide-y divide-outline-variant">
+<!-- Row 1: Student -->
+<tr class="table-row-hover transition-colors group">
+<td class="py-4 px-6">
+<div class="flex items-center gap-3">
+<img class="w-8 h-8 rounded-full object-cover border border-outline-variant" data-alt="A small, professional avatar portrait of a young male graduate student wearing a neutral-colored sweater against a bright, minimalist white background. The lighting is soft and studio-quality, conveying a serious academic tone." src="https://lh3.googleusercontent.com/aida-public/AB6AXuB-Ku0IVzxuFcZMZEO2zyQUHxIwEz-iVDyhV1us9htJUy-xxmHKY2o7coI_FjH9pdn73_zSJXba29HjinqzSOLxNHiONufJP_fSo7NmGtHG315AiRSrEW6Fae09y77MTHzt0cFE8X0O_voDUMjFHIP6iQwMu3lW7x84d-QDO1QSeoEJeBYiNwi7nqhDB19VgfylVcyIKs0AJS4llKnuTLXRmOzTBCIeMlXpNN0rKtwoMqNu0XPdSeNq"/>
+<span class="font-medium">Alex Mercer</span>
+</div>
+</td>
+<td class="py-4 px-6 text-secondary">alex.mercer@thesis.edu</td>
+<td class="py-4 px-6">Student</td>
+<td class="py-4 px-6">Computer Science</td>
+<td class="py-4 px-6">
+<span class="inline-flex items-center px-2.5 py-0.5 rounded-full font-label-xs status-badge-active">Active</span>
+</td>
+<td class="py-4 px-6 text-right">
+<button class="p-1.5 rounded-lg text-secondary hover:text-on-surface hover:bg-surface-variant transition-colors">
+<span class="material-symbols-outlined text-[20px]" style="font-variation-settings: 'FILL' 0;">more_vert</span>
+</button>
+</td>
+</tr>
+<!-- Row 2: Supervisor -->
+<tr class="table-row-hover transition-colors group">
+<td class="py-4 px-6">
+<div class="flex items-center gap-3">
+<img class="w-8 h-8 rounded-full object-cover border border-outline-variant" data-alt="A small, professional avatar portrait of a middle-aged female professor wearing glasses and a dark blazer against a bright, minimalist white background. The lighting is crisp and authoritative, typical of a university faculty directory photo." src="https://lh3.googleusercontent.com/aida-public/AB6AXuCumqt-oxVK_-317J_RIm4N8Ek715tiCQ-tZu5nNTDJP6-gIgDdski851WPSqa7qm3Sb3rOOZJHFzN9uX9pvh1tiuFKnD0iL3qPi7wsc8uM2vBE--KKc6gf9GxaAl7Ls45pB0mTQ_87PE2gTR-ReTD0UaWioY6uny_HyIhujuU3KyeuB038TdilotbUvNRBtRPXxA_SK29z66wLGwLrohp1JRJvy3aOAZwx4mT9jGXY2NEtN08di2vA"/>
+<span class="font-medium">Dr. Sarah Jenkins</span>
+</div>
+</td>
+<td class="py-4 px-6 text-secondary">s.jenkins@thesis.edu</td>
+<td class="py-4 px-6">Supervisor</td>
+<td class="py-4 px-6">Data Science</td>
+<td class="py-4 px-6">
+<span class="inline-flex items-center px-2.5 py-0.5 rounded-full font-label-xs status-badge-active">Active</span>
+</td>
+<td class="py-4 px-6 text-right">
+<button class="p-1.5 rounded-lg text-secondary hover:text-on-surface hover:bg-surface-variant transition-colors">
+<span class="material-symbols-outlined text-[20px]" style="font-variation-settings: 'FILL' 0;">more_vert</span>
+</button>
+</td>
+</tr>
+<!-- Row 3: Coordinator -->
+<tr class="table-row-hover transition-colors group">
+<td class="py-4 px-6">
+<div class="flex items-center gap-3">
+<div class="w-8 h-8 rounded-full bg-secondary-container text-on-secondary-container flex items-center justify-center font-label-md border border-outline-variant">
+                                            MR
+                                        </div>
+<span class="font-medium">Michael Ross</span>
+</div>
+</td>
+<td class="py-4 px-6 text-secondary">m.ross@thesis.edu</td>
+<td class="py-4 px-6 font-medium">Coordinator</td>
+<td class="py-4 px-6">Engineering</td>
+<td class="py-4 px-6">
+<span class="inline-flex items-center px-2.5 py-0.5 rounded-full font-label-xs status-badge-active">Active</span>
+</td>
+<td class="py-4 px-6 text-right">
+<button class="p-1.5 rounded-lg text-secondary hover:text-on-surface hover:bg-surface-variant transition-colors">
+<span class="material-symbols-outlined text-[20px]" style="font-variation-settings: 'FILL' 0;">more_vert</span>
+</button>
+</td>
+</tr>
+<!-- Row 4: Deactivated -->
+<tr class="table-row-hover transition-colors group opacity-80">
+<td class="py-4 px-6">
+<div class="flex items-center gap-3">
+<div class="w-8 h-8 rounded-full bg-surface-variant text-on-surface-variant flex items-center justify-center font-label-md border border-outline-variant">
+                                            EL
+                                        </div>
+<span class="font-medium">Emily Lin</span>
+</div>
+</td>
+<td class="py-4 px-6 text-secondary">e.lin@alumni.thesis.edu</td>
+<td class="py-4 px-6">Student</td>
+<td class="py-4 px-6">Mathematics</td>
+<td class="py-4 px-6">
+<span class="inline-flex items-center px-2.5 py-0.5 rounded-full font-label-xs status-badge-deactivated">Deactivated</span>
+</td>
+<td class="py-4 px-6 text-right">
+<button class="p-1.5 rounded-lg text-secondary hover:text-on-surface hover:bg-surface-variant transition-colors">
+<span class="material-symbols-outlined text-[20px]" style="font-variation-settings: 'FILL' 0;">more_vert</span>
+</button>
+</td>
+</tr>
+<!-- Row 5: Supervisor -->
+<tr class="table-row-hover transition-colors group">
+<td class="py-4 px-6">
+<div class="flex items-center gap-3">
+<img class="w-8 h-8 rounded-full object-cover border border-outline-variant" data-alt="A small, professional avatar portrait of an older male professor with a neatly trimmed beard, wearing a light blue button-down shirt against a clean white background. High-key lighting, serious but approachable academic expression." src="https://lh3.googleusercontent.com/aida-public/AB6AXuC4g24zQkI3mMGCHPmmV0vwagMRHaY3z4aN7qBYs1VEijzekAQVgwQA8f6mutR2vsDKjms-987284fY4B69EjccuIPu_SpEQBgIoMSR7MHRLg42puMFJX0hIgPvCvG_jh427WzK8zoeAeisXLBnc4Y8xIY4GrCTmjPuF61GRQknt_BTVPnMsW4mc6WacCZ6-CyLaWqudv_pjUP90a5WTPbKiO6bRTmgh4nhHWHnHYEslzFfwbLUPI_w"/>
+<span class="font-medium">Prof. James Sterling</span>
+</div>
+</td>
+<td class="py-4 px-6 text-secondary">j.sterling@thesis.edu</td>
+<td class="py-4 px-6">Supervisor</td>
+<td class="py-4 px-6">Physics</td>
+<td class="py-4 px-6">
+<span class="inline-flex items-center px-2.5 py-0.5 rounded-full font-label-xs status-badge-active">Active</span>
+</td>
+<td class="py-4 px-6 text-right">
+<button class="p-1.5 rounded-lg text-secondary hover:text-on-surface hover:bg-surface-variant transition-colors">
+<span class="material-symbols-outlined text-[20px]" style="font-variation-settings: 'FILL' 0;">more_vert</span>
+</button>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+<!-- Pagination Footer -->
+<div class="bg-surface px-6 py-4 border-t border-outline-variant flex items-center justify-between">
+<span class="font-body-sm text-secondary">Showing 1 to 5 of 124 users</span>
+<div class="flex items-center gap-2">
+<button class="px-3 py-1.5 rounded-lg border border-outline-variant text-secondary font-label-sm hover:bg-surface-container-high disabled:opacity-50 transition-colors" disabled="">Previous</button>
+<button class="px-3 py-1.5 rounded-lg border border-outline-variant text-on-surface bg-surface font-label-sm hover:bg-surface-container-high transition-colors">Next</button>
+</div>
+</div>
+</div>
+</div>
+</main>
+</body></html>

@@ -1,0 +1,311 @@
+<!DOCTYPE html>
+
+<html lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>ThesisFlow - Department Management</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "on-primary": "#ffffff",
+                        "on-error": "#ffffff",
+                        "inverse-surface": "#303039",
+                        "tertiary-container": "#932c00",
+                        "surface-container-lowest": "#ffffff",
+                        "inverse-on-surface": "#f2effc",
+                        "surface-bright": "#fbf8ff",
+                        "on-secondary": "#ffffff",
+                        "surface-container-highest": "#e4e1ed",
+                        "primary-fixed-dim": "#c0c1ff",
+                        "on-tertiary": "#ffffff",
+                        "primary-container": "#3538cd",
+                        "on-secondary-container": "#596377",
+                        "primary-fixed": "#e1e0ff",
+                        "primary": "#1713b8",
+                        "surface-container": "#efecf9",
+                        "on-tertiary-fixed": "#390c00",
+                        "on-background": "#1b1b23",
+                        "surface-tint": "#4549dc",
+                        "on-primary-fixed-variant": "#2a2bc4",
+                        "tertiary": "#6c1e00",
+                        "on-primary-container": "#bbbdff",
+                        "on-error-container": "#93000a",
+                        "error-container": "#ffdad6",
+                        "secondary-container": "#d6e0f8",
+                        "on-tertiary-fixed-variant": "#832600",
+                        "inverse-primary": "#c0c1ff",
+                        "on-secondary-fixed-variant": "#3d475a",
+                        "on-secondary-fixed": "#111c2d",
+                        "surface-dim": "#dbd8e5",
+                        "surface": "#fbf8ff",
+                        "on-surface": "#1b1b23",
+                        "surface-container-low": "#f5f2fe",
+                        "secondary-fixed-dim": "#bdc7de",
+                        "secondary-fixed": "#d9e3fb",
+                        "outline": "#767586",
+                        "surface-container-high": "#e9e6f3",
+                        "tertiary-fixed": "#ffdbd0",
+                        "outline-variant": "#c6c5d7",
+                        "on-tertiary-container": "#ffaf95",
+                        "error": "#ba1a1a",
+                        "surface-variant": "#e4e1ed",
+                        "secondary": "#555f73",
+                        "on-surface-variant": "#454555",
+                        "tertiary-fixed-dim": "#ffb59d",
+                        "on-primary-fixed": "#04006d",
+                        "background": "#fbf8ff"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "full": "9999px"
+                    },
+                    "spacing": {
+                        "stack-gap": "12px",
+                        "sidebar-width": "280px",
+                        "sidebar-collapsed": "64px",
+                        "gutter": "24px",
+                        "section-gap": "40px",
+                        "margin-mobile": "16px",
+                        "container-max": "1200px"
+                    },
+                    "fontFamily": {
+                        "display-lg": ["Inter"],
+                        "body-sm": ["Inter"],
+                        "label-xs": ["Inter"],
+                        "label-md": ["Inter"],
+                        "headline-md": ["Inter"],
+                        "display-lg-mobile": ["Inter"],
+                        "body-base": ["Inter"],
+                        "section-header": ["Inter"]
+                    },
+                    "fontSize": {
+                        "display-lg": ["36px", { "lineHeight": "44px", "letterSpacing": "-0.02em", "fontWeight": "700" }],
+                        "body-sm": ["14px", { "lineHeight": "20px", "fontWeight": "400" }],
+                        "label-xs": ["12px", { "lineHeight": "18px", "fontWeight": "600" }],
+                        "label-md": ["14px", { "lineHeight": "20px", "fontWeight": "500" }],
+                        "headline-md": ["24px", { "lineHeight": "32px", "letterSpacing": "-0.01em", "fontWeight": "600" }],
+                        "display-lg-mobile": ["30px", { "lineHeight": "38px", "letterSpacing": "-0.02em", "fontWeight": "700" }],
+                        "body-base": ["16px", { "lineHeight": "24px", "fontWeight": "400" }],
+                        "section-header": ["18px", { "lineHeight": "28px", "fontWeight": "600" }]
+                    }
+                }
+            }
+        }
+    </script>
+<style>
+        body { background-color: theme('colors.background'); color: theme('colors.on-background'); }
+        .ambient-shadow { box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1); }
+    </style>
+</head>
+<body class="font-body-base text-body-base antialiased flex h-screen overflow-hidden">
+<!-- SideNavBar -->
+<aside class="w-sidebar-width h-full fixed left-0 top-0 bg-surface border-r border-outline-variant z-20 hidden md:flex flex-col p-4 gap-stack-gap">
+<div class="flex items-center gap-3 px-4 py-2 mb-4">
+<div class="w-8 h-8 rounded bg-primary-container text-on-primary-container flex items-center justify-center font-bold">TF</div>
+<div>
+<div class="font-display-lg text-[20px] leading-tight font-bold text-primary">ThesisFlow</div>
+<div class="font-label-xs text-label-xs text-on-surface-variant">Coordinator Portal</div>
+</div>
+</div>
+<nav class="flex-1 flex flex-col gap-1">
+<a class="flex items-center gap-3 px-4 py-3 text-secondary hover:bg-surface-container-high transition-colors rounded-lg font-label-md text-label-md group" href="#">
+<span class="material-symbols-outlined text-[20px] group-hover:text-primary transition-colors">dashboard</span>
+                Department Dashboard
+            </a>
+<a class="flex items-center gap-3 px-4 py-3 bg-secondary-container text-on-secondary-container font-semibold rounded-lg font-label-md text-label-md" href="#">
+<span class="material-symbols-outlined text-[20px]" style="font-variation-settings: 'FILL' 1;">group</span>
+                User Management
+            </a>
+<a class="flex items-center gap-3 px-4 py-3 text-secondary hover:bg-surface-container-high transition-colors rounded-lg font-label-md text-label-md group" href="#">
+<span class="material-symbols-outlined text-[20px] group-hover:text-primary transition-colors">settings</span>
+                Department Settings
+            </a>
+<a class="flex items-center gap-3 px-4 py-3 text-secondary hover:bg-surface-container-high transition-colors rounded-lg font-label-md text-label-md group" href="#">
+<span class="material-symbols-outlined text-[20px] group-hover:text-primary transition-colors">assessment</span>
+                Reports
+            </a>
+</nav>
+<div class="mt-auto flex flex-col gap-1 pt-4 border-t border-outline-variant">
+<a class="flex items-center gap-3 px-4 py-3 text-secondary hover:bg-surface-container-high transition-colors rounded-lg font-label-md text-label-md group" href="#">
+<span class="material-symbols-outlined text-[20px] group-hover:text-primary transition-colors">help</span>
+                Help Center
+            </a>
+<a class="flex items-center gap-3 px-4 py-3 text-secondary hover:bg-surface-container-high transition-colors rounded-lg font-label-md text-label-md group" href="#">
+<span class="material-symbols-outlined text-[20px] group-hover:text-primary transition-colors">logout</span>
+                Sign Out
+            </a>
+</div>
+</aside>
+<!-- Main Content Area -->
+<div class="flex-1 flex flex-col h-full md:pl-sidebar-width overflow-hidden">
+<!-- TopNavBar -->
+<header class="h-16 flex-shrink-0 bg-surface border-b border-outline-variant flex items-center justify-between px-gutter z-10 sticky top-0">
+<div class="flex items-center gap-4 w-1/3">
+<div class="relative w-full max-w-md hidden sm:block">
+<span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-on-surface-variant text-[20px]">search</span>
+<input class="w-full h-10 pl-10 pr-4 bg-surface-container-lowest border border-outline-variant rounded-lg font-body-sm text-body-sm text-on-surface placeholder:text-on-surface-variant focus:outline-none focus:border-primary focus:ring-2 focus:ring-primary-container transition-all" placeholder="Search departments, users..." type="text"/>
+</div>
+</div>
+<div class="flex items-center gap-4">
+<button class="w-10 h-10 rounded-full flex items-center justify-center text-on-surface-variant hover:text-primary hover:bg-surface-container-high transition-colors focus-within:ring-2 focus-within:ring-primary-container">
+<span class="material-symbols-outlined">notifications</span>
+</button>
+<button class="w-10 h-10 rounded-full flex items-center justify-center text-on-surface-variant hover:text-primary hover:bg-surface-container-high transition-colors focus-within:ring-2 focus-within:ring-primary-container">
+<span class="material-symbols-outlined">account_circle</span>
+</button>
+</div>
+</header>
+<!-- Page Content -->
+<main class="flex-1 overflow-y-auto bg-background p-gutter">
+<div class="max-w-container-max mx-auto w-full flex flex-col gap-section-gap pb-12">
+<!-- Page Header -->
+<div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+<div>
+<h1 class="font-display-lg text-display-lg text-on-background">Department Management</h1>
+<p class="font-body-base text-body-base text-secondary mt-1">Manage academic departments, coordinators, and overview statistics.</p>
+</div>
+<button class="h-10 px-4 bg-primary-container text-on-primary font-label-md text-label-md rounded-lg flex items-center justify-center gap-2 hover:bg-primary transition-colors whitespace-nowrap">
+<span class="material-symbols-outlined text-[18px]">add</span>
+                        Create Department
+                    </button>
+</div>
+<!-- Department Cards Grid -->
+<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+<!-- Card 1 -->
+<div class="bg-surface-container-lowest border border-outline-variant rounded-lg p-5 flex flex-col gap-4 hover:border-outline transition-colors ambient-shadow group relative overflow-hidden">
+<div class="absolute top-0 left-0 w-1 h-full bg-primary-container"></div>
+<div class="flex justify-between items-start">
+<div>
+<h3 class="font-section-header text-section-header text-on-surface">Computer Science</h3>
+<p class="font-body-sm text-body-sm text-secondary mt-0.5">Coordinator: Dr. Alan Turing</p>
+</div>
+<span class="material-symbols-outlined text-secondary opacity-50">computer</span>
+</div>
+<div class="grid grid-cols-2 gap-4 py-3 border-y border-outline-variant">
+<div>
+<div class="font-label-xs text-label-xs text-secondary uppercase tracking-wider mb-1">Students</div>
+<div class="font-headline-md text-headline-md text-on-surface">342</div>
+</div>
+<div>
+<div class="font-label-xs text-label-xs text-secondary uppercase tracking-wider mb-1">Supervisors</div>
+<div class="font-headline-md text-headline-md text-on-surface">45</div>
+</div>
+</div>
+<div class="flex items-center gap-3 mt-auto pt-2">
+<button class="flex-1 h-9 px-3 bg-surface-container-lowest border border-outline-variant text-on-surface font-label-md text-label-md rounded-lg flex items-center justify-center gap-2 hover:bg-surface-container-high transition-colors">
+<span class="material-symbols-outlined text-[16px]">settings</span>
+                                Edit Settings
+                            </button>
+<button class="flex-1 h-9 px-3 bg-surface-container-lowest border border-outline-variant text-primary font-label-md text-label-md rounded-lg flex items-center justify-center gap-2 hover:bg-surface-container-high transition-colors">
+<span class="material-symbols-outlined text-[16px]">group</span>
+                                Manage Members
+                            </button>
+</div>
+</div>
+<!-- Card 2 -->
+<div class="bg-surface-container-lowest border border-outline-variant rounded-lg p-5 flex flex-col gap-4 hover:border-outline transition-colors ambient-shadow group relative overflow-hidden">
+<div class="absolute top-0 left-0 w-1 h-full bg-primary-container"></div>
+<div class="flex justify-between items-start">
+<div>
+<h3 class="font-section-header text-section-header text-on-surface">Mechanical Engineering</h3>
+<p class="font-body-sm text-body-sm text-secondary mt-0.5">Coordinator: Prof. Sarah Connor</p>
+</div>
+<span class="material-symbols-outlined text-secondary opacity-50">engineering</span>
+</div>
+<div class="grid grid-cols-2 gap-4 py-3 border-y border-outline-variant">
+<div>
+<div class="font-label-xs text-label-xs text-secondary uppercase tracking-wider mb-1">Students</div>
+<div class="font-headline-md text-headline-md text-on-surface">215</div>
+</div>
+<div>
+<div class="font-label-xs text-label-xs text-secondary uppercase tracking-wider mb-1">Supervisors</div>
+<div class="font-headline-md text-headline-md text-on-surface">28</div>
+</div>
+</div>
+<div class="flex items-center gap-3 mt-auto pt-2">
+<button class="flex-1 h-9 px-3 bg-surface-container-lowest border border-outline-variant text-on-surface font-label-md text-label-md rounded-lg flex items-center justify-center gap-2 hover:bg-surface-container-high transition-colors">
+<span class="material-symbols-outlined text-[16px]">settings</span>
+                                Edit Settings
+                            </button>
+<button class="flex-1 h-9 px-3 bg-surface-container-lowest border border-outline-variant text-primary font-label-md text-label-md rounded-lg flex items-center justify-center gap-2 hover:bg-surface-container-high transition-colors">
+<span class="material-symbols-outlined text-[16px]">group</span>
+                                Manage Members
+                            </button>
+</div>
+</div>
+<!-- Card 3 -->
+<div class="bg-surface-container-lowest border border-outline-variant rounded-lg p-5 flex flex-col gap-4 hover:border-outline transition-colors ambient-shadow group relative overflow-hidden">
+<div class="absolute top-0 left-0 w-1 h-full bg-primary-container"></div>
+<div class="flex justify-between items-start">
+<div>
+<h3 class="font-section-header text-section-header text-on-surface">Physics</h3>
+<p class="font-body-sm text-body-sm text-secondary mt-0.5">Coordinator: Dr. Marie Curie</p>
+</div>
+<span class="material-symbols-outlined text-secondary opacity-50">science</span>
+</div>
+<div class="grid grid-cols-2 gap-4 py-3 border-y border-outline-variant">
+<div>
+<div class="font-label-xs text-label-xs text-secondary uppercase tracking-wider mb-1">Students</div>
+<div class="font-headline-md text-headline-md text-on-surface">189</div>
+</div>
+<div>
+<div class="font-label-xs text-label-xs text-secondary uppercase tracking-wider mb-1">Supervisors</div>
+<div class="font-headline-md text-headline-md text-on-surface">32</div>
+</div>
+</div>
+<div class="flex items-center gap-3 mt-auto pt-2">
+<button class="flex-1 h-9 px-3 bg-surface-container-lowest border border-outline-variant text-on-surface font-label-md text-label-md rounded-lg flex items-center justify-center gap-2 hover:bg-surface-container-high transition-colors">
+<span class="material-symbols-outlined text-[16px]">settings</span>
+                                Edit Settings
+                            </button>
+<button class="flex-1 h-9 px-3 bg-surface-container-lowest border border-outline-variant text-primary font-label-md text-label-md rounded-lg flex items-center justify-center gap-2 hover:bg-surface-container-high transition-colors">
+<span class="material-symbols-outlined text-[16px]">group</span>
+                                Manage Members
+                            </button>
+</div>
+</div>
+<!-- Card 4 -->
+<div class="bg-surface-container-lowest border border-outline-variant rounded-lg p-5 flex flex-col gap-4 hover:border-outline transition-colors ambient-shadow group relative overflow-hidden">
+<div class="absolute top-0 left-0 w-1 h-full bg-primary-container opacity-50"></div>
+<div class="flex justify-between items-start">
+<div>
+<h3 class="font-section-header text-section-header text-on-surface">Mathematics</h3>
+<p class="font-body-sm text-body-sm text-secondary mt-0.5">Coordinator: Dr. John Nash</p>
+</div>
+<span class="material-symbols-outlined text-secondary opacity-50">calculate</span>
+</div>
+<div class="grid grid-cols-2 gap-4 py-3 border-y border-outline-variant">
+<div>
+<div class="font-label-xs text-label-xs text-secondary uppercase tracking-wider mb-1">Students</div>
+<div class="font-headline-md text-headline-md text-on-surface">156</div>
+</div>
+<div>
+<div class="font-label-xs text-label-xs text-secondary uppercase tracking-wider mb-1">Supervisors</div>
+<div class="font-headline-md text-headline-md text-on-surface">22</div>
+</div>
+</div>
+<div class="flex items-center gap-3 mt-auto pt-2">
+<button class="flex-1 h-9 px-3 bg-surface-container-lowest border border-outline-variant text-on-surface font-label-md text-label-md rounded-lg flex items-center justify-center gap-2 hover:bg-surface-container-high transition-colors">
+<span class="material-symbols-outlined text-[16px]">settings</span>
+                                Edit Settings
+                            </button>
+<button class="flex-1 h-9 px-3 bg-surface-container-lowest border border-outline-variant text-primary font-label-md text-label-md rounded-lg flex items-center justify-center gap-2 hover:bg-surface-container-high transition-colors">
+<span class="material-symbols-outlined text-[16px]">group</span>
+                                Manage Members
+                            </button>
+</div>
+</div>
+</div>
+</div>
+</main>
+</div>
+</body></html>

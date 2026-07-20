@@ -1,0 +1,385 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Thesis Review - ThesisFlow</title>
+<!-- Google Fonts & Material Icons -->
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<!-- Tailwind CSS -->
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<!-- Theme Configuration -->
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            "colors": {
+                    "primary-fixed-dim": "#c0c1ff",
+                    "on-secondary": "#ffffff",
+                    "inverse-primary": "#c0c1ff",
+                    "surface-container-lowest": "#ffffff",
+                    "surface-container-high": "#e9e6f3",
+                    "on-primary-fixed-variant": "#2a2bc4",
+                    "on-secondary-fixed": "#111c2d",
+                    "surface-container-highest": "#e4e1ed",
+                    "tertiary-fixed": "#ffdbd0",
+                    "on-tertiary-fixed": "#390c00",
+                    "surface-dim": "#dbd8e5",
+                    "surface": "#fbf8ff",
+                    "secondary": "#555f73",
+                    "error-container": "#ffdad6",
+                    "tertiary-container": "#932c00",
+                    "outline": "#767586",
+                    "tertiary-fixed-dim": "#ffb59d",
+                    "on-surface-variant": "#454555",
+                    "on-error-container": "#93000a",
+                    "on-secondary-fixed-variant": "#3d475a",
+                    "tertiary": "#6c1e00",
+                    "surface-bright": "#fbf8ff",
+                    "outline-variant": "#c6c5d7",
+                    "on-tertiary-container": "#ffaf95",
+                    "surface-variant": "#e4e1ed",
+                    "on-surface": "#1b1b23",
+                    "surface-container-low": "#f5f2fe",
+                    "on-secondary-container": "#596377",
+                    "on-tertiary-fixed-variant": "#832600",
+                    "on-error": "#ffffff",
+                    "primary-fixed": "#e1e0ff",
+                    "on-background": "#1b1b23",
+                    "on-primary-fixed": "#04006d",
+                    "surface-container": "#efecf9",
+                    "error": "#ba1a1a",
+                    "on-primary": "#ffffff",
+                    "surface-tint": "#4549dc",
+                    "on-tertiary": "#ffffff",
+                    "secondary-container": "#d6e0f8",
+                    "secondary-fixed-dim": "#bdc7de",
+                    "background": "#fbf8ff",
+                    "on-primary-container": "#bbbdff",
+                    "inverse-surface": "#303039",
+                    "secondary-fixed": "#d9e3fb",
+                    "primary-container": "#3538cd",
+                    "primary": "#1713b8",
+                    "inverse-on-surface": "#f2effc"
+            },
+            "borderRadius": {
+                    "DEFAULT": "0.25rem",
+                    "lg": "0.5rem",
+                    "xl": "0.75rem",
+                    "full": "9999px"
+            },
+            "spacing": {
+                    "sidebar-collapsed": "64px",
+                    "stack-gap": "12px",
+                    "section-gap": "40px",
+                    "container-max": "1200px",
+                    "gutter": "24px",
+                    "sidebar-width": "280px",
+                    "margin-mobile": "16px"
+            },
+            "fontFamily": {
+                    "label-md": ["Inter"],
+                    "display-lg-mobile": ["Inter"],
+                    "display-lg": ["Inter"],
+                    "label-xs": ["Inter"],
+                    "body-sm": ["Inter"],
+                    "section-header": ["Inter"],
+                    "body-base": ["Inter"],
+                    "headline-md": ["Inter"]
+            },
+            "fontSize": {
+                    "label-md": ["14px", { "lineHeight": "20px", "fontWeight": "500" }],
+                    "display-lg-mobile": ["30px", { "lineHeight": "38px", "letterSpacing": "-0.02em", "fontWeight": "700" }],
+                    "display-lg": ["36px", { "lineHeight": "44px", "letterSpacing": "-0.02em", "fontWeight": "700" }],
+                    "label-xs": ["12px", { "lineHeight": "18px", "fontWeight": "600" }],
+                    "body-sm": ["14px", { "lineHeight": "20px", "fontWeight": "400" }],
+                    "section-header": ["18px", { "lineHeight": "28px", "fontWeight": "600" }],
+                    "body-base": ["16px", { "lineHeight": "24px", "fontWeight": "400" }],
+                    "headline-md": ["24px", { "lineHeight": "32px", "letterSpacing": "-0.01em", "fontWeight": "600" }]
+            }
+          }
+        }
+      }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        .icon-fill {
+            font-variation-settings: 'FILL' 1;
+        }
+        
+        /* Custom scrollbar for document viewer to maintain minimal look */
+        .custom-scrollbar::-webkit-scrollbar {
+            width: 6px;
+        }
+        .custom-scrollbar::-webkit-scrollbar-track {
+            background: transparent;
+        }
+        .custom-scrollbar::-webkit-scrollbar-thumb {
+            background-color: #c6c5d7;
+            border-radius: 10px;
+        }
+    </style>
+</head>
+<body class="bg-background text-on-background font-body-base h-screen overflow-hidden flex">
+<!-- SideNavBar (Shared Component) -->
+<aside class="bg-surface fixed left-0 top-0 h-full w-sidebar-width border-r border-outline-variant shadow-none z-20">
+<div class="flex flex-col h-full p-4 gap-stack-gap">
+<!-- Header -->
+<div class="flex items-center gap-3 mb-6 px-2">
+<div class="w-8 h-8 rounded bg-primary flex items-center justify-center text-on-primary">
+<span class="material-symbols-outlined icon-fill" style="font-size: 20px;">account_balance</span>
+</div>
+<div>
+<h1 class="text-headline-md font-headline-md text-primary tracking-tight">ThesisFlow</h1>
+<p class="font-label-xs text-label-xs text-secondary uppercase tracking-widest">Supervisor Portal</p>
+</div>
+</div>
+<!-- Navigation Tabs -->
+<nav class="flex flex-col gap-1 flex-1">
+<a class="flex items-center gap-3 px-3 py-2 rounded-lg text-secondary hover:bg-surface-container-low transition-colors font-label-md text-label-md" href="#">
+<span class="material-symbols-outlined">dashboard</span>
+                    Dashboard
+                </a>
+<!-- Active Tab -->
+<a class="flex items-center gap-3 px-3 py-2 bg-secondary-container text-on-secondary-container font-bold rounded-lg transition-transform scale-95 origin-left font-label-md text-label-md" href="#">
+<span class="material-symbols-outlined icon-fill">group</span>
+                    My Students
+                </a>
+<a class="flex items-center gap-3 px-3 py-2 rounded-lg text-secondary hover:bg-surface-container-low transition-colors font-label-md text-label-md" href="#">
+<span class="material-symbols-outlined">chat</span>
+                    Communications
+                </a>
+<a class="flex items-center gap-3 px-3 py-2 rounded-lg text-secondary hover:bg-surface-container-low transition-colors mt-auto font-label-md text-label-md" href="#">
+<span class="material-symbols-outlined">settings</span>
+                    Settings
+                </a>
+</nav>
+</div>
+</aside>
+<!-- Main Content Wrapper -->
+<div class="flex-1 flex flex-col ml-sidebar-width relative h-full">
+<!-- TopNavBar (Shared Component) -->
+<header class="bg-surface docked full-width top-0 border-b border-outline-variant shadow-none absolute w-full z-10 flex justify-between items-center h-16 px-gutter">
+<!-- Contextual Breadcrumb / Title -->
+<div class="flex items-center gap-2">
+<button class="text-on-surface-variant hover:text-primary transition-colors flex items-center justify-center p-1 rounded-full hover:bg-surface-container-low">
+<span class="material-symbols-outlined">arrow_back</span>
+</button>
+<div class="flex items-center gap-2 font-label-md text-label-md">
+<span class="text-secondary">My Students</span>
+<span class="material-symbols-outlined text-outline" style="font-size: 16px;">chevron_right</span>
+<span class="text-on-surface">Sarah Chen</span>
+<span class="material-symbols-outlined text-outline" style="font-size: 16px;">chevron_right</span>
+<span class="text-primary border-b-2 border-primary pb-0.5">Chapter 3 Review</span>
+</div>
+</div>
+<!-- Trailing Icons -->
+<div class="flex items-center gap-4 text-on-surface-variant">
+<button class="hover:text-primary transition-colors relative">
+<span class="material-symbols-outlined">notifications</span>
+<span class="absolute top-0 right-0 w-2 h-2 bg-error rounded-full"></span>
+</button>
+<button class="hover:text-primary transition-colors">
+<span class="material-symbols-outlined">account_circle</span>
+</button>
+</div>
+</header>
+<!-- Main Canvas (Two Column Layout) -->
+<main class="flex-1 pt-[88px] pb-gutter px-gutter overflow-hidden">
+<div class="max-w-[1400px] mx-auto h-full grid grid-cols-12 gap-6">
+<!-- Left Column: Document Viewer (col-span-8) -->
+<section class="col-span-8 flex flex-col h-full bg-surface-container-lowest border border-outline-variant rounded-xl overflow-hidden shadow-[0_4px_6px_-1px_rgb(0,0,0,0.05),_0_2px_4px_-2px_rgb(0,0,0,0.05)]">
+<!-- Viewer Header -->
+<div class="px-6 py-4 border-b border-outline-variant bg-surface-bright flex justify-between items-start">
+<div>
+<div class="flex items-center gap-3 mb-1">
+<h2 class="font-section-header text-section-header text-on-surface">Sarah Chen</h2>
+<span class="inline-flex items-center px-2 py-0.5 rounded-full bg-primary/10 text-primary font-label-xs text-label-xs">
+                                    Under Review
+                                </span>
+</div>
+<h3 class="font-body-base text-body-base text-secondary">Chapter 3: Methodology - Optimizing Deep Learning Models for Resource-Constrained Environments</h3>
+</div>
+<div class="flex gap-2">
+<button class="px-3 py-1.5 rounded-lg border border-outline-variant bg-surface-container-lowest text-secondary font-label-md text-label-md hover:bg-surface-container-low hover:text-on-surface transition-colors flex items-center gap-2">
+<span class="material-symbols-outlined" style="font-size: 18px;">download</span>
+                                PDF
+                            </button>
+</div>
+</div>
+<!-- PDF Placeholder Area -->
+<div class="flex-1 overflow-y-auto custom-scrollbar bg-[#F0F2F5] p-8 flex justify-center">
+<!-- Simulated A4 Page -->
+<div class="bg-white w-full max-w-[800px] min-h-[1056px] shadow-sm border border-outline-variant rounded p-12">
+<!-- Faux Document Content -->
+<div class="mb-12 border-b border-outline-variant pb-8 text-center">
+<h1 class="font-display-lg text-display-lg text-on-surface mb-4">Chapter 3: Methodology</h1>
+<p class="font-body-base text-body-base text-secondary">Draft Version 2.1 • Submitted Oct 24, 2023</p>
+</div>
+<div class="space-y-6">
+<h3 class="font-section-header text-section-header text-on-surface">3.1 Research Design</h3>
+<div class="space-y-3">
+<div class="h-4 bg-surface-variant rounded w-full"></div>
+<div class="h-4 bg-surface-variant rounded w-[95%]"></div>
+<div class="h-4 bg-surface-variant rounded w-[98%]"></div>
+<div class="h-4 bg-surface-variant rounded w-[90%]"></div>
+<div class="h-4 bg-surface-variant rounded w-[92%]"></div>
+</div>
+<div class="space-y-3 pt-4">
+<div class="h-4 bg-surface-variant rounded w-full"></div>
+<div class="h-4 bg-surface-variant rounded w-[85%]"></div>
+<div class="h-4 bg-primary-fixed-dim/30 rounded w-[96%] relative ring-2 ring-primary border-transparent">
+<!-- Highlighted text simulation -->
+<div class="absolute right-[-40px] top-1/2 -translate-y-1/2 w-8 h-8 rounded-full bg-primary/10 flex items-center justify-center cursor-pointer hover:bg-primary/20">
+<span class="material-symbols-outlined text-primary" style="font-size: 16px;">chat_bubble</span>
+</div>
+</div>
+<div class="h-4 bg-surface-variant rounded w-[94%]"></div>
+</div>
+<!-- Image Placeholder within PDF -->
+<div class="my-8 py-4">
+<img class="w-full h-64 object-cover rounded border border-outline-variant opacity-80 mix-blend-multiply" data-alt="A highly detailed, technical data visualization chart displaying neural network performance metrics. The chart features crisp, modern lines with a minimalist color palette of deep indigo blues and cool grays against a pure white background. The aesthetic is academic, precise, and corporate modern, suitable for a high-end research paper." src="https://lh3.googleusercontent.com/aida-public/AB6AXuB2gIpX8IgppYTjETaCh2xWHnwlXzJWV8HhooOuocljTiPriLwiPDWHLzfErK4mOsktVnbhQcmYHekoBYT5-L3s3hDZo7yIFC8tydkpoghZiIoM6rP1pJeBBbg1lyIKtPncf1ZlN8_UWUwSPZAHZKvwgFRImeDFL8qd7SDkcsB5P7d88zOQctmemr2x31WNWrOyn8u_QJmuTJ0qqjAc7h63TMlptuXe3Bmmeb1oCeA2LoP2DRe4L4kf"/>
+<p class="text-center font-label-xs text-label-xs text-secondary mt-2">Figure 3.1: Comparative Analysis of Inference Times</p>
+</div>
+<h3 class="font-section-header text-section-header text-on-surface pt-4">3.2 Data Collection Protocols</h3>
+<div class="space-y-3">
+<div class="h-4 bg-surface-variant rounded w-full"></div>
+<div class="h-4 bg-surface-variant rounded w-[92%]"></div>
+<div class="h-4 bg-surface-variant rounded w-[97%]"></div>
+</div>
+</div>
+</div>
+</div>
+</section>
+<!-- Right Column: Supervisor Feedback Panel (col-span-4) -->
+<section class="col-span-4 flex flex-col h-full bg-surface-container-lowest border border-outline-variant rounded-xl overflow-hidden shadow-[0_4px_6px_-1px_rgb(0,0,0,0.05),_0_2px_4px_-2px_rgb(0,0,0,0.05)]">
+<!-- Panel Header & Timeline -->
+<div class="px-5 py-4 border-b border-outline-variant bg-surface">
+<h3 class="font-section-header text-section-header text-on-surface mb-4">Review Progress</h3>
+<!-- Status Timeline Strip -->
+<div class="relative flex justify-between items-center px-2">
+<!-- Background Track -->
+<div class="absolute left-4 right-4 top-1/2 h-[2px] bg-surface-variant -translate-y-1/2 z-0"></div>
+<!-- Active Track -->
+<div class="absolute left-4 w-1/2 top-1/2 h-[2px] bg-primary -translate-y-1/2 z-0"></div>
+<!-- Step 1: Draft -->
+<div class="relative z-10 flex flex-col items-center gap-1 group">
+<div class="w-4 h-4 rounded-full bg-primary border-2 border-surface-container-lowest flex items-center justify-center"></div>
+<span class="font-label-xs text-[10px] text-primary absolute -bottom-4 whitespace-nowrap">Draft</span>
+</div>
+<!-- Step 2: Submitted -->
+<div class="relative z-10 flex flex-col items-center gap-1">
+<div class="w-4 h-4 rounded-full bg-primary border-2 border-surface-container-lowest flex items-center justify-center"></div>
+<span class="font-label-xs text-[10px] text-primary absolute -bottom-4 whitespace-nowrap">Submitted</span>
+</div>
+<!-- Step 3: Under Review (Current) -->
+<div class="relative z-10 flex flex-col items-center gap-1">
+<div class="w-5 h-5 rounded-full bg-primary ring-4 ring-primary/20 border-2 border-surface-container-lowest flex items-center justify-center">
+<div class="w-1.5 h-1.5 bg-white rounded-full"></div>
+</div>
+<span class="font-label-xs text-[10px] text-primary font-bold absolute -bottom-4 whitespace-nowrap">Reviewing</span>
+</div>
+<!-- Step 4: Revisions -->
+<div class="relative z-10 flex flex-col items-center gap-1">
+<div class="w-4 h-4 rounded-full bg-surface-variant border-2 border-surface-container-lowest flex items-center justify-center"></div>
+</div>
+<!-- Step 5: Approved -->
+<div class="relative z-10 flex flex-col items-center gap-1">
+<div class="w-4 h-4 rounded-full bg-surface-variant border-2 border-surface-container-lowest flex items-center justify-center"></div>
+<span class="font-label-xs text-[10px] text-secondary absolute -bottom-4 whitespace-nowrap">Approved</span>
+</div>
+</div>
+<div class="h-4"></div> <!-- Spacer for absolute text -->
+</div>
+<!-- Comment Thread Area -->
+<div class="flex-1 overflow-y-auto custom-scrollbar p-5 flex flex-col gap-6 bg-surface-bright">
+<!-- Comment 1 -->
+<div class="flex gap-3">
+<div class="w-8 h-8 rounded-full bg-secondary-container text-on-secondary-container flex items-center justify-center font-label-xs shrink-0">
+                                Dr. S
+                            </div>
+<div class="flex-1">
+<div class="flex justify-between items-baseline mb-1">
+<span class="font-label-md text-label-md text-on-surface">Dr. Smith (Primary)</span>
+<span class="font-label-xs text-[11px] text-secondary">Oct 25, 9:00 AM</span>
+</div>
+<div class="bg-surface-container-low rounded-lg rounded-tl-none p-3 text-on-surface-variant font-body-sm text-body-sm border border-outline-variant/50">
+                                    Sarah, the justification for choosing Model A over Model B in section 3.1 needs more literature support. Please refer to recent studies by Johnson et al. (2022).
+                                </div>
+</div>
+</div>
+<!-- Comment 2 (Co-supervisor) -->
+<div class="flex gap-3">
+<div class="w-8 h-8 rounded-full bg-tertiary-fixed text-on-tertiary-fixed flex items-center justify-center font-label-xs shrink-0">
+                                Prof. L
+                            </div>
+<div class="flex-1">
+<div class="flex justify-between items-baseline mb-1">
+<span class="font-label-md text-label-md text-on-surface">Prof. Lee (Co-Sup)</span>
+<span class="font-label-xs text-[11px] text-secondary">Yesterday, 2:15 PM</span>
+</div>
+<div class="bg-surface-container-low rounded-lg rounded-tl-none p-3 text-on-surface-variant font-body-sm text-body-sm border border-outline-variant/50">
+                                    I agree with Dr. Smith. Also, the data collection timeline chart seems to be missing from the appendix as referenced.
+                                </div>
+</div>
+</div>
+<!-- Comment 3 (Contextual Highlight) -->
+<div class="flex gap-3">
+<div class="w-8 h-8 rounded-full bg-secondary-container text-on-secondary-container flex items-center justify-center font-label-xs shrink-0">
+                                Dr. S
+                            </div>
+<div class="flex-1">
+<div class="flex justify-between items-baseline mb-1">
+<span class="font-label-md text-label-md text-on-surface">Dr. Smith (Primary)</span>
+<span class="font-label-xs text-[11px] text-secondary">2 hrs ago</span>
+</div>
+<!-- Quoted text reference -->
+<div class="mb-2 pl-2 border-l-2 border-primary/40 text-secondary font-body-sm text-[13px] italic">
+                                    "The dataset was truncated to 10,000 epochs due to..."
+                                </div>
+<div class="bg-surface-container-low rounded-lg rounded-tl-none p-3 text-on-surface-variant font-body-sm text-body-sm border border-outline-variant/50">
+                                    Did we discuss this truncation? I recall we aimed for 50k epochs. We need a meeting to clarify this limitation.
+                                </div>
+</div>
+</div>
+</div>
+<!-- Input Field -->
+<div class="p-4 border-t border-outline-variant bg-surface">
+<div class="relative">
+<textarea class="w-full rounded-lg border-outline-variant text-body-sm font-body-sm bg-surface-container-lowest focus:ring-2 focus:ring-primary focus:border-primary resize-none p-3 pr-10 shadow-sm" placeholder="Add a comment or highlight text to attach..." rows="2"></textarea>
+<button class="absolute bottom-3 right-3 text-primary hover:text-primary-fixed-variant transition-colors flex items-center justify-center">
+<span class="material-symbols-outlined icon-fill" style="font-size: 20px;">send</span>
+</button>
+</div>
+</div>
+<!-- Verdict Actions -->
+<div class="p-5 border-t border-outline-variant bg-surface-container-low flex flex-col gap-3">
+<div class="flex gap-3">
+<button class="flex-1 bg-surface-container-lowest border border-error text-error hover:bg-error-container/20 font-label-md text-label-md py-2.5 px-4 rounded-lg transition-colors flex justify-center items-center gap-2">
+<span class="material-symbols-outlined" style="font-size: 18px;">assignment_return</span>
+                                Request Revisions
+                            </button>
+<button class="flex-1 bg-primary text-on-primary hover:bg-primary/90 font-label-md text-label-md py-2.5 px-4 rounded-lg transition-colors shadow-sm flex justify-center items-center gap-2">
+<span class="material-symbols-outlined icon-fill" style="font-size: 18px;">check_circle</span>
+                                Approve Chapter
+                            </button>
+</div>
+<div class="text-center mt-2">
+<a class="font-label-xs text-label-xs text-secondary hover:text-primary transition-colors flex items-center justify-center gap-1 inline-flex" href="#">
+<span class="material-symbols-outlined" style="font-size: 14px;">history</span>
+                                View Prior Versions (1)
+                            </a>
+</div>
+</div>
+</section>
+</div>
+</main>
+</div>
+</body></html>

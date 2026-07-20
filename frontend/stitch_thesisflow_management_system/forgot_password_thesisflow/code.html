@@ -1,0 +1,290 @@
+<!DOCTYPE html>
+
+<html class="h-full bg-surface" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Forgot Password - ThesisFlow</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+          darkMode: "class",
+          theme: {
+            extend: {
+              "colors": {
+                      "on-tertiary": "#ffffff",
+                      "inverse-primary": "#c0c1ff",
+                      "tertiary-fixed-dim": "#ffb59d",
+                      "primary-fixed": "#e1e0ff",
+                      "tertiary-container": "#932c00",
+                      "error-container": "#ffdad6",
+                      "primary": "#1713b8",
+                      "surface": "#fbf8ff",
+                      "tertiary": "#6c1e00",
+                      "on-secondary": "#ffffff",
+                      "tertiary-fixed": "#ffdbd0",
+                      "secondary-fixed-dim": "#bdc7de",
+                      "surface-container-lowest": "#ffffff",
+                      "on-background": "#1b1b23",
+                      "error": "#ba1a1a",
+                      "on-primary-container": "#bbbdff",
+                      "secondary-container": "#d6e0f8",
+                      "on-error": "#ffffff",
+                      "surface-container-high": "#e9e6f3",
+                      "background": "#fbf8ff",
+                      "on-primary-fixed-variant": "#2a2bc4",
+                      "on-surface-variant": "#454555",
+                      "on-primary-fixed": "#04006d",
+                      "on-surface": "#1b1b23",
+                      "primary-fixed-dim": "#c0c1ff",
+                      "outline-variant": "#c6c5d7",
+                      "on-secondary-container": "#596377",
+                      "outline": "#767586",
+                      "secondary": "#555f73",
+                      "surface-container-highest": "#e4e1ed",
+                      "surface-variant": "#e4e1ed",
+                      "surface-bright": "#fbf8ff",
+                      "on-error-container": "#93000a",
+                      "primary-container": "#3538cd",
+                      "surface-dim": "#dbd8e5",
+                      "on-tertiary-fixed": "#390c00",
+                      "inverse-on-surface": "#f2effc",
+                      "on-tertiary-container": "#ffaf95",
+                      "on-primary": "#ffffff",
+                      "surface-tint": "#4549dc",
+                      "on-secondary-fixed": "#111c2d",
+                      "surface-container": "#efecf9",
+                      "inverse-surface": "#303039",
+                      "on-tertiary-fixed-variant": "#832600",
+                      "on-secondary-fixed-variant": "#3d475a",
+                      "secondary-fixed": "#d9e3fb",
+                      "surface-container-low": "#f5f2fe"
+              },
+              "borderRadius": {
+                      "DEFAULT": "0.25rem",
+                      "lg": "0.5rem",
+                      "xl": "0.75rem",
+                      "full": "9999px"
+              },
+              "spacing": {
+                      "stack-gap": "12px",
+                      "sidebar-collapsed": "64px",
+                      "sidebar-width": "280px",
+                      "gutter": "24px",
+                      "section-gap": "40px",
+                      "margin-mobile": "16px",
+                      "container-max": "1200px"
+              },
+              "fontFamily": {
+                      "section-header": [
+                              "Inter"
+                      ],
+                      "body-sm": [
+                              "Inter"
+                      ],
+                      "display-lg": [
+                              "Inter"
+                      ],
+                      "body-base": [
+                              "Inter"
+                      ],
+                      "label-md": [
+                              "Inter"
+                      ],
+                      "label-xs": [
+                              "Inter"
+                      ],
+                      "headline-md": [
+                              "Inter"
+                      ],
+                      "display-lg-mobile": [
+                              "Inter"
+                      ]
+              },
+              "fontSize": {
+                      "section-header": [
+                              "18px",
+                              {
+                                      "lineHeight": "28px",
+                                      "fontWeight": "600"
+                              }
+                      ],
+                      "body-sm": [
+                              "14px",
+                              {
+                                      "lineHeight": "20px",
+                                      "fontWeight": "400"
+                              }
+                      ],
+                      "display-lg": [
+                              "36px",
+                              {
+                                      "lineHeight": "44px",
+                                      "letterSpacing": "-0.02em",
+                                      "fontWeight": "700"
+                              }
+                      ],
+                      "body-base": [
+                              "16px",
+                              {
+                                      "lineHeight": "24px",
+                                      "fontWeight": "400"
+                              }
+                      ],
+                      "label-md": [
+                              "14px",
+                              {
+                                      "lineHeight": "20px",
+                                      "fontWeight": "500"
+                              }
+                      ],
+                      "label-xs": [
+                              "12px",
+                              {
+                                      "lineHeight": "18px",
+                                      "fontWeight": "600"
+                              }
+                      ],
+                      "headline-md": [
+                              "24px",
+                              {
+                                      "lineHeight": "32px",
+                                      "letterSpacing": "-0.01em",
+                                      "fontWeight": "600"
+                              }
+                      ],
+                      "display-lg-mobile": [
+                              "30px",
+                              {
+                                      "lineHeight": "38px",
+                                      "letterSpacing": "-0.02em",
+                                      "fontWeight": "700"
+                              }
+                      ]
+              }
+            },
+          },
+        }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-family: 'Material Symbols Outlined';
+            font-weight: normal;
+            font-style: normal;
+            font-size: 24px;
+            line-height: 1;
+            letter-spacing: normal;
+            text-transform: none;
+            display: inline-block;
+            white-space: nowrap;
+            word-wrap: normal;
+            direction: ltr;
+            -webkit-font-feature-settings: 'liga';
+            -webkit-font-smoothing: antialiased;
+        }
+        
+        .fade-in {
+            animation: fadeIn 0.3s ease-in-out;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+    </style>
+</head>
+<body class="h-full bg-surface text-on-surface antialiased flex flex-col justify-center py-12 sm:px-6 lg:px-8">
+<div class="sm:mx-auto sm:w-full sm:max-w-md mb-8 fade-in">
+<h2 class="mt-6 text-center text-display-lg font-display-lg tracking-tight text-on-surface">
+            ThesisFlow
+        </h2>
+<p class="mt-2 text-center text-body-base font-body-base text-on-surface-variant">
+            Academic Portal
+        </p>
+</div>
+<div class="sm:mx-auto sm:w-full sm:max-w-md fade-in" style="animation-delay: 0.1s;">
+<div class="bg-surface-container-lowest py-8 px-4 shadow-[0_4px_6px_-1px_rgb(0_0_0_0.1),0_2px_4px_-2px_rgb(0_0_0_0.1)] sm:rounded-lg sm:px-10 border border-outline-variant">
+<!-- Default State: Forgot Password Form -->
+<div id="reset-form-container">
+<div class="mb-6">
+<h3 class="text-headline-md font-headline-md text-on-surface">Reset Password</h3>
+<p class="mt-1 text-body-sm font-body-sm text-on-surface-variant">
+                        Enter your university email address and we'll send you a link to reset your password.
+                    </p>
+</div>
+<form action="#" class="space-y-6" id="reset-form" method="POST">
+<div>
+<label class="block text-label-md font-label-md text-on-surface" for="email">Email address</label>
+<div class="mt-2">
+<input autocomplete="email" class="block w-full rounded-DEFAULT border border-outline-variant py-2.5 px-3 text-on-surface shadow-sm focus:border-primary-container focus:outline-none focus:ring-1 focus:ring-primary-container focus:shadow-[0_0_0_3px_rgba(53,56,205,0.2)] bg-surface-container-lowest text-body-base font-body-base transition-all duration-200" id="email" name="email" placeholder="netid@university.edu" required="" type="email"/>
+</div>
+</div>
+<div>
+<button class="flex w-full justify-center rounded-DEFAULT bg-primary-container py-2.5 px-3 text-label-md font-label-md text-on-primary shadow-sm hover:bg-primary focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary transition-colors duration-200" type="submit">
+                            Send reset link
+                        </button>
+</div>
+</form>
+</div>
+<!-- Success State: Email Sent (Initially Hidden) -->
+<div class="hidden text-center py-4" id="success-state-container">
+<div class="mx-auto flex h-12 w-12 items-center justify-center rounded-full bg-primary-fixed mb-4">
+<span class="material-symbols-outlined text-on-primary-fixed" data-icon="mark_email_read">mark_email_read</span>
+</div>
+<h3 class="text-headline-md font-headline-md text-on-surface mb-2">Check your inbox</h3>
+<p class="text-body-sm font-body-sm text-on-surface-variant mb-6">
+                    We've sent a password reset link to <span class="font-medium text-on-surface" id="display-email">your email</span>. It may take a few minutes to arrive.
+                </p>
+<div class="rounded-DEFAULT bg-surface-container-low p-4 text-left border border-outline-variant mb-6">
+<p class="text-label-xs font-label-xs text-on-surface-variant uppercase tracking-wider mb-2">Didn't receive the email?</p>
+<ul class="text-body-sm font-body-sm text-on-surface-variant space-y-1 list-disc list-inside">
+<li>Check your spam folder</li>
+<li>Verify you used your university email</li>
+<li><button class="text-primary hover:text-primary-container underline transition-colors" id="resend-link" type="button">Click here to resend</button></li>
+</ul>
+</div>
+</div>
+<div class="mt-6 text-center">
+<a class="inline-flex items-center text-label-md font-label-md text-primary hover:text-primary-container transition-colors duration-200 group" href="#">
+<span class="material-symbols-outlined text-[18px] mr-1 group-hover:-translate-x-1 transition-transform" data-icon="arrow_back">arrow_back</span>
+                    Back to log in
+                </a>
+</div>
+</div>
+</div>
+<script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const resetForm = document.getElementById('reset-form');
+            const formContainer = document.getElementById('reset-form-container');
+            const successContainer = document.getElementById('success-state-container');
+            const emailInput = document.getElementById('email');
+            const displayEmail = document.getElementById('display-email');
+            const resendLink = document.getElementById('resend-link');
+
+            resetForm.addEventListener('submit', (e) => {
+                e.preventDefault();
+                
+                const emailValue = emailInput.value;
+                if (emailValue) {
+                    displayEmail.textContent = emailValue;
+                }
+
+                // Hide form, show success
+                formContainer.classList.add('hidden');
+                successContainer.classList.remove('hidden');
+                successContainer.classList.add('fade-in');
+            });
+
+            resendLink.addEventListener('click', () => {
+                // Optional: Add some visual feedback that it's resending
+                resendLink.textContent = "Sending...";
+                setTimeout(() => {
+                    resendLink.textContent = "Click here to resend";
+                    // Could add a toast notification here
+                }, 1500);
+            });
+        });
+    </script>
+</body></html>
