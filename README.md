@@ -77,8 +77,8 @@ ThesisFlow System Architecture:
    Navigate to `backend/` and create/verify the `.env` file:
    ```env
    DATABASE_URL="postgresql://postgres:password@localhost:5432/thesisflow?schema=public"
-   JWT_SECRET="dev-secret-change-me-in-production"
-   JWT_EXPIRES_IN="7d"
+   JWT_SECRET="enter-your-jwt-secret-here"
+   JWT_EXPIRES_IN="use any time you want. eg: '3d'"
    PORT=3000
    ```
 
