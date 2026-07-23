@@ -1,4 +1,7 @@
-import { notifications } from '../data/mockData';
+import { useEffect, useState } from 'react';
+import { Link, useNavigate } from 'react-router-dom';
+import { api } from '../lib/api';
+import { useAuth } from '../context/AuthContext';
 
 function MaterialIcon({ name, filled = false, className = 'text-[24px]' }) {
   return (
@@ -13,7 +16,27 @@ function MaterialIcon({ name, filled = false, className = 'text-[24px]' }) {
 
 // Mobile-only top bar + slide-in drawer. Visible only below md.
 export default function TopBar({ onMenuClick, user }) {
-  const unread = notifications.filter((n) => !n.read).length;
+  const { logout } = useAuth();
+  const navigate = useNavigate();
+  const [unreadCount, setUnreadCount] = useState(0);
+
+  useEffect(() => {
+    api
+      .getNotifications()
+      .then((data) => {
+        const count = (data.notifications || []).filter((n) => !n.read).length;
+        setUnreadCount(count);
+      })
+      .catch(() => setUnreadCount(0));
+  }, []);
+
+  const badgeText = unreadCount > 9 ? '9+' : unreadCount > 0 ? String(unreadCount) : null;
+
+  function handleLogout() {
+    logout();
+    navigate('/login');
+  }
+
   return (
     <header className="flex justify-between items-center h-16 px-gutter w-full sticky top-0 z-40 bg-surface-bright border-b border-outline-variant md:hidden">
       <div className="flex items-center gap-3">
@@ -28,26 +51,26 @@ export default function TopBar({ onMenuClick, user }) {
           ThesisFlow
         </h1>
       </div>
-      <div className="flex items-center gap-4">
-        <button className="text-on-surface-variant relative cursor-pointer opacity-80 hover:opacity-100 transition-opacity">
+      <div className="flex items-center gap-3">
+        <Link
+          to="/notifications"
+          className="text-on-surface-variant relative cursor-pointer opacity-80 hover:opacity-100 transition-opacity"
+        >
           <MaterialIcon name="notifications" />
-          {unread > 0 && (
-            <span className="absolute -top-1 -right-1 bg-error text-on-error text-[10px] font-semibold rounded-full px-1">
-              {unread}
+          {badgeText && (
+            <span className="absolute -top-1 -right-2.5 bg-error text-on-error text-[10px] font-bold rounded-full px-1.5 py-0.2 shadow-sm animate-pulse">
+              {badgeText}
             </span>
           )}
+        </Link>
+
+        <button
+          onClick={handleLogout}
+          title="Logout"
+          className="text-error cursor-pointer opacity-80 hover:opacity-100 transition-opacity p-1"
+        >
+          <MaterialIcon name="logout" className="text-error text-[22px]" />
         </button>
-        {user?.avatar ? (
-          <img
-            alt="User avatar"
-            className="w-8 h-8 rounded-full border border-outline-variant object-cover"
-            src={user.avatar}
-          />
-        ) : (
-          <div className="w-8 h-8 rounded-full bg-secondary-container text-on-secondary-container flex items-center justify-center font-label-md text-label-md border border-outline-variant">
-            {(user?.firstName?.[0] ?? '') + (user?.lastName?.[0] ?? '')}
-          </div>
-        )}
       </div>
     </header>
   );

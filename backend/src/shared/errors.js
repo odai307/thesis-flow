@@ -1,4 +1,4 @@
-// Thrown anywhere in the app; caught by errorHandler and turned into a JSON response.
+// Application error class - thrown anywhere in the app for known error cases
 class AppError extends Error {
   constructor(message, statusCode = 400) {
     super(message);
@@ -7,9 +7,11 @@ class AppError extends Error {
   }
 }
 
-// Wraps async route handlers so rejected promises reach the error handler.
-const asyncHandler = (fn) => (req, res, next) => {
-  Promise.resolve(fn(req, res, next)).catch(next);
-};
+// Centralized response helper to send error responses directly from controllers
+function sendError(res, error) {
+  const status = error.statusCode || 500;
+  if (status === 500) console.error(error);
+  return res.status(status).json({ error: error.message || 'Internal server error' });
+}
 
-module.exports = { AppError, asyncHandler };
+module.exports = { AppError, sendError };

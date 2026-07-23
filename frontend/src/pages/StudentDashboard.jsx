@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import AppLayout from '../components/AppLayout';
 import StatusBadge from '../components/StatusBadge';
 import { api } from '../lib/api';
@@ -10,9 +10,16 @@ function Icon({ name, className = 'text-[18px]' }) {
 }
 
 export default function StudentDashboard() {
+  const navigate = useNavigate();
   const [thesis, setThesis] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
+
+  // Create-thesis form state (shown when student has no thesis yet).
+  const [supervisors, setSupervisors] = useState([]);
+  const [title, setTitle] = useState('');
+  const [supervisorId, setSupervisorId] = useState('');
+  const [creating, setCreating] = useState(false);
 
   useEffect(() => {
     api
@@ -22,10 +29,40 @@ export default function StudentDashboard() {
       .finally(() => setLoading(false));
   }, []);
 
+  // Load supervisors when student needs to create a thesis
+  useEffect(() => {
+    if (!loading && !thesis) {
+      api
+        .getSupervisors()
+        .then((data) => setSupervisors(data.supervisors))
+        .catch(() => setSupervisors([]));
+    }
+  }, [loading, thesis]);
+
+  async function handleCreate(e) {
+    e.preventDefault();
+    if (!title.trim() || !supervisorId) return;
+    setCreating(true);
+    setError('');
+    try {
+      const { thesis: created } = await api.createThesis(title.trim(), supervisorId);
+      // Go straight to the workspace to upload the first version
+      navigate(`/thesis/${created.id}/workspace`);
+    } catch (err) {
+      setError(err.message);
+    } finally {
+      setCreating(false);
+    }
+  }
+
   if (loading) {
     return (
       <AppLayout>
-        <p className="font-body-base text-body-base text-secondary">Loading your thesis…</p>
+        <div className="flex items-center justify-center min-h-[50vh]">
+          <p className="font-body-base text-body-base text-secondary animate-pulse">
+            Loading your thesis dashboard…
+          </p>
+        </div>
       </AppLayout>
     );
   }
@@ -33,44 +70,91 @@ export default function StudentDashboard() {
   if (error) {
     return (
       <AppLayout>
-        <p className="font-body-base text-body-base text-error bg-error-container border border-error/20 rounded px-3 py-2">
+        <p className="font-body-base text-body-base text-error bg-error-container border border-error/20 rounded-lg px-4 py-3">
           {error}
         </p>
       </AppLayout>
     );
   }
 
+  // 1. NO THESIS CREATED YET — Render Thesis Creation Form
   if (!thesis) {
     return (
       <AppLayout>
-        <header className="flex flex-col md:flex-row md:items-end justify-between gap-4">
-          <div>
-            <h2 className="font-display-lg-mobile md:font-display-lg text-display-lg-mobile md:text-display-lg text-on-surface mb-2">
-              My Dashboard
-            </h2>
-            <p className="font-body-base text-body-base text-secondary">
-              Manage your thesis progression and supervisor feedback.
-            </p>
-          </div>
-        </header>
-        <section className="bg-surface-container-lowest border border-outline-variant rounded-xl p-8 text-center">
-          <Icon name="menu_book" className="text-[40px] text-outline" />
-          <h3 className="font-section-header text-section-header text-on-surface mt-3">
-            No thesis yet
-          </h3>
-          <p className="font-body-sm text-body-sm text-secondary mt-1">
-            You haven&apos;t created a thesis. Start a draft to begin.
+        <header className="mb-6">
+          <h2 className="font-display-lg-mobile md:font-display-lg text-display-lg-mobile md:text-display-lg text-on-surface mb-2">
+            My Student Dashboard
+          </h2>
+          <p className="font-body-base text-body-base text-secondary">
+            Get started by creating your thesis project and selecting a supervisor.
           </p>
+        </header>
+
+        <section className="bg-surface-container-lowest border border-outline-variant rounded-xl p-6 md:p-8 max-w-xl mx-auto shadow-sm">
+          <div className="flex items-center gap-3 mb-4">
+            <div className="w-12 h-12 rounded-full bg-primary-fixed flex items-center justify-center text-primary-container">
+              <Icon name="menu_book" className="text-[28px]" />
+            </div>
+            <div>
+              <h3 className="font-headline-md text-headline-md text-on-surface">Start Your Thesis</h3>
+              <p className="font-body-sm text-body-sm text-secondary">Fill in the details below to create your thesis entry.</p>
+            </div>
+          </div>
+
+          <form onSubmit={handleCreate} className="flex flex-col gap-5 mt-6">
+            <div>
+              <label className="block font-label-md text-label-md text-on-surface mb-1.5 font-medium">
+                Thesis Title
+              </label>
+              <input
+                type="text"
+                required
+                value={title}
+                onChange={(e) => setTitle(e.target.value)}
+                placeholder="e.g., Artificial Intelligence in Modern Healthcare Systems"
+                className="w-full bg-surface-container-low border border-outline-variant rounded-lg px-4 py-2.5 text-on-surface focus:outline-none focus:border-primary transition-colors"
+              />
+            </div>
+
+            <div>
+              <label className="block font-label-md text-label-md text-on-surface mb-1.5 font-medium">
+                Assigned Supervisor
+              </label>
+              <select
+                required
+                value={supervisorId}
+                onChange={(e) => setSupervisorId(e.target.value)}
+                className="w-full bg-surface-container-low border border-outline-variant rounded-lg px-4 py-2.5 text-on-surface focus:outline-none focus:border-primary transition-colors"
+              >
+                <option value="">Select a supervisor from your department...</option>
+                {supervisors.map((s) => (
+                  <option key={s.id} value={s.id}>
+                    {s.firstName} {s.lastName} ({s.email})
+                  </option>
+                ))}
+              </select>
+            </div>
+
+            <button
+              type="submit"
+              disabled={creating || !supervisorId || !title.trim()}
+              className="w-full bg-primary text-on-primary font-label-md text-label-md py-3 px-4 rounded-lg hover:bg-primary-container transition-colors disabled:opacity-50 shadow-sm mt-2 flex items-center justify-center gap-2"
+            >
+              <Icon name="add_circle" />
+              {creating ? 'Creating Thesis...' : 'Create Thesis & Open Workspace'}
+            </button>
+          </form>
         </section>
       </AppLayout>
     );
   }
 
+  // 2. THESIS EXISTS — Render Full Dashboard & Actions
   const supervisorName = thesis.supervisor
     ? `${thesis.supervisor.firstName} ${thesis.supervisor.lastName}`
     : 'Unassigned';
   const version = thesis.currentSubmission?.versionNumber ?? thesis._count?.submissions ?? 1;
-  // Simple progress derived from the thesis lifecycle status.
+
   const PROGRESS_BY_STATUS = {
     draft: 10,
     submitted: 40,
@@ -83,23 +167,36 @@ export default function StudentDashboard() {
   return (
     <AppLayout>
       {/* Page header */}
-      <header className="flex flex-col md:flex-row md:items-end justify-between gap-4">
+      <header className="flex flex-col md:flex-row md:items-end justify-between gap-4 mb-6">
         <div>
           <h2 className="font-display-lg-mobile md:font-display-lg text-display-lg-mobile md:text-display-lg text-on-surface mb-2">
-            My Dashboard
+            My Student Dashboard
           </h2>
           <p className="font-body-base text-body-base text-secondary">
-            Manage your thesis progression and supervisor feedback.
+            Manage your thesis progression, upload drafts, and review feedback.
           </p>
         </div>
-        <button className="bg-surface-container-lowest border border-outline-variant text-on-surface px-4 py-2 rounded-lg font-label-md text-label-md hover:bg-surface-container-low transition-colors shadow-sm">
-          View Guidelines
-        </button>
+        <div className="flex items-center gap-3">
+          <Link
+            to={`/thesis/${thesis.id}/workspace`}
+            className="bg-primary text-on-primary px-4 py-2.5 rounded-lg font-label-md text-label-md flex items-center gap-2 hover:bg-primary-container transition-colors shadow-sm"
+          >
+            <Icon name="edit_document" />
+            Thesis Workspace
+          </Link>
+          <Link
+            to={`/thesis/${thesis.id}/version-history`}
+            className="bg-surface-container-lowest border border-outline-variant text-on-surface px-4 py-2.5 rounded-lg font-label-md text-label-md flex items-center gap-2 hover:bg-surface-container-low transition-colors shadow-sm"
+          >
+            <Icon name="history" />
+            Version History
+          </Link>
+        </div>
       </header>
 
       {/* Hero thesis card */}
-      <section className="bg-surface-container-lowest border border-outline-variant rounded-xl p-6 md:p-8 shadow-ambient relative overflow-hidden group hover:border-outline transition-colors">
-        <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-error via-tertiary-container to-primary opacity-80" />
+      <section className="bg-surface-container-lowest border border-outline-variant rounded-xl p-6 md:p-8 shadow-ambient relative overflow-hidden group mb-8">
+        <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-primary via-tertiary-container to-secondary" />
         <div className="flex flex-col lg:flex-row gap-8 justify-between">
           <div className="flex-1 flex flex-col">
             <div className="flex items-center gap-3 mb-4">
@@ -108,21 +205,24 @@ export default function StudentDashboard() {
                 Version {version}
               </span>
             </div>
+
             <Link to={`/thesis/${thesis.id}/workspace`}>
-              <h3 className="font-headline-md text-headline-md text-on-surface mb-3 pr-4 hover:text-primary transition-colors">
+              <h3 className="font-headline-md text-headline-md text-on-surface mb-3 pr-4 hover:text-primary transition-colors cursor-pointer flex items-center gap-2">
                 {thesis.title}
+                <Icon name="open_in_new" className="text-[20px] text-outline opacity-0 group-hover:opacity-100 transition-opacity" />
               </h3>
             </Link>
-            <div className="flex items-center gap-6 mt-auto pt-4 text-secondary font-body-sm text-body-sm">
+
+            <div className="flex flex-wrap items-center gap-6 mt-auto pt-4 text-secondary font-body-sm text-body-sm">
               <div className="flex items-center gap-2">
                 <Icon name="person" />
                 <span>
-                  Supervisor: <strong>{supervisorName}</strong>
+                  Supervisor: <strong className="text-on-surface">{supervisorName}</strong>
                 </span>
               </div>
-              <div className="flex items-center gap-2 text-error font-medium">
-                <Icon name="comment" />
-                <span>{thesis._count?.submissions ?? 0} Submission(s)</span>
+              <div className="flex items-center gap-2">
+                <Icon name="folder" />
+                <span>{thesis._count?.submissions ?? 0} Total Submissions</span>
               </div>
             </div>
           </div>
@@ -130,20 +230,25 @@ export default function StudentDashboard() {
           <div className="lg:w-72 flex flex-col gap-4 border-t lg:border-t-0 lg:border-l border-outline-variant pt-6 lg:pt-0 lg:pl-8">
             <div className="bg-surface-container-low p-4 rounded-lg border border-outline-variant">
               <div className="flex justify-between items-center mb-2">
-                <span className="font-label-xs text-label-xs text-secondary uppercase tracking-wider">
+                <span className="font-label-xs text-label-xs text-secondary uppercase tracking-wider font-semibold">
                   Overall Progress
                 </span>
-                <span className="font-label-md text-label-md text-on-surface font-semibold">
+                <span className="font-label-md text-label-md text-on-surface font-bold">
                   {progress}%
                 </span>
               </div>
               <div className="w-full bg-surface-variant rounded-full h-2">
-                <div className="bg-primary h-2 rounded-full" style={{ width: `${progress}%` }} />
+                <div className="bg-primary h-2 rounded-full transition-all duration-500" style={{ width: `${progress}%` }} />
               </div>
             </div>
-            <button className="w-full bg-primary-container text-on-primary py-3 px-4 rounded-lg font-label-md text-label-md flex items-center justify-center gap-2 hover:bg-primary transition-colors shadow-sm mt-auto">
+
+            {/* Direct button to upload revision in workspace */}
+            <button
+              onClick={() => navigate(`/thesis/${thesis.id}/workspace`)}
+              className="w-full bg-primary text-on-primary py-3 px-4 rounded-lg font-label-md text-label-md flex items-center justify-center gap-2 hover:bg-primary-container transition-colors shadow-sm cursor-pointer"
+            >
               <Icon name="upload_file" />
-              Upload Revision
+              Upload Paper / Revision
             </button>
           </div>
         </div>
@@ -155,9 +260,6 @@ export default function StudentDashboard() {
         <section className="lg:col-span-2 flex flex-col gap-4">
           <div className="flex justify-between items-center mb-2">
             <h3 className="font-section-header text-section-header text-on-surface">Recent Activity</h3>
-            <button className="text-primary hover:text-primary-container font-label-md text-label-md flex items-center gap-1 transition-colors">
-              View all <Icon name="arrow_forward" className="text-[16px]" />
-            </button>
           </div>
           <div className="bg-surface-container-lowest border border-outline-variant rounded-xl overflow-hidden shadow-sm">
             {activities.map((a, i) => (
@@ -202,12 +304,9 @@ export default function StudentDashboard() {
                     src={m.avatar}
                   />
                   <div className="flex flex-col">
-                    <span className="font-label-md text-label-md text-on-surface">{m.name}</span>
+                    <span className="font-label-md text-label-md text-on-surface font-medium">{m.name}</span>
                     <span className="font-label-xs text-label-xs text-secondary">{m.role}</span>
                   </div>
-                  <button className="ml-auto text-outline hover:text-primary transition-colors">
-                    <Icon name="mail" />
-                  </button>
                 </li>
               ))}
             </ul>

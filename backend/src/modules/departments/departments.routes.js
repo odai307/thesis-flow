@@ -1,19 +1,17 @@
 const { Router } = require('express');
-const { asyncHandler } = require('../../shared/errors');
-const { prisma } = require('../../lib/prisma');
+const { requireAuth, requireRole } = require('../../middleware/auth');
+const { validate } = require('../../middleware/validate');
+const { createDepartmentSchema, updateDepartmentSchema } = require('./departments.schema');
+const {
+  listDepartments,
+  createDepartment,
+  updateDepartment,
+} = require('./departments.controller');
 
 const router = Router();
 
-// GET /api/departments -> list of { id, name } for dropdowns (e.g. registration).
-router.get(
-  '/',
-  asyncHandler(async (_req, res) => {
-    const departments = await prisma.department.findMany({
-      select: { id: true, name: true },
-      orderBy: { name: 'asc' },
-    });
-    res.json({ departments });
-  }),
-);
+router.get('/', listDepartments);
+router.post('/', requireAuth, requireRole('coordinator'), validate(createDepartmentSchema), createDepartment);
+router.patch('/:id', requireAuth, requireRole('coordinator'), validate(updateDepartmentSchema), updateDepartment);
 
 module.exports = router;

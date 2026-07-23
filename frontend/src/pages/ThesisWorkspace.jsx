@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from 'react';
-import { useParams } from 'react-router-dom';
+import { useParams, Link, useSearchParams } from 'react-router-dom';
 import AppLayout from '../components/AppLayout';
 import StatusTimeline from '../components/StatusTimeline';
 import { api } from '../lib/api';
@@ -24,8 +24,49 @@ function formatDate(iso) {
   });
 }
 
+// Modal dialog for confirming student submission to supervisor
+function ConfirmModal({ isOpen, title, description, confirmText, confirmClass, onConfirm, onClose, busy }) {
+  if (!isOpen) return null;
+  return (
+    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/50 backdrop-blur-sm animate-fade-in">
+      <div className="bg-surface-container-lowest border border-outline-variant rounded-2xl max-w-md w-full p-6 shadow-2xl">
+        <div className="flex items-center gap-3 mb-3">
+          <div className="w-10 h-10 rounded-full bg-primary-fixed flex items-center justify-center text-primary">
+            <Icon name="send" className="text-[24px]" />
+          </div>
+          <h3 className="font-headline-md text-headline-md text-on-surface font-bold">{title}</h3>
+        </div>
+        <p className="font-body-base text-body-base text-secondary mb-6 leading-relaxed">
+          {description}
+        </p>
+        <div className="flex items-center justify-end gap-3">
+          <button
+            type="button"
+            onClick={onClose}
+            disabled={busy}
+            className="px-4 py-2.5 rounded-lg border border-outline-variant text-on-surface font-label-md text-label-md hover:bg-surface-container-low transition-colors disabled:opacity-50"
+          >
+            Cancel / Edit File
+          </button>
+          <button
+            type="button"
+            onClick={onConfirm}
+            disabled={busy}
+            className={`px-5 py-2.5 rounded-lg text-white font-label-md text-label-md transition-colors disabled:opacity-50 shadow-sm ${confirmClass}`}
+          >
+            {busy ? 'Submitting...' : confirmText}
+          </button>
+        </div>
+      </div>
+    </div>
+  );
+}
+
 export default function ThesisWorkspace() {
   const { id } = useParams();
+  const [searchParams] = useSearchParams();
+  const requestedSubmissionId = searchParams.get('submissionId');
+
   const [thesis, setThesis] = useState(null);
   const [comments, setComments] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -33,9 +74,39 @@ export default function ThesisWorkspace() {
   const [draft, setDraft] = useState('');
   const [posting, setPosting] = useState(false);
   const [uploading, setUploading] = useState(false);
+  const [submitting, setSubmitting] = useState(false);
+  const [showSubmitModal, setShowSubmitModal] = useState(false);
   const fileInputRef = useRef(null);
 
-  const currentSubmission = thesis?.currentSubmission;
+  const submissions = thesis?.submissions ?? [];
+  const activeSubmission =
+    submissions.find((s) => s.id === requestedSubmissionId) ??
+    thesis?.currentSubmission ??
+    submissions[0];
+
+  async function loadThesisData() {
+    try {
+      const data = await api.getThesis(id);
+      setThesis(data.thesis);
+      const targetSub =
+        data.thesis.submissions?.find((s) => s.id === requestedSubmissionId) ??
+        data.thesis.currentSubmission ??
+        data.thesis.submissions?.[0];
+
+      if (targetSub) {
+        const c = await api.getComments(targetSub.id);
+        setComments(c.comments);
+      }
+    } catch (e) {
+      setError(e.message);
+    } finally {
+      setLoading(false);
+    }
+  }
+
+  useEffect(() => {
+    loadThesisData();
+  }, [id, requestedSubmissionId]);
 
   async function handleUploadClick() {
     fileInputRef.current?.click();
@@ -43,20 +114,13 @@ export default function ThesisWorkspace() {
 
   async function handleFileChange(e) {
     const file = e.target.files?.[0];
-    e.target.value = ''; // allow re-selecting the same file
+    e.target.value = '';
     if (!file) return;
     setUploading(true);
     setError('');
     try {
-      const { submission, status } = await api.uploadSubmission(id, file);
-      // Refresh thesis + submissions to reflect the new version.
-      const data = await api.getThesis(id);
-      setThesis(data.thesis);
-      if (data.thesis.currentSubmission) {
-        const c = await api.getComments(data.thesis.currentSubmission.id);
-        setComments(c.comments);
-      }
-      console.log('Uploaded version', submission.versionNumber, '->', status);
+      await api.uploadSubmission(id, file);
+      await loadThesisData();
     } catch (err) {
       setError(err.message);
     } finally {
@@ -64,45 +128,26 @@ export default function ThesisWorkspace() {
     }
   }
 
-  async function loadComments() {
-    if (!currentSubmission) return;
+  async function handleConfirmSubmit() {
+    setSubmitting(true);
+    setError('');
     try {
-      const data = await api.getComments(currentSubmission.id);
-      setComments(data.comments);
-    } catch (e) {
-      setError(e.message);
+      await api.submitToSupervisor(id);
+      setShowSubmitModal(false);
+      await loadThesisData();
+    } catch (err) {
+      setError(err.message);
+    } finally {
+      setSubmitting(false);
     }
   }
 
-  useEffect(() => {
-    let active = true;
-    (async () => {
-      try {
-        const data = await api.getThesis(id);
-        if (!active) return;
-        setThesis(data.thesis);
-        if (data.thesis.currentSubmission) {
-          const c = await api.getComments(data.thesis.currentSubmission.id);
-          if (active) setComments(c.comments);
-        }
-      } catch (e) {
-        if (active) setError(e.message);
-      } finally {
-        if (active) setLoading(false);
-      }
-    })();
-    return () => {
-      active = false;
-    };
-  }, [id]);
-
   async function handlePost(e) {
     e.preventDefault();
-    const content = draft.trim();
-    if (!content || !currentSubmission) return;
+    if (!draft.trim() || !activeSubmission) return;
     setPosting(true);
     try {
-      const { comment } = await api.postComment(currentSubmission.id, content);
+      const { comment } = await api.postComment(activeSubmission.id, draft.trim());
       setComments((prev) => [...prev, comment]);
       setDraft('');
     } catch (err) {
@@ -115,133 +160,234 @@ export default function ThesisWorkspace() {
   if (loading) {
     return (
       <AppLayout>
-        <p className="font-body-base text-body-base text-secondary">Loading workspace…</p>
+        <div className="flex items-center justify-center min-h-[50vh]">
+          <p className="font-body-base text-body-base text-secondary animate-pulse">Loading workspace…</p>
+        </div>
       </AppLayout>
     );
   }
+
   if (error && !thesis) {
     return (
       <AppLayout>
-        <p className="font-body-base text-body-base text-error bg-error-container border border-error/20 rounded px-3 py-2">
+        <p className="font-body-base text-body-base text-error bg-error-container border border-error/20 rounded-lg px-4 py-3">
           {error}
         </p>
       </AppLayout>
     );
   }
+
   if (!thesis) return null;
 
-  const version = currentSubmission?.versionNumber ?? thesis._count?.submissions ?? 1;
+  const version = activeSubmission?.versionNumber ?? thesis._count?.submissions ?? 1;
+  const fileUrl = activeSubmission?.fileUrl;
+  const isLatestVersion = activeSubmission?.id === thesis.currentSubmission?.id;
+  const canSubmitToSupervisor = ['draft', 'revisions_requested'].includes(thesis.status) && thesis.currentSubmissionId;
 
   return (
     <AppLayout>
-      {/* Header */}
-      <div className="flex flex-col gap-6 mb-4">
-        <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
+      <input
+        type="file"
+        ref={fileInputRef}
+        onChange={handleFileChange}
+        accept=".pdf,.docx"
+        className="hidden"
+      />
+
+      <ConfirmModal
+        isOpen={showSubmitModal}
+        title="Submit Thesis to Supervisor?"
+        description={`Are you sure you want to submit Version ${version} to your supervisor? Once submitted, your supervisor will be notified and can begin reviewing your document.`}
+        confirmText="Yes, Submit to Supervisor"
+        confirmClass="bg-[#059669] hover:bg-[#047857]"
+        onConfirm={handleConfirmSubmit}
+        onClose={() => setShowSubmitModal(false)}
+        busy={submitting}
+      />
+
+      {/* Header with status timeline */}
+      <div className="flex flex-col gap-4 bg-surface-container-lowest border border-outline-variant rounded-xl p-6 shadow-sm">
+        <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-4">
           <div>
-            <h1 className="font-section-header text-section-header text-on-surface">
+            <div className="flex items-center gap-2 text-label-md font-label-md text-secondary mb-1">
+              <Link to="/dashboard" className="hover:text-primary transition-colors">
+                My Dashboard
+              </Link>
+              <Icon name="chevron_right" className="text-sm" />
+              <span className="text-on-surface">Thesis Workspace</span>
+            </div>
+            <h2 className="font-display-lg text-display-lg text-on-surface font-bold flex items-center gap-3">
               {thesis.title}
-            </h1>
-            <p className="font-body-sm text-body-sm text-secondary mt-1">
-              Submitted on {formatDate(currentSubmission?.submittedAt)} • v{version}
+              {!isLatestVersion && (
+                <span className="bg-amber-100 text-amber-800 text-label-xs px-2.5 py-1 rounded-full border border-amber-300 font-semibold">
+                  Viewing Historical Version (v{version})
+                </span>
+              )}
+            </h2>
+            <p className="font-body-base text-body-base text-secondary mt-1">
+              Viewing Version <strong>v{version}</strong> • Status:{' '}
+              <strong className="capitalize text-primary">{thesis.status.replace('_', ' ')}</strong>
             </p>
           </div>
-          <button
-            onClick={handleUploadClick}
-            disabled={uploading}
-            className="px-5 py-2.5 bg-primary-container text-on-primary rounded-lg font-label-md text-label-md flex items-center gap-2 shadow-ambient hover:bg-primary transition-colors disabled:opacity-60"
-          >
-            <Icon name="upload_file" className="text-[18px]" />
-            {uploading ? 'Uploading…' : 'Upload/Resubmit'}
-          </button>
-          <input
-            ref={fileInputRef}
-            type="file"
-            accept=".pdf,.docx"
-            className="hidden"
-            onChange={handleFileChange}
-          />
+
+          <div className="flex flex-wrap items-center gap-3">
+            {/* Version Selector Dropdown */}
+            {submissions.length > 1 && (
+              <div className="flex items-center gap-2 bg-surface-container-low border border-outline-variant rounded-lg px-3 py-2">
+                <Icon name="history" className="text-secondary" />
+                <select
+                  value={activeSubmission?.id ?? ''}
+                  onChange={(e) => {
+                    const selectedId = e.target.value;
+                    window.location.href = `/thesis/${id}/workspace?submissionId=${selectedId}`;
+                  }}
+                  className="bg-transparent text-on-surface font-label-md text-label-md focus:outline-none cursor-pointer"
+                >
+                  {submissions.map((s) => (
+                    <option key={s.id} value={s.id}>
+                      Version {s.versionNumber} ({formatDate(s.submittedAt)})
+                    </option>
+                  ))}
+                </select>
+              </div>
+            )}
+
+            {/* Upload File Button */}
+            {['draft', 'revisions_requested'].includes(thesis.status) && (
+              <button
+                onClick={handleUploadClick}
+                disabled={uploading || submitting}
+                className="bg-surface-container-low border border-outline-variant text-on-surface px-4 py-2.5 rounded-lg font-label-md text-label-md flex items-center gap-2 hover:bg-surface-container-high transition-colors disabled:opacity-50 shadow-sm cursor-pointer"
+              >
+                <Icon name="upload_file" />
+                {uploading ? 'Uploading Paper...' : fileUrl ? 'Replace Paper File' : 'Upload Draft Paper'}
+              </button>
+            )}
+
+            {/* Manual Submit Button */}
+            {canSubmitToSupervisor && (
+              <button
+                onClick={() => setShowSubmitModal(true)}
+                disabled={submitting}
+                className="bg-[#059669] text-white px-5 py-2.5 rounded-lg font-label-md text-label-md flex items-center gap-2 hover:bg-[#047857] transition-colors disabled:opacity-50 shadow-sm cursor-pointer font-bold"
+              >
+                <Icon name="send" />
+                Submit Version {version} to Supervisor
+              </button>
+            )}
+
+            {fileUrl && (
+              <a
+                href={fileUrl}
+                target="_blank"
+                rel="noreferrer"
+                download
+                className="bg-surface-container-lowest border border-outline-variant text-on-surface px-4 py-2.5 rounded-lg font-label-md text-label-md flex items-center gap-2 hover:bg-surface-container-low transition-colors shadow-sm"
+              >
+                <Icon name="download" />
+                Download PDF (v{version})
+              </a>
+            )}
+          </div>
         </div>
 
-        {/* Status timeline */}
-        <div className="w-full relative py-6 px-4 bg-surface-container-lowest rounded-lg border border-outline-variant">
+        {/* Draft Notice Banner */}
+        {['draft', 'revisions_requested'].includes(thesis.status) && fileUrl && (
+          <div className="bg-amber-50 border border-amber-200 rounded-lg p-3 flex items-center justify-between gap-4 text-amber-900 font-body-sm text-body-sm">
+            <div className="flex items-center gap-2">
+              <Icon name="info" className="text-amber-700 text-[20px]" />
+              <span>
+                Your paper file (v{version}) is saved in your draft area. Your supervisor cannot see it until you click <strong>Submit to Supervisor</strong>.
+              </span>
+            </div>
+            <button
+              onClick={() => setShowSubmitModal(true)}
+              className="bg-[#059669] text-white font-label-xs text-label-xs px-3 py-1.5 rounded-md hover:bg-[#047857] transition-colors flex items-center gap-1 shrink-0 font-bold"
+            >
+              Submit Now &rarr;
+            </button>
+          </div>
+        )}
+
+        <div className="pt-4 border-t border-outline-variant">
           <StatusTimeline current={thesis.status} />
         </div>
       </div>
 
-      {/* Two-column layout */}
-      <div className="flex flex-col lg:flex-row gap-gutter flex-grow min-h-[600px]">
-        {/* Left: document preview */}
-        <div className="flex-grow lg:w-2/3 flex flex-col bg-surface-container-lowest rounded-xl border border-outline-variant overflow-hidden shadow-ambient">
-          <div className="h-12 border-b border-outline-variant bg-surface-container-low flex items-center justify-between px-4 flex-shrink-0">
-            <div className="flex items-center gap-4 text-on-surface-variant">
-              <button className="hover:text-primary transition-colors flex items-center">
-                <Icon name="zoom_out" />
-              </button>
-              <span className="font-label-md text-label-md">100%</span>
-              <button className="hover:text-primary transition-colors flex items-center">
-                <Icon name="zoom_in" />
-              </button>
-            </div>
-            <div className="flex items-center gap-2 font-label-md text-label-md text-on-surface-variant">
-              <button className="hover:text-primary transition-colors flex items-center">
-                <Icon name="navigate_before" />
-              </button>
-              <span>Page 1 of 42</span>
-              <button className="hover:text-primary transition-colors flex items-center">
-                <Icon name="navigate_next" />
-              </button>
-            </div>
-            <div className="flex items-center gap-3 text-on-surface-variant">
-              <button className="hover:text-primary transition-colors flex items-center">
-                <Icon name="search" />
-              </button>
-              <button className="hover:text-primary transition-colors flex items-center">
-                <Icon name="download" />
-              </button>
-            </div>
+      {/* Main Workspace Grid */}
+      <div className="flex flex-col lg:flex-row gap-6 min-h-[700px] mt-6">
+        {/* Left: Document Viewer / Upload Drop Zone */}
+        <div className="flex-1 flex flex-col bg-surface-container-lowest border border-outline-variant rounded-xl overflow-hidden shadow-sm">
+          <div className="h-12 border-b border-outline-variant flex items-center justify-between px-5 bg-surface-bright flex-shrink-0">
+            <span className="font-label-md text-label-md text-on-surface font-semibold flex items-center gap-2">
+              <Icon name="description" className="text-primary" />
+              Document Viewer (v{version})
+            </span>
+            {fileUrl && (
+              <a
+                href={fileUrl}
+                target="_blank"
+                rel="noreferrer"
+                className="text-primary font-label-xs text-label-xs hover:underline flex items-center gap-1"
+              >
+                Open in Full Window <Icon name="open_in_new" className="text-[14px]" />
+              </a>
+            )}
           </div>
 
-          <div className="flex-grow bg-[#E5E7EB] overflow-auto p-8 flex justify-center items-start">
-            <div className="w-full max-w-[800px] aspect-[1/1.414] bg-white shadow-lg border border-outline-variant p-12 flex flex-col gap-6 relative">
-              <div className="absolute top-[25%] left-[10%] right-[10%] h-8 bg-error-container/30 border border-error/50 rounded cursor-pointer" />
-              <div className="w-1/2 h-8 bg-surface-container-high rounded mb-8" />
-              <div className="w-full h-4 bg-surface-container-low rounded" />
-              <div className="w-full h-4 bg-surface-container-low rounded" />
-              <div className="w-11/12 h-4 bg-surface-container-low rounded" />
-              <div className="w-full h-4 bg-surface-container-low rounded" />
-              <div className="w-4/5 h-4 bg-surface-container-low rounded mb-6" />
-              <div className="w-1/3 h-6 bg-surface-container-high rounded mb-4 mt-4" />
-              <div className="w-full h-4 bg-surface-container-low rounded" />
-              <div className="w-full h-4 bg-surface-container-low rounded" />
-              <div className="w-10/12 h-4 bg-surface-container-low rounded" />
-              <div className="mt-auto w-full flex justify-center">
-                <div className="w-8 h-4 bg-surface-container-highest rounded" />
+          <div className="flex-1 bg-[#F3F4F6] min-h-[600px] flex items-center justify-center relative p-2">
+            {fileUrl ? (
+              <iframe
+                src={fileUrl}
+                title={`Thesis Document v${version}`}
+                className="w-full h-full min-h-[650px] border-0 rounded"
+              />
+            ) : (
+              <div className="text-center p-8 border-2 border-dashed border-outline-variant rounded-xl max-w-md bg-white shadow-sm">
+                <div className="w-16 h-16 rounded-full bg-primary-fixed flex items-center justify-center mx-auto mb-4 text-primary-container">
+                  <Icon name="cloud_upload" className="text-[36px]" />
+                </div>
+                <h3 className="font-headline-md text-headline-md text-on-surface mb-2">Upload Your Paper Draft</h3>
+                <p className="font-body-sm text-body-sm text-secondary mb-6">
+                  Select your thesis file (.pdf or .docx) to preview it in your workspace before submitting to your supervisor.
+                </p>
+                <button
+                  onClick={handleUploadClick}
+                  disabled={uploading}
+                  className="bg-primary text-on-primary px-6 py-3 rounded-lg font-label-md text-label-md flex items-center justify-center gap-2 hover:bg-primary-container transition-colors disabled:opacity-50 mx-auto shadow-sm cursor-pointer"
+                >
+                  <Icon name="upload_file" />
+                  {uploading ? 'Uploading...' : 'Select & Upload Paper File'}
+                </button>
               </div>
-            </div>
+            )}
           </div>
         </div>
 
-        {/* Right: comments panel */}
-        <div className="w-full lg:w-[400px] flex-shrink-0 flex flex-col bg-surface-container-lowest rounded-xl border border-outline-variant overflow-hidden shadow-ambient">
-          <div className="h-14 border-b border-outline-variant flex items-center px-5 flex-shrink-0 bg-surface-bright">
-            <h2 className="font-section-header text-section-header text-on-surface flex items-center gap-2">
+        {/* Right: Feedback & Discussion Panel */}
+        <div className="w-full lg:w-[400px] flex-shrink-0 flex flex-col bg-surface-container-lowest border border-outline-variant rounded-xl overflow-hidden shadow-sm">
+          <div className="h-12 border-b border-outline-variant flex items-center px-5 flex-shrink-0 bg-surface-bright">
+            <h3 className="font-section-header text-section-header text-on-surface flex items-center gap-2">
               <Icon name="forum" className="text-primary text-[20px]" />
-              Supervisor Feedback
-            </h2>
-            <span className="ml-auto bg-error-container text-error font-label-xs text-label-xs px-2 py-1 rounded-full">
-              {comments.length} {comments.length === 1 ? 'note' : 'notes'}
+              Feedback on v{version}
+            </h3>
+            <span className="ml-auto bg-surface-container text-on-surface-variant font-label-xs text-label-xs px-2.5 py-0.5 rounded-full border border-outline-variant">
+              {comments.length}
             </span>
           </div>
 
-          <div className="flex-grow overflow-y-auto p-5 flex flex-col gap-6">
+          <div className="flex-grow overflow-y-auto p-5 flex flex-col gap-4 min-h-[400px]">
             {comments.length === 0 && (
-              <p className="font-body-sm text-body-sm text-secondary text-center mt-8">
-                No comments yet. Start the conversation below.
-              </p>
+              <div className="text-center my-auto py-8">
+                <Icon name="chat_bubble_outline" className="text-[36px] text-outline mb-2" />
+                <p className="font-body-sm text-body-sm text-secondary">
+                  No feedback notes for v{version}. Send a message below.
+                </p>
+              </div>
             )}
             {comments.map((c) => (
-              <div key={c.id} className="flex gap-4">
-                <div className="w-10 h-10 rounded-full bg-primary-container text-on-primary flex items-center justify-center flex-shrink-0 font-label-md text-label-md">
+              <div key={c.id} className="flex gap-3">
+                <div className="w-9 h-9 rounded-full bg-primary-container text-on-primary flex items-center justify-center flex-shrink-0 font-label-md text-label-md font-bold">
                   {(c.author?.firstName?.[0] ?? '?') + (c.author?.lastName?.[0] ?? '')}
                 </div>
                 <div className="flex flex-col w-full">
@@ -253,12 +399,7 @@ export default function ThesisWorkspace() {
                       {formatDate(c.createdAt)}
                     </span>
                   </div>
-                  {c.author?.role && (
-                    <span className="font-label-xs text-label-xs text-primary mb-2 capitalize">
-                      {c.author.role}
-                    </span>
-                  )}
-                  <div className="bg-surface-container p-3 rounded-r-lg rounded-bl-lg font-body-sm text-body-sm text-on-surface border border-outline-variant/50 relative">
+                  <div className="bg-surface-container-low rounded-lg p-3 text-on-surface font-body-sm text-body-sm border border-outline-variant/60">
                     {c.content}
                   </div>
                 </div>
@@ -266,36 +407,24 @@ export default function ThesisWorkspace() {
             ))}
           </div>
 
-          {/* Reply input */}
-          <form onSubmit={handlePost} className="p-4 border-t border-outline-variant bg-surface-bright flex-shrink-0">
-            <div className="border border-outline-variant rounded-lg bg-surface-container-lowest overflow-hidden focus-within:border-primary transition-all">
-              <textarea
-                className="w-full p-3 bg-transparent border-none focus:ring-0 resize-none font-body-sm text-body-sm text-on-surface outline-none"
-                placeholder="Write a reply or add a general comment..."
-                rows="2"
+          {/* Comment input box */}
+          <form onSubmit={handlePost} className="p-4 border-t border-outline-variant bg-surface-container-lowest">
+            <div className="flex gap-2">
+              <input
+                type="text"
                 value={draft}
                 onChange={(e) => setDraft(e.target.value)}
+                placeholder={activeSubmission ? `Comment on v${version}...` : 'Upload a paper first'}
+                disabled={!activeSubmission || posting}
+                className="flex-1 bg-surface-container-low border border-outline-variant rounded-lg px-3.5 py-2 text-on-surface focus:outline-none focus:border-primary text-body-sm disabled:opacity-50"
               />
-              <div className="flex justify-between items-center px-3 py-2 border-t border-outline-variant/30 bg-surface-container-low">
-                <div className="flex gap-1">
-                  <button type="button" className="text-on-surface-variant hover:text-primary p-1 rounded transition-colors">
-                    <Icon name="format_bold" className="text-[18px]" />
-                  </button>
-                  <button type="button" className="text-on-surface-variant hover:text-primary p-1 rounded transition-colors">
-                    <Icon name="format_italic" className="text-[18px]" />
-                  </button>
-                  <button type="button" className="text-on-surface-variant hover:text-primary p-1 rounded transition-colors">
-                    <Icon name="attach_file" className="text-[18px]" />
-                  </button>
-                </div>
-                <button
-                  type="submit"
-                  disabled={posting || !draft.trim()}
-                  className="bg-primary text-on-primary px-3 py-1.5 rounded font-label-md text-label-md hover:opacity-90 transition-opacity disabled:opacity-60"
-                >
-                  Post
-                </button>
-              </div>
+              <button
+                type="submit"
+                disabled={!draft.trim() || !activeSubmission || posting}
+                className="bg-primary text-on-primary px-4 py-2 rounded-lg font-label-md text-label-md hover:bg-primary-container transition-colors disabled:opacity-50 flex items-center justify-center cursor-pointer"
+              >
+                {posting ? '...' : <Icon name="send" />}
+              </button>
             </div>
           </form>
         </div>

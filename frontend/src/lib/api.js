@@ -53,6 +53,10 @@ export const api = {
   getDepartments: () => request('/departments', { method: 'GET', auth: false }),
   getTheses: () => request('/theses', { method: 'GET', auth: true }),
   getThesis: (id) => request(`/theses/${id}`, { method: 'GET', auth: true }),
+  getSupervisors: () => request('/users/supervisors', { method: 'GET', auth: true }),
+  getMyStudents: () => request('/users/my-students', { method: 'GET', auth: true }),
+  createThesis: (title, supervisorId) =>
+    request('/theses', { method: 'POST', body: { title, supervisorId }, auth: true }),
   uploadSubmission: (thesisId, file) => {
     const form = new FormData();
     form.append('file', file);
@@ -62,6 +66,8 @@ export const api = {
       auth: true,
     });
   },
+  submitToSupervisor: (thesisId) =>
+    request(`/theses/${thesisId}/submit`, { method: 'POST', auth: true }),
   getComments: (submissionId) =>
     request(`/submissions/${submissionId}/comments`, { method: 'GET', auth: true }),
   postComment: (submissionId, content) =>
@@ -74,11 +80,23 @@ export const api = {
     request(`/theses/${thesisId}/start-review`, { method: 'POST', auth: true }),
   approve: (thesisId) =>
     request(`/theses/${thesisId}/approve`, { method: 'POST', auth: true }),
+  approveThesis: (thesisId) =>
+    request(`/theses/${thesisId}/approve`, { method: 'POST', auth: true }),
   requestRevisions: (thesisId) =>
     request(`/theses/${thesisId}/request-revisions`, { method: 'POST', auth: true }),
+  reopenThesis: (thesisId) =>
+    request(`/theses/${thesisId}/reopen`, { method: 'POST', auth: true }),
   getNotifications: () => request('/notifications', { method: 'GET', auth: true }),
   markNotificationRead: (id) =>
     request(`/notifications/${id}/read`, { method: 'PATCH', auth: true }),
   markAllNotificationsRead: () =>
     request('/notifications/read-all', { method: 'POST', auth: true }),
+  updateProfile: (payload) =>
+    request('/users/profile', { method: 'PATCH', body: payload, auth: true }),
+  changePassword: (currentPassword, newPassword) =>
+    request('/users/change-password', {
+      method: 'PUT',
+      body: { currentPassword, newPassword },
+      auth: true,
+    }),
 };

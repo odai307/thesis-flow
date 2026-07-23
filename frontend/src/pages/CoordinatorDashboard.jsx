@@ -1,196 +1,222 @@
+import { useEffect, useState } from 'react';
+import { Link } from 'react-router-dom';
 import AppLayout from '../components/AppLayout';
+import StatusBadge from '../components/StatusBadge';
+import { api } from '../lib/api';
 
 function Icon({ name, className = 'text-[20px]' }) {
   return <span className={`material-symbols-outlined ${className}`}>{name}</span>;
 }
 
-const STATS = [
-  { label: 'Total Students', value: '124', icon: 'school', iconCls: 'text-primary-container bg-primary-fixed', trend: '+12% from last month', trendCls: 'text-[#059669]' },
-  { label: 'Pending Reviews', value: '18', icon: 'pending_actions', iconCls: 'text-tertiary bg-tertiary-fixed', trend: '+3 require attention', trendCls: 'text-error' },
-  { label: 'Approved this Month', value: '12', icon: 'check_circle', iconCls: 'text-[#059669] bg-[#D1FAE5]', trend: 'On track for targets', trendCls: 'text-secondary' },
-  { label: 'Avg. Completion Time', value: '7.2', sub: 'months', icon: 'schedule', iconCls: 'text-primary-container bg-primary-fixed', trend: '-0.4 months vs avg', trendCls: 'text-[#059669]' },
-];
+function formatDate(iso) {
+  if (!iso) return '—';
+  return new Date(iso).toLocaleDateString('en-US', {
+    year: 'numeric',
+    month: 'short',
+    day: 'numeric',
+  });
+}
 
-const BARS = [
-  { dept: 'CS', h: '80%', cls: 'bg-primary-container', val: 45 },
-  { dept: 'Math', h: '40%', cls: 'bg-secondary-fixed-dim', val: 22 },
-  { dept: 'Physics', h: '60%', cls: 'bg-primary-fixed-dim', val: 34 },
-  { dept: 'Eng', h: '90%', cls: 'bg-surface-variant', val: 51 },
-];
-
-const DONUT = [
-  { label: 'Under Review (35%)', color: 'bg-primary-container' },
-  { label: 'Submitted (25%)', color: 'bg-primary-fixed-dim' },
-  { label: 'Draft (20%)', color: 'bg-secondary-container' },
-  { label: 'Approved (20%)', color: 'bg-surface-variant' },
-];
-
-const ACTIVITY = [
-  { initials: 'ES', name: 'Emma Stone', dept: 'Computer Science', supervisor: 'Dr. Alan Turing', action: 'Submitted v2.0', actionCls: 'bg-secondary-fixed text-on-secondary-fixed', time: '2 hours ago' },
-  { initials: 'JD', name: 'John Doe', dept: 'Mathematics', supervisor: 'Prof. Euler', action: 'Revisions Requested', actionCls: 'bg-error-container text-on-error-container', time: '5 hours ago' },
-  { initials: 'AS', name: 'Alice Smith', dept: 'Physics', supervisor: 'Dr. Marie Curie', action: 'Approved', actionCls: 'bg-[#D1FAE5] text-[#065F46]', time: 'Yesterday, 14:30' },
-  { initials: 'RB', name: 'Robert Brown', dept: 'Engineering', supervisor: 'Prof. Tesla', action: 'Draft Saved', actionCls: 'bg-surface-variant text-on-surface-variant', time: 'Yesterday, 09:15' },
-];
+// Modal dialog for coordinator to reopen an approved thesis
+function ConfirmReopenModal({ isOpen, thesis, onConfirm, onClose, busy }) {
+  if (!isOpen || !thesis) return null;
+  return (
+    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/50 backdrop-blur-sm animate-fade-in">
+      <div className="bg-surface-container-lowest border border-outline-variant rounded-2xl max-w-md w-full p-6 shadow-2xl">
+        <div className="flex items-center gap-3 mb-3 text-tertiary">
+          <div className="w-10 h-10 rounded-full bg-tertiary-fixed flex items-center justify-center">
+            <Icon name="lock_open" className="text-[24px]" />
+          </div>
+          <h3 className="font-headline-md text-headline-md text-on-surface font-bold">Reopen Approved Thesis?</h3>
+        </div>
+        <p className="font-body-base text-body-base text-secondary mb-6 leading-relaxed">
+          Reopening <strong>&quot;{thesis.title}&quot;</strong> will revert its status back to <strong>Revisions Requested</strong>, allowing the student to upload further revisions.
+        </p>
+        <div className="flex items-center justify-end gap-3">
+          <button
+            type="button"
+            onClick={onClose}
+            disabled={busy}
+            className="px-4 py-2.5 rounded-lg border border-outline-variant text-on-surface font-label-md text-label-md hover:bg-surface-container-low transition-colors disabled:opacity-50"
+          >
+            Cancel
+          </button>
+          <button
+            type="button"
+            onClick={onConfirm}
+            disabled={busy}
+            className="px-5 py-2.5 rounded-lg text-white font-label-md text-label-md bg-tertiary-container hover:bg-tertiary transition-colors disabled:opacity-50 shadow-sm"
+          >
+            {busy ? 'Reopening...' : 'Reopen Thesis'}
+          </button>
+        </div>
+      </div>
+    </div>
+  );
+}
 
 export default function CoordinatorDashboard() {
+  const [theses, setTheses] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState('');
+  const [reopenTarget, setReopenTarget] = useState(null);
+  const [busy, setBusy] = useState(false);
+
+  async function loadData() {
+    try {
+      const data = await api.getTheses();
+      setTheses(data.theses || []);
+    } catch (e) {
+      setError(e.message);
+    } finally {
+      setLoading(false);
+    }
+  }
+
+  useEffect(() => {
+    loadData();
+  }, []);
+
+  async function handleConfirmReopen() {
+    if (!reopenTarget) return;
+    setBusy(true);
+    try {
+      await api.reopenThesis(reopenTarget.id);
+      setReopenTarget(null);
+      await loadData();
+    } catch (err) {
+      setError(err.message);
+    } finally {
+      setBusy(false);
+    }
+  }
+
   return (
     <AppLayout role="coordinator">
-      <div className="space-y-1">
-        <h2 className="font-display-lg text-display-lg text-on-surface">Coordinator Dashboard</h2>
-        <p className="font-body-base text-body-base text-on-surface-variant">
-          Department-wide overview of thesis progress.
+      <ConfirmReopenModal
+        isOpen={!!reopenTarget}
+        thesis={reopenTarget}
+        onConfirm={handleConfirmReopen}
+        onClose={() => setReopenTarget(null)}
+        busy={busy}
+      />
+
+      <div className="space-y-1 mb-6">
+        <h2 className="font-display-lg-mobile md:font-display-lg text-display-lg-mobile md:text-display-lg text-on-surface m-0 font-bold">
+          Department Coordinator Dashboard
+        </h2>
+        <p className="font-body-base text-body-base text-secondary m-0">
+          Department-wide overview of supervisor-approved theses ready for final archiving.
         </p>
       </div>
 
-      {/* KPI cards */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-stack-gap">
-        {STATS.map((s) => (
-          <div
-            key={s.label}
-            className="bg-surface border border-outline-variant rounded-lg p-5 shadow-sm flex flex-col gap-2 hover:border-outline transition-colors group"
-          >
-            <div className="flex items-center justify-between">
-              <span className="font-label-md text-label-md text-secondary">{s.label}</span>
-              <span className={`material-symbols-outlined ${s.iconCls} p-1.5 rounded-full text-sm`}>
-                {s.icon}
-              </span>
-            </div>
-            <div className="font-headline-md text-headline-md text-on-surface mt-2">
-              {s.value} {s.sub && <span className="text-lg font-normal text-secondary">{s.sub}</span>}
-            </div>
-            <div className={`flex items-center gap-1 font-label-xs text-label-xs ${s.trendCls}`}>
-              <Icon name="trending_up" className="text-[16px]" />
-              <span>{s.trend}</span>
-            </div>
-          </div>
-        ))}
+      {/* Stats Bar */}
+      <div className="grid grid-cols-1 sm:grid-cols-3 gap-6 mb-8">
+        <div className="bg-surface-container-lowest border border-outline-variant rounded-xl p-5 shadow-sm">
+          <span className="font-label-md text-label-md text-secondary block mb-1">Approved Department Theses</span>
+          <span className="font-display-lg text-display-lg text-on-surface font-bold">{theses.length}</span>
+        </div>
+        <div className="bg-surface-container-lowest border border-outline-variant rounded-xl p-5 shadow-sm">
+          <span className="font-label-md text-label-md text-secondary block mb-1">Status</span>
+          <span className="font-display-lg text-display-lg text-[#059669] font-bold">All Approved</span>
+        </div>
+        <div className="bg-surface-container-lowest border border-outline-variant rounded-xl p-5 shadow-sm">
+          <span className="font-label-md text-label-md text-secondary block mb-1">Coordinator Access</span>
+          <span className="font-display-lg text-display-lg text-primary font-bold">Full Archive</span>
+        </div>
       </div>
 
-      {/* Charts */}
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-stack-gap">
-        <div className="lg:col-span-2 bg-surface border border-outline-variant rounded-lg p-6 shadow-sm flex flex-col h-[400px]">
-          <div className="flex items-center justify-between mb-6">
-            <h3 className="font-section-header text-section-header text-on-surface">
-              Thesis Submissions by Department
+      {loading ? (
+        <div className="flex items-center justify-center min-h-[40vh]">
+          <p className="font-body-base text-body-base text-secondary animate-pulse">Loading approved department theses…</p>
+        </div>
+      ) : error ? (
+        <p className="font-body-base text-body-base text-error bg-error-container border border-error/20 rounded-lg px-4 py-3">
+          {error}
+        </p>
+      ) : (
+        <div className="bg-surface-container-lowest border border-outline-variant rounded-xl overflow-hidden shadow-sm">
+          <div className="px-6 py-4 border-b border-outline-variant bg-surface-bright flex justify-between items-center">
+            <h3 className="font-section-header text-section-header text-on-surface flex items-center gap-2">
+              <Icon name="verified" className="text-[#059669]" />
+              Approved Department Theses Archive
             </h3>
-            <select className="bg-surface-container-low border border-outline-variant rounded-md px-3 py-1 font-label-sm text-label-sm focus:ring-1 focus:ring-primary outline-none">
-              <option>Current Year</option>
-              <option>Last Year</option>
-            </select>
+            <span className="font-body-sm text-body-sm text-secondary">
+              Showing theses approved by department supervisors
+            </span>
           </div>
-          <div className="flex-1 relative pt-8">
-            <div className="absolute inset-0 flex items-end justify-around px-8 pb-8 pt-8">
-              {BARS.map((b) => (
-                <div
-                  key={b.dept}
-                  className={`w-16 ${b.cls} rounded-t-md hover:opacity-80 transition-opacity relative group`}
-                  style={{ height: b.h }}
-                >
-                  <div className="absolute -top-8 left-1/2 -translate-x-1/2 opacity-0 group-hover:opacity-100 transition-opacity bg-inverse-surface text-on-secondary px-2 py-1 rounded text-xs font-medium">
-                    {b.val}
-                  </div>
-                </div>
-              ))}
-            </div>
-            <div className="absolute bottom-0 left-0 right-0 h-8 border-t border-outline-variant flex justify-around items-center px-8">
-              {BARS.map((b) => (
-                <span key={b.dept} className="font-label-xs text-label-xs text-secondary truncate w-16 text-center">
-                  {b.dept}
-                </span>
-              ))}
-            </div>
-          </div>
-        </div>
 
-        <div className="bg-surface border border-outline-variant rounded-lg p-6 shadow-sm flex flex-col h-[400px]">
-          <div className="flex items-center justify-between mb-6">
-            <h3 className="font-section-header text-section-header text-on-surface">Theses by Status</h3>
-            <button className="p-1 hover:bg-surface-container-high rounded text-secondary transition-colors">
-              <Icon name="more_vert" className="text-sm" />
-            </button>
-          </div>
-          <div className="flex-1 flex flex-col items-center justify-center">
-            <div
-              className="w-48 h-48 rounded-full border-[24px] border-surface-container-low relative flex items-center justify-center mb-6"
-              style={{
-                borderTopColor: '#3538cd',
-                borderRightColor: '#d6e0f8',
-                borderBottomColor: '#e4e1ed',
-                borderLeftColor: '#c0c1ff',
-                transform: 'rotate(45deg)',
-              }}
-            >
-              <div
-                className="absolute inset-0 m-auto w-full h-full flex flex-col items-center justify-center"
-                style={{ transform: 'rotate(-45deg)' }}
-              >
-                <span className="font-headline-md text-headline-md text-on-surface">124</span>
-                <span className="font-label-xs text-label-xs text-secondary">Total</span>
-              </div>
-            </div>
-            <div className="w-full grid grid-cols-2 gap-y-2 gap-x-4">
-              {DONUT.map((d) => (
-                <div key={d.label} className="flex items-center gap-2">
-                  <div className={`w-3 h-3 rounded-full ${d.color}`} />
-                  <span className="font-label-xs text-label-xs text-secondary">{d.label}</span>
-                </div>
-              ))}
-            </div>
-          </div>
-        </div>
-      </div>
-
-      {/* Recent activity table */}
-      <div className="bg-surface border border-outline-variant rounded-lg overflow-hidden shadow-sm">
-        <div className="p-6 border-b border-outline-variant flex items-center justify-between bg-surface">
-          <h3 className="font-section-header text-section-header text-on-surface">Recent Activity</h3>
-          <a className="font-label-md text-label-md text-primary hover:underline" href="#">
-            View All
-          </a>
-        </div>
-        <div className="overflow-x-auto">
-          <table className="w-full text-left border-collapse">
-            <thead>
-              <tr className="bg-surface-container-low border-b border-outline-variant">
-                {['Student Name', 'Supervisor', 'Action', 'Timestamp'].map((h) => (
-                  <th
-                    key={h}
-                    className="py-3 px-6 font-label-xs text-label-xs text-secondary uppercase tracking-wider"
-                  >
-                    {h}
-                  </th>
-                ))}
-              </tr>
-            </thead>
-            <tbody className="divide-y divide-outline-variant">
-              {ACTIVITY.map((a, i) => (
-                <tr key={i} className="hover:bg-surface-container-low transition-colors group">
-                  <td className="py-4 px-6">
-                    <div className="flex items-center gap-3">
-                      <div className="w-8 h-8 rounded-full bg-primary-fixed text-primary-fixed-dim flex items-center justify-center font-label-md text-label-md">
-                        {a.initials}
-                      </div>
-                      <div>
-                        <div className="font-label-md text-label-md text-on-surface">{a.name}</div>
-                        <div className="font-body-sm text-body-sm text-secondary">{a.dept}</div>
-                      </div>
-                    </div>
-                  </td>
-                  <td className="py-4 px-6 font-body-sm text-body-sm text-on-surface">{a.supervisor}</td>
-                  <td className="py-4 px-6">
-                    <span
-                      className={`inline-flex items-center px-2.5 py-0.5 rounded-full font-label-xs text-label-xs ${a.actionCls}`}
-                    >
-                      {a.action}
-                    </span>
-                  </td>
-                  <td className="py-4 px-6 font-body-sm text-body-sm text-secondary">{a.time}</td>
+          <div className="overflow-x-auto">
+            <table className="w-full text-left border-collapse min-w-[800px]">
+              <thead>
+                <tr className="bg-surface-container-low border-b border-outline-variant font-label-xs text-label-xs text-secondary uppercase tracking-wider">
+                  <th className="px-6 py-3.5 font-semibold">Student Name</th>
+                  <th className="px-6 py-3.5 font-semibold">Thesis Title</th>
+                  <th className="px-6 py-3.5 font-semibold">Supervisor</th>
+                  <th className="px-6 py-3.5 font-semibold">Status</th>
+                  <th className="px-6 py-3.5 font-semibold">Approved Date</th>
+                  <th className="px-6 py-3.5 font-semibold text-right">Actions</th>
                 </tr>
-              ))}
-            </tbody>
-          </table>
+              </thead>
+              <tbody className="divide-y divide-outline-variant/40 font-body-sm text-body-sm">
+                {theses.map((t) => {
+                  const studentName = t.student
+                    ? `${t.student.firstName} ${t.student.lastName}`
+                    : 'Unknown student';
+                  const supervisorName = t.supervisor
+                    ? `${t.supervisor.firstName} ${t.supervisor.lastName}`
+                    : 'Unassigned';
+
+                  return (
+                    <tr key={t.id} className="hover:bg-surface-container-low/50 transition-colors">
+                      <td className="px-6 py-4 font-semibold text-on-surface">
+                        {studentName}
+                      </td>
+                      <td className="px-6 py-4 text-on-surface-variant max-w-xs truncate">
+                        {t.title}
+                      </td>
+                      <td className="px-6 py-4 text-secondary">
+                        {supervisorName}
+                      </td>
+                      <td className="px-6 py-4">
+                        <StatusBadge status={t.status} />
+                      </td>
+                      <td className="px-6 py-4 text-secondary">
+                        {formatDate(t.updatedAt)}
+                      </td>
+                      <td className="px-6 py-4 text-right">
+                        <div className="flex items-center justify-end gap-3">
+                          <Link
+                            to={`/review/${t.id}`}
+                            className="bg-primary text-on-primary font-label-xs text-label-xs px-3.5 py-2 rounded-lg hover:bg-primary-container transition-colors shadow-sm inline-flex items-center gap-1"
+                          >
+                            View Submission
+                          </Link>
+                          <button
+                            onClick={() => setReopenTarget(t)}
+                            className="bg-tertiary-container text-on-tertiary-container font-label-xs text-label-xs px-3.5 py-2 rounded-lg hover:bg-tertiary transition-colors shadow-sm inline-flex items-center gap-1 cursor-pointer"
+                          >
+                            Reopen Thesis
+                          </button>
+                        </div>
+                      </td>
+                    </tr>
+                  );
+                })}
+
+                {theses.length === 0 && (
+                  <tr>
+                    <td colSpan={6} className="py-12 text-center text-secondary">
+                      <Icon name="history_edu" className="text-[40px] text-outline mb-2 block mx-auto" />
+                      No supervisor-approved theses in your department yet.
+                    </td>
+                  </tr>
+                )}
+              </tbody>
+            </table>
+          </div>
         </div>
-      </div>
+      )}
     </AppLayout>
   );
 }

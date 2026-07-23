@@ -1,7 +1,8 @@
 import { useEffect, useState } from 'react';
-import { NavLink } from 'react-router-dom';
+import { NavLink, useNavigate } from 'react-router-dom';
 import { navByRole } from '../data/navItems';
 import { api } from '../lib/api';
+import { useAuth } from '../context/AuthContext';
 
 function MaterialIcon({ name, filled = false, className = 'text-[20px]' }) {
   return (
@@ -15,24 +16,46 @@ function MaterialIcon({ name, filled = false, className = 'text-[20px]' }) {
 }
 
 export default function Sidebar({ role, onNavigate }) {
+  const { logout } = useAuth();
+  const navigate = useNavigate();
+
   const items = navByRole[role] ?? navByRole.student;
-  // Resolve the student's real thesis id so workspace/version-history links work.
   const [thesisId, setThesisId] = useState(null);
+  const [unreadCount, setUnreadCount] = useState(0);
 
   useEffect(() => {
-    if (role !== 'student') return;
-    api
-      .getTheses()
-      .then((data) => setThesisId(data.theses[0]?.id ?? null))
-      .catch(() => setThesisId(null));
+    if (role === 'student') {
+      api
+        .getTheses()
+        .then((data) => setThesisId(data.theses[0]?.id ?? null))
+        .catch(() => setThesisId(null));
+    }
   }, [role]);
+
+  // Fetch unread notifications count
+  useEffect(() => {
+    api
+      .getNotifications()
+      .then((data) => {
+        const count = (data.notifications || []).filter((n) => !n.read).length;
+        setUnreadCount(count);
+      })
+      .catch(() => setUnreadCount(0));
+  }, []);
+
+  const badgeText = unreadCount > 9 ? '9+' : unreadCount > 0 ? String(unreadCount) : null;
 
   function resolveTo(to) {
     if (thesisId) return to.replace(':id', thesisId);
-    // No thesis yet: point workspace/version-history to the dashboard for now.
     if (to.includes('/workspace')) return '/dashboard';
     if (to.includes('/version-history')) return '/dashboard';
     return to.replace(':id', 't-1');
+  }
+
+  function handleLogout() {
+    logout();
+    if (onNavigate) onNavigate();
+    navigate('/login');
   }
 
   return (
@@ -69,21 +92,35 @@ export default function Sidebar({ role, onNavigate }) {
             >
               <MaterialIcon name={item.icon} />
               <span className="flex-1">{item.label}</span>
+
+              {/* Notification Badge: Shows 1..9 or 9+ */}
+              {item.label === 'Notifications' && badgeText && (
+                <span className="bg-error text-on-error font-label-xs text-[11px] font-bold px-2 py-0.5 rounded-full ml-auto shadow-sm animate-pulse">
+                  {badgeText}
+                </span>
+              )}
             </NavLink>
           </li>
         ))}
       </ul>
 
       {/* Footer */}
-      <div className="mt-auto pt-4 border-t border-outline-variant">
+      <div className="mt-auto pt-4 border-t border-outline-variant flex flex-col gap-1">
         <NavLink
           to="/profile"
           onClick={onNavigate}
           className="flex items-center gap-3 px-3 py-2 rounded-lg font-label-md text-label-md text-secondary hover:bg-surface-container-high transition-colors"
         >
           <MaterialIcon name="settings" />
-          Settings
+          Settings / Profile
         </NavLink>
+        <button
+          onClick={handleLogout}
+          className="flex items-center gap-3 px-3 py-2 rounded-lg font-label-md text-label-md text-error hover:bg-error-container/20 transition-colors w-full text-left cursor-pointer"
+        >
+          <MaterialIcon name="logout" className="text-error" />
+          Logout
+        </button>
       </div>
     </nav>
   );

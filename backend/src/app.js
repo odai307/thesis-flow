@@ -8,6 +8,7 @@ const thesisRoutes = require('./modules/thesis/thesis.routes');
 const departmentRoutes = require('./modules/departments/departments.routes');
 const commentRoutes = require('./modules/comment/comment.routes');
 const notificationRoutes = require('./modules/notification/notification.routes');
+const userRoutes = require('./modules/user/user.routes');
 const { errorHandler } = require('./middleware/errorHandler');
 
 function createApp() {
@@ -30,6 +31,7 @@ function createApp() {
   app.use('/api/departments', departmentRoutes);
   app.use('/api/submissions/:submissionId/comments', commentRoutes);
   app.use('/api/notifications', notificationRoutes);
+  app.use('/api/users', userRoutes);
 
   app.use(errorHandler);
   return app;

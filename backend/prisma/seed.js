@@ -2,21 +2,20 @@ require('dotenv').config();
 const { prisma } = require('../src/lib/prisma');
 const { randomUUID } = require('node:crypto');
 const bcrypt = require('bcryptjs');
+const { generateUniqueIndexNumber } = require('../src/shared/indexGenerator');
 
-// The department and its coordinator form a circular FK
-// (department.coordinatorId -> user.id, user.departmentId -> department.id).
-// Postgres FKs are NOT DEFERRABLE by default, so `SET CONSTRAINTS ALL DEFERRED`
-// is a no-op. Instead we temporarily disable FK enforcement for the session,
-// insert both rows with known IDs, then re-enable it.
+// Circular FK handling (department.coordinatorId -> user.id, user.departmentId -> department.id)
 async function createDepartmentWithCoordinator(
   name,
   coordFirstName,
   coordLastName,
   coordEmail,
-  passwordHash,
+  passwordHash
 ) {
   const deptId = randomUUID();
   const coordId = randomUUID();
+  const indexNumber = await generateUniqueIndexNumber();
+
   const [department, coordinator] = await prisma.$transaction(async (tx) => {
     await tx.$executeRawUnsafe('SET session_replication_role = replica');
     const department = await tx.department.create({
@@ -25,6 +24,7 @@ async function createDepartmentWithCoordinator(
     const coordinator = await tx.user.create({
       data: {
         id: coordId,
+        indexNumber,
         firstName: coordFirstName,
         lastName: coordLastName,
         email: coordEmail,
@@ -39,81 +39,68 @@ async function createDepartmentWithCoordinator(
   return { department, coordinator };
 }
 
+async function createSupervisor(firstName, lastName, email, departmentId, passwordHash) {
+  const indexNumber = await generateUniqueIndexNumber();
+  return prisma.user.create({
+    data: {
+      indexNumber,
+      firstName,
+      lastName,
+      email,
+      passwordHash,
+      role: 'supervisor',
+      departmentId,
+    },
+  });
+}
+
 async function main() {
   const passwordHash = await bcrypt.hash('password123', 10);
 
-  // One department, with exactly one coordinator.
-  const cs = await createDepartmentWithCoordinator(
-    'Computer Science',
-    'Diana',
-    'Mensah',
-    'diana.mensah@thesisflow.dev',
-    passwordHash,
+  console.log('Seeding departments, coordinators, and supervisors...');
+
+  // 1. Maths Department
+  const maths = await createDepartmentWithCoordinator(
+    'Maths',
+    'Math',
+    'Coordinator',
+    'mathcoordinator@gmail.com',
+    passwordHash
   );
+  await createSupervisor('Math', 'Supervisor 1', 'mathsupervisor1@gmail.com', maths.department.id, passwordHash);
+  await createSupervisor('Math', 'Supervisor 2', 'mathsupervisor2@gmail.com', maths.department.id, passwordHash);
+  await createSupervisor('Math', 'Supervisor 3', 'mathsupervisor3@gmail.com', maths.department.id, passwordHash);
 
-  // One supervisor in the same department.
-  const supervisor = await prisma.user.create({
-    data: {
-      firstName: 'Kwame',
-      lastName: 'Osei',
-      email: 'kwame.osei@thesisflow.dev',
-      passwordHash,
-      role: 'supervisor',
-      departmentId: cs.department.id,
-    },
-  });
+  // 2. Comp Sci Department
+  const compSci = await createDepartmentWithCoordinator(
+    'Comp Sci',
+    'CompSci',
+    'Coordinator',
+    'compscicoordinator@gmail.com',
+    passwordHash
+  );
+  await createSupervisor('CompSci', 'Supervisor 1', 'compscisupervisor1@gmail.com', compSci.department.id, passwordHash);
+  await createSupervisor('CompSci', 'Supervisor 2', 'compscisupervisor2@gmail.com', compSci.department.id, passwordHash);
+  await createSupervisor('CompSci', 'Supervisor 3', 'compscisupervisor3@gmail.com', compSci.department.id, passwordHash);
 
-  // One student in the same department.
-  const student = await prisma.user.create({
-    data: {
-      firstName: 'Ama',
-      lastName: 'Boateng',
-      email: 'ama.boateng@thesisflow.dev',
-      passwordHash,
-      role: 'student',
-      departmentId: cs.department.id,
-    },
-  });
+  // 3. Engineering Department
+  const engineering = await createDepartmentWithCoordinator(
+    'Engineering',
+    'Engineering',
+    'Coordinator',
+    'engineeringcoordinator@gmail.com',
+    passwordHash
+  );
+  await createSupervisor('Engineering', 'Supervisor 1', 'engineeringsupervisor1@gmail.com', engineering.department.id, passwordHash);
+  await createSupervisor('Engineering', 'Supervisor 2', 'engineeringsupervisor2@gmail.com', engineering.department.id, passwordHash);
+  await createSupervisor('Engineering', 'Supervisor 3', 'engineeringsupervisor3@gmail.com', engineering.department.id, passwordHash);
 
-  // One thesis: student -> supervisor, in the coordinator's department.
-  const thesis = await prisma.thesis.create({
-    data: {
-      title: 'A Sample Thesis on ThesisFlow',
-      studentId: student.id,
-      supervisorId: supervisor.id,
-      departmentId: cs.department.id,
-      status: 'submitted',
-    },
-  });
-
-  const submission = await prisma.submission.create({
-    data: {
-      thesisId: thesis.id,
-      versionNumber: 1,
-      fileUrl: 'uploads/sample-v1.pdf',
-      fileType: 'pdf',
-      status: 'pending_review',
-    },
-  });
-
-  await prisma.thesis.update({
-    where: { id: thesis.id },
-    data: { currentSubmissionId: submission.id },
-  });
-
-  console.log('Seed complete:', {
-    department: cs.department.name,
-    coordinator: cs.coordinator.email,
-    supervisor: supervisor.email,
-    student: student.email,
-    thesis: thesis.id,
-    submission: submission.id,
-  });
+  console.log('Seed completed successfully!');
 }
 
 main()
   .catch((e) => {
-    console.error(e);
+    console.error('Seed failed:', e);
     process.exit(1);
   })
   .finally(async () => {
