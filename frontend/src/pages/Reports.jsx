@@ -42,7 +42,7 @@ export default function Reports() {
   const approvedCount = theses.filter((t) => t.status === 'approved').length;
 
   return (
-    <AppLayout role="coordinator">
+    <AppLayout>
       <div className="flex flex-col md:flex-row md:items-end justify-between gap-4 mb-6">
         <div>
           <h2 className="font-display-lg text-display-lg text-on-surface font-bold">Analytics & Reports</h2>

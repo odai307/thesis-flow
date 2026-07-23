@@ -16,20 +16,33 @@ function initials(name) {
     .toUpperCase();
 }
 
-// Modal for coordinator to create a user (student or supervisor)
-function CreateUserModal({ isOpen, onClose, onCreated, coordinatorDeptId }) {
+// Modal for coordinator to create a user in any department
+function CreateUserModal({ isOpen, onClose, onCreated, departments, coordinatorDeptId }) {
   const [firstName, setFirstName] = useState('');
   const [lastName, setLastName] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('password123');
   const [role, setRole] = useState('student');
+  const [departmentId, setDepartmentId] = useState(coordinatorDeptId || '');
   const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState('');
+
+  useEffect(() => {
+    if (coordinatorDeptId && !departmentId) {
+      setDepartmentId(coordinatorDeptId);
+    } else if (departments.length > 0 && !departmentId) {
+      setDepartmentId(departments[0].id);
+    }
+  }, [coordinatorDeptId, departments]);
 
   if (!isOpen) return null;
 
   async function handleSubmit(e) {
     e.preventDefault();
+    if (!departmentId) {
+      setError('Please select a department');
+      return;
+    }
     setSubmitting(true);
     setError('');
     try {
@@ -39,7 +52,7 @@ function CreateUserModal({ isOpen, onClose, onCreated, coordinatorDeptId }) {
         email: email.trim().toLowerCase(),
         password,
         role,
-        departmentId: coordinatorDeptId,
+        departmentId,
       });
       onCreated();
       onClose();
@@ -114,6 +127,21 @@ function CreateUserModal({ isOpen, onClose, onCreated, coordinatorDeptId }) {
 
           <div className="grid grid-cols-2 gap-4">
             <div>
+              <label className="block font-label-md text-label-md text-on-surface mb-1 font-medium">Department</label>
+              <select
+                required
+                value={departmentId}
+                onChange={(e) => setDepartmentId(e.target.value)}
+                className="w-full bg-surface-container-low border border-outline-variant rounded-lg px-3.5 py-2 text-on-surface text-body-sm focus:outline-none focus:border-primary cursor-pointer"
+              >
+                {departments.map((d) => (
+                  <option key={d.id} value={d.id}>
+                    {d.name}
+                  </option>
+                ))}
+              </select>
+            </div>
+            <div>
               <label className="block font-label-md text-label-md text-on-surface mb-1 font-medium">Account Role</label>
               <select
                 value={role}
@@ -122,18 +150,20 @@ function CreateUserModal({ isOpen, onClose, onCreated, coordinatorDeptId }) {
               >
                 <option value="student">Student</option>
                 <option value="supervisor">Supervisor</option>
+                <option value="coordinator">Coordinator</option>
               </select>
             </div>
-            <div>
-              <label className="block font-label-md text-label-md text-on-surface mb-1 font-medium">Initial Password</label>
-              <input
-                type="text"
-                required
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-                className="w-full bg-surface-container-low border border-outline-variant rounded-lg px-3.5 py-2 text-on-surface text-body-sm focus:outline-none focus:border-primary"
-              />
-            </div>
+          </div>
+
+          <div>
+            <label className="block font-label-md text-label-md text-on-surface mb-1 font-medium">Initial Password</label>
+            <input
+              type="text"
+              required
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              className="w-full bg-surface-container-low border border-outline-variant rounded-lg px-3.5 py-2 text-on-surface text-body-sm focus:outline-none focus:border-primary"
+            />
           </div>
 
           <p className="font-label-xs text-label-xs text-secondary italic">
@@ -165,14 +195,30 @@ function CreateUserModal({ isOpen, onClose, onCreated, coordinatorDeptId }) {
 export default function UserManagement() {
   const { user } = useAuth();
   const [users, setUsers] = useState([]);
+  const [departments, setDepartments] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
-  const [roleFilter, setRoleFilter] = useState('');
+
+  // Filters
+  const [selectedDeptId, setSelectedDeptId] = useState('all');
+  const [selectedRole, setSelectedRole] = useState('all');
   const [showCreateModal, setShowCreateModal] = useState(false);
 
+  // Load available departments
+  useEffect(() => {
+    api
+      .getDepartments()
+      .then((data) => setDepartments(data.departments || []))
+      .catch(() => setDepartments([]));
+  }, []);
+
+  // Load users with filters
   async function loadUsers() {
     try {
-      const data = await api.getUsers(roleFilter);
+      const data = await api.getUsers({
+        departmentId: selectedDeptId,
+        role: selectedRole,
+      });
       setUsers(data.users || []);
     } catch (e) {
       setError(e.message);
@@ -183,7 +229,7 @@ export default function UserManagement() {
 
   useEffect(() => {
     loadUsers();
-  }, [roleFilter]);
+  }, [selectedDeptId, selectedRole]);
 
   async function handleDeactivate(id, name) {
     if (!confirm(`Are you sure you want to deactivate ${name}?`)) return;
@@ -196,11 +242,12 @@ export default function UserManagement() {
   }
 
   return (
-    <AppLayout role="coordinator">
+    <AppLayout>
       <CreateUserModal
         isOpen={showCreateModal}
         onClose={() => setShowCreateModal(false)}
         onCreated={loadUsers}
+        departments={departments}
         coordinatorDeptId={user?.departmentId}
       />
 
@@ -208,7 +255,7 @@ export default function UserManagement() {
         <div>
           <h2 className="font-display-lg text-display-lg text-on-surface font-bold">User Management</h2>
           <p className="font-body-base text-body-base text-secondary mt-1">
-            Manage student and supervisor accounts for your department ({user?.department?.name ?? 'Department'}).
+            Manage student, supervisor, and coordinator accounts across university departments.
           </p>
         </div>
         <button
@@ -216,34 +263,56 @@ export default function UserManagement() {
           className="bg-primary text-on-primary px-4 py-2.5 rounded-lg font-label-md text-label-md flex items-center gap-2 hover:bg-primary-container transition-colors shadow-sm cursor-pointer"
         >
           <Icon name="person_add" />
-          Add Department User
+          Add New User
         </button>
       </div>
 
-      {/* Role Filter Tabs */}
-      <div className="flex gap-2 mb-6">
-        {[
-          { label: 'All Department Users', value: '' },
-          { label: 'Students Only', value: 'student' },
-          { label: 'Supervisors Only', value: 'supervisor' },
-        ].map((tab) => (
-          <button
-            key={tab.value}
-            onClick={() => setRoleFilter(tab.value)}
-            className={`px-4 py-2 rounded-lg font-label-md text-label-md transition-colors cursor-pointer ${
-              roleFilter === tab.value
-                ? 'bg-primary text-on-primary font-semibold shadow-sm'
-                : 'bg-surface-container-lowest border border-outline-variant text-on-surface hover:bg-surface-container-low'
-            }`}
-          >
-            {tab.label}
-          </button>
-        ))}
+      {/* Filter Toolbar: Department & Role Filters */}
+      <div className="bg-surface-container-lowest border border-outline-variant rounded-xl p-4 mb-6 shadow-sm flex flex-col md:flex-row items-center justify-between gap-4">
+        <div className="flex flex-wrap items-center gap-4 w-full md:w-auto">
+          {/* Department Filter */}
+          <div className="flex items-center gap-2">
+            <Icon name="domain" className="text-secondary" />
+            <span className="font-label-md text-label-md text-on-surface font-medium">Department:</span>
+            <select
+              value={selectedDeptId}
+              onChange={(e) => setSelectedDeptId(e.target.value)}
+              className="bg-surface-container-low border border-outline-variant rounded-lg px-3 py-1.5 text-on-surface text-body-sm font-medium focus:outline-none focus:border-primary cursor-pointer"
+            >
+              <option value="all">All Departments</option>
+              {departments.map((d) => (
+                <option key={d.id} value={d.id}>
+                  {d.name}
+                </option>
+              ))}
+            </select>
+          </div>
+
+          {/* Role Filter */}
+          <div className="flex items-center gap-2">
+            <Icon name="badge" className="text-secondary" />
+            <span className="font-label-md text-label-md text-on-surface font-medium">Role:</span>
+            <select
+              value={selectedRole}
+              onChange={(e) => setSelectedRole(e.target.value)}
+              className="bg-surface-container-low border border-outline-variant rounded-lg px-3 py-1.5 text-on-surface text-body-sm font-medium focus:outline-none focus:border-primary cursor-pointer"
+            >
+              <option value="all">All Roles</option>
+              <option value="student">Students Only</option>
+              <option value="supervisor">Supervisors Only</option>
+              <option value="coordinator">Coordinators Only</option>
+            </select>
+          </div>
+        </div>
+
+        <div className="text-body-sm text-secondary font-medium">
+          Total Users: <strong className="text-on-surface">{users.length}</strong>
+        </div>
       </div>
 
       {loading ? (
         <div className="flex items-center justify-center min-h-[40vh]">
-          <p className="font-body-base text-body-base text-secondary animate-pulse">Loading department users…</p>
+          <p className="font-body-base text-body-base text-secondary animate-pulse">Loading users…</p>
         </div>
       ) : error ? (
         <p className="font-body-base text-body-base text-error bg-error-container border border-error/20 rounded-lg px-4 py-3">
@@ -302,7 +371,7 @@ export default function UserManagement() {
                 {users.length === 0 && (
                   <tr>
                     <td colSpan={6} className="py-8 text-center text-secondary">
-                      No department users found.
+                      No users match the selected Department and Role filters.
                     </td>
                   </tr>
                 )}

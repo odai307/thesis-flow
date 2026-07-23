@@ -55,7 +55,13 @@ export const api = {
   getThesis: (id) => request(`/theses/${id}`, { method: 'GET', auth: true }),
   getSupervisors: () => request('/users/supervisors', { method: 'GET', auth: true }),
   getMyStudents: () => request('/users/my-students', { method: 'GET', auth: true }),
-  getUsers: (role) => request(`/users${role ? `?role=${role}` : ''}`, { method: 'GET', auth: true }),
+  getUsers: (filters = {}) => {
+    const params = new URLSearchParams();
+    if (filters.role && filters.role !== 'all') params.append('role', filters.role);
+    if (filters.departmentId && filters.departmentId !== 'all') params.append('departmentId', filters.departmentId);
+    const query = params.toString();
+    return request(`/users${query ? `?${query}` : ''}`, { method: 'GET', auth: true });
+  },
   createUser: (payload) => request('/users', { method: 'POST', body: payload, auth: true }),
   deleteUser: (id) => request(`/users/${id}`, { method: 'DELETE', auth: true }),
   createThesis: (title, supervisorId) =>

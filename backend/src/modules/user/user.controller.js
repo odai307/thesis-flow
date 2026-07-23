@@ -67,7 +67,7 @@ async function listMyStudents(req, res) {
   }
 }
 
-// GET /api/users - Coordinator: List all users in coordinator's department
+// GET /api/users - Coordinator: List users (supports departmentId and role filters)
 async function listUsers(req, res) {
   try {
     const me = await prisma.user.findUnique({ where: { id: req.user.id } });
@@ -75,12 +75,12 @@ async function listUsers(req, res) {
       throw new AppError('User not found', 404);
     }
 
-    const { role } = req.query;
+    const { role, departmentId } = req.query;
 
     const where = {
       deletedAt: null,
-      ...(me.departmentId ? { departmentId: me.departmentId } : {}),
-      ...(role ? { role } : {}),
+      ...(departmentId && departmentId !== 'all' ? { departmentId } : {}),
+      ...(role && role !== 'all' ? { role } : {}),
     };
 
     const users = await prisma.user.findMany({

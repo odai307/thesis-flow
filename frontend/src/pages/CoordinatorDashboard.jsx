@@ -92,7 +92,7 @@ export default function CoordinatorDashboard() {
   }
 
   return (
-    <AppLayout role="coordinator">
+    <AppLayout>
       <ConfirmReopenModal
         isOpen={!!reopenTarget}
         thesis={reopenTarget}

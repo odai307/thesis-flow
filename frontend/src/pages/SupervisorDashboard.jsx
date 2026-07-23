@@ -71,7 +71,7 @@ export default function SupervisorDashboard() {
   );
 
   return (
-    <AppLayout role="supervisor">
+    <AppLayout>
       <div className="space-y-1 mb-6">
         <h2 className="font-display-lg-mobile md:font-display-lg text-display-lg-mobile md:text-display-lg text-on-surface m-0 font-bold">
           Supervisor Dashboard
