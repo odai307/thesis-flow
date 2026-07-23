@@ -55,6 +55,9 @@ export const api = {
   getThesis: (id) => request(`/theses/${id}`, { method: 'GET', auth: true }),
   getSupervisors: () => request('/users/supervisors', { method: 'GET', auth: true }),
   getMyStudents: () => request('/users/my-students', { method: 'GET', auth: true }),
+  getUsers: (role) => request(`/users${role ? `?role=${role}` : ''}`, { method: 'GET', auth: true }),
+  createUser: (payload) => request('/users', { method: 'POST', body: payload, auth: true }),
+  deleteUser: (id) => request(`/users/${id}`, { method: 'DELETE', auth: true }),
   createThesis: (title, supervisorId) =>
     request('/theses', { method: 'POST', body: { title, supervisorId }, auth: true }),
   uploadSubmission: (thesisId, file) => {
