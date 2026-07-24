@@ -1,5 +1,6 @@
 const { prisma } = require('../../lib/prisma');
 const { AppError, sendError } = require('../../shared/errors');
+const { notifySubmission, notifyUser } = require('../../lib/socket');
 
 // Helper to check if user is a participant (student, supervisor, or coordinator)
 async function isParticipant(thesisId, userId) {
@@ -63,7 +64,7 @@ async function createComment(req, res) {
       throw new AppError('Comment cannot be empty', 400);
     }
 
-    const comment = await prisma.$transaction(async (tx) => {
+    const { newComment, recipientId, notification } = await prisma.$transaction(async (tx) => {
       const submission = await tx.submission.findUnique({
         where: { id: submissionId },
         include: { thesis: true },
@@ -76,7 +77,7 @@ async function createComment(req, res) {
       const canComment = await isCommentAuthor(submission.thesis.id, userId);
       if (!canComment) throw new AppError('Only student and supervisor can comment', 403);
 
-      const newComment = await tx.comment.create({
+      const created = await tx.comment.create({
         data: {
           submissionId,
           authorId: userId,
@@ -86,21 +87,25 @@ async function createComment(req, res) {
       });
 
       const thesis = submission.thesis;
-      const recipientId = thesis.studentId === userId ? thesis.supervisorId : thesis.studentId;
-      await tx.notification.create({
+      const rId = thesis.studentId === userId ? thesis.supervisorId : thesis.studentId;
+      const notif = await tx.notification.create({
         data: {
-          userId: recipientId,
+          userId: rId,
           thesisId: thesis.id,
           type: 'comment',
-          referenceId: newComment.id,
+          referenceId: created.id,
           message: `New comment on "${thesis.title}"`,
         },
       });
 
-      return newComment;
+      return { newComment: created, recipientId: rId, notification: notif };
     });
 
-    res.status(201).json({ comment });
+    // Real-time broadcasts
+    notifySubmission(submissionId, 'comment:created', newComment);
+    notifyUser(recipientId, 'notification:new', notification);
+
+    res.status(201).json({ comment: newComment });
   } catch (error) {
     sendError(res, error);
   }

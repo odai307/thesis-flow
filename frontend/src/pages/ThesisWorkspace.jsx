@@ -3,6 +3,7 @@ import { useParams, Link, useSearchParams } from 'react-router-dom';
 import AppLayout from '../components/AppLayout';
 import StatusTimeline from '../components/StatusTimeline';
 import { api } from '../lib/api';
+import { getSocket, joinThesisRoom, leaveThesisRoom, joinSubmissionRoom, leaveSubmissionRoom } from '../lib/socket';
 
 function Icon({ name, filled = false, className = 'text-[20px]' }) {
   return (
@@ -108,6 +109,55 @@ export default function ThesisWorkspace() {
     loadThesisData();
   }, [id, requestedSubmissionId]);
 
+  // Real-time socket events & interval polling
+  useEffect(() => {
+    if (!id) return;
+    joinThesisRoom(id);
+
+    const socket = getSocket();
+
+    const handleStatusChanged = () => {
+      loadThesisData();
+    };
+
+    socket.on('thesis:statusChanged', handleStatusChanged);
+    socket.on('thesis:paperUploaded', handleStatusChanged);
+
+    // Fallback polling interval every 4 seconds
+    const interval = setInterval(loadThesisData, 4000);
+
+    return () => {
+      leaveThesisRoom(id);
+      socket.off('thesis:statusChanged', handleStatusChanged);
+      socket.off('thesis:paperUploaded', handleStatusChanged);
+      clearInterval(interval);
+    };
+  }, [id]);
+
+  // Submission room socket listener for comments
+  useEffect(() => {
+    if (!activeSubmission?.id) return;
+    joinSubmissionRoom(activeSubmission.id);
+
+    const socket = getSocket();
+
+    const handleNewComment = (newComment) => {
+      if (newComment && newComment.submissionId === activeSubmission.id) {
+        setComments((prev) => {
+          if (prev.some((c) => c.id === newComment.id)) return prev;
+          return [...prev, newComment];
+        });
+      }
+    };
+
+    socket.on('comment:created', handleNewComment);
+
+    return () => {
+      leaveSubmissionRoom(activeSubmission.id);
+      socket.off('comment:created', handleNewComment);
+    };
+  }, [activeSubmission?.id]);
+
   async function handleUploadClick() {
     fileInputRef.current?.click();
   }
@@ -148,7 +198,10 @@ export default function ThesisWorkspace() {
     setPosting(true);
     try {
       const { comment } = await api.postComment(activeSubmission.id, draft.trim());
-      setComments((prev) => [...prev, comment]);
+      setComments((prev) => {
+        if (prev.some((c) => c.id === comment.id)) return prev;
+        return [...prev, comment];
+      });
       setDraft('');
     } catch (err) {
       setError(err.message);

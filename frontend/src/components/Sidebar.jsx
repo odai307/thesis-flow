@@ -3,6 +3,7 @@ import { NavLink, useNavigate } from 'react-router-dom';
 import { navByRole } from '../data/navItems';
 import { api } from '../lib/api';
 import { useAuth } from '../context/AuthContext';
+import { getSocket, joinUserRoom } from '../lib/socket';
 
 function MaterialIcon({ name, filled = false, className = 'text-[20px]' }) {
   return (
@@ -16,7 +17,7 @@ function MaterialIcon({ name, filled = false, className = 'text-[20px]' }) {
 }
 
 export default function Sidebar({ role, onNavigate }) {
-  const { logout } = useAuth();
+  const { user, logout } = useAuth();
   const navigate = useNavigate();
 
   const items = navByRole[role] ?? navByRole.student;
@@ -32,8 +33,8 @@ export default function Sidebar({ role, onNavigate }) {
     }
   }, [role]);
 
-  // Fetch unread notifications count
-  useEffect(() => {
+  // Fetch unread notifications count + Real-time socket listener
+  const fetchUnread = () => {
     api
       .getNotifications()
       .then((data) => {
@@ -41,7 +42,30 @@ export default function Sidebar({ role, onNavigate }) {
         setUnreadCount(count);
       })
       .catch(() => setUnreadCount(0));
-  }, []);
+  };
+
+  useEffect(() => {
+    fetchUnread();
+
+    if (user?.id) {
+      joinUserRoom(user.id);
+      const socket = getSocket();
+
+      socket.on('notification:new', fetchUnread);
+      socket.on('notification:read', fetchUnread);
+      socket.on('notification:readAll', fetchUnread);
+
+      // Interval fallback polling every 5s
+      const interval = setInterval(fetchUnread, 5000);
+
+      return () => {
+        socket.off('notification:new', fetchUnread);
+        socket.off('notification:read', fetchUnread);
+        socket.off('notification:readAll', fetchUnread);
+        clearInterval(interval);
+      };
+    }
+  }, [user?.id]);
 
   const badgeText = unreadCount > 9 ? '9+' : unreadCount > 0 ? String(unreadCount) : null;
 

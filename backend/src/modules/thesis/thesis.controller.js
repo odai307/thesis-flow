@@ -3,6 +3,7 @@ const { prisma } = require('../../lib/prisma');
 const { AppError, sendError } = require('../../shared/errors');
 const { transitionThesisStatus } = require('../../shared/transitions');
 const { createNotification } = require('../notification/notification.controller');
+const { notifyThesis, notifyAll } = require('../../lib/socket');
 
 // Relations we always want alongside a thesis so the frontend doesn't have to re-fetch them.
 const THESIS_INCLUDE = {
@@ -40,6 +41,8 @@ async function createThesis(req, res) {
       },
       include: THESIS_INCLUDE,
     });
+
+    notifyAll('thesis:created', thesis);
 
     res.status(201).json({ thesis });
   } catch (error) {
@@ -170,6 +173,8 @@ async function submitVersion(req, res) {
       return { submission, status: thesis.status };
     });
 
+    notifyThesis(thesisId, 'thesis:paperUploaded', result);
+
     res.status(201).json(result);
   } catch (error) {
     sendError(res, error);
@@ -202,18 +207,19 @@ async function submitToSupervisor(req, res) {
         data: { status: newStatus },
       });
 
-      await tx.notification.create({
-        data: {
-          userId: thesis.supervisorId,
-          thesisId,
-          type: 'status_change',
-          referenceId: thesis.currentSubmissionId,
-          message: `New thesis submission (v${thesis.currentSubmission.versionNumber}) for "${thesis.title}"`,
-        },
+      await createNotification({
+        userId: thesis.supervisorId,
+        thesisId,
+        type: 'status_change',
+        referenceId: thesis.currentSubmissionId,
+        message: `New thesis submission (v${thesis.currentSubmission.versionNumber}) for "${thesis.title}"`,
       });
 
       return { thesisId, status: newStatus };
     });
+
+    notifyThesis(thesisId, 'thesis:statusChanged', result);
+    notifyAll('thesis:statusChanged', result);
 
     res.json(result);
   } catch (error) {
@@ -248,7 +254,11 @@ async function startReview(req, res) {
       message: `Your supervisor has started reviewing "${thesis.title}"`,
     });
 
-    res.json({ thesis: updated, status: newStatus });
+    const result = { thesis: updated, status: newStatus, thesisId };
+    notifyThesis(thesisId, 'thesis:statusChanged', result);
+    notifyAll('thesis:statusChanged', result);
+
+    res.json(result);
   } catch (error) {
     sendError(res, error);
   }
@@ -299,7 +309,11 @@ async function approve(req, res) {
       });
     }
 
-    res.json({ thesis: updated, status: newStatus });
+    const result = { thesis: updated, status: newStatus, thesisId };
+    notifyThesis(thesisId, 'thesis:statusChanged', result);
+    notifyAll('thesis:statusChanged', result);
+
+    res.json(result);
   } catch (error) {
     sendError(res, error);
   }
@@ -339,7 +353,11 @@ async function requestRevisions(req, res) {
       message: `Revisions requested on "${thesis.title}"`,
     });
 
-    res.json({ thesis: updated, status: newStatus });
+    const result = { thesis: updated, status: newStatus, thesisId };
+    notifyThesis(thesisId, 'thesis:statusChanged', result);
+    notifyAll('thesis:statusChanged', result);
+
+    res.json(result);
   } catch (error) {
     sendError(res, error);
   }
@@ -375,7 +393,11 @@ async function reopenThesis(req, res) {
       message: `Thesis "${thesis.title}" has been reopened by the department coordinator`,
     });
 
-    res.json({ thesis: updated, status: newStatus });
+    const result = { thesis: updated, status: newStatus, thesisId };
+    notifyThesis(thesisId, 'thesis:statusChanged', result);
+    notifyAll('thesis:statusChanged', result);
+
+    res.json(result);
   } catch (error) {
     sendError(res, error);
   }

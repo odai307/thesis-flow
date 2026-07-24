@@ -1,5 +1,6 @@
 const { prisma } = require('../../lib/prisma');
 const { AppError, sendError } = require('../../shared/errors');
+const { notifyUser } = require('../../lib/socket');
 
 // GET /api/notifications - List user's notifications
 async function listNotifications(req, res) {
@@ -33,6 +34,8 @@ async function markRead(req, res) {
       data: { read: true },
     });
 
+    notifyUser(userId, 'notification:read', updated);
+
     res.json({ notification: updated });
   } catch (error) {
     sendError(res, error);
@@ -49,17 +52,23 @@ async function markAllRead(req, res) {
       data: { read: true },
     });
 
+    notifyUser(userId, 'notification:readAll', { userId });
+
     res.json({ success: true });
   } catch (error) {
     sendError(res, error);
   }
 }
 
-// Reusable helper for other controllers to create notifications
+// Reusable helper for other controllers to create notifications and emit socket event
 async function createNotification({ userId, thesisId, type, referenceId, message }) {
-  return prisma.notification.create({
+  const notif = await prisma.notification.create({
     data: { userId, thesisId, type, referenceId, message },
   });
+
+  notifyUser(userId, 'notification:new', notif);
+
+  return notif;
 }
 
 module.exports = { listNotifications, markRead, markAllRead, createNotification };

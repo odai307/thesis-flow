@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { api } from '../lib/api';
 import { useAuth } from '../context/AuthContext';
+import { getSocket, joinUserRoom } from '../lib/socket';
 
 function MaterialIcon({ name, filled = false, className = 'text-[24px]' }) {
   return (
@@ -15,12 +16,13 @@ function MaterialIcon({ name, filled = false, className = 'text-[24px]' }) {
 }
 
 // Mobile-only top bar + slide-in drawer. Visible only below md.
-export default function TopBar({ onMenuClick, user }) {
-  const { logout } = useAuth();
+export default function TopBar({ onMenuClick, user: propUser }) {
+  const { user: authUser, logout } = useAuth();
+  const user = propUser || authUser;
   const navigate = useNavigate();
   const [unreadCount, setUnreadCount] = useState(0);
 
-  useEffect(() => {
+  const fetchUnread = () => {
     api
       .getNotifications()
       .then((data) => {
@@ -28,7 +30,29 @@ export default function TopBar({ onMenuClick, user }) {
         setUnreadCount(count);
       })
       .catch(() => setUnreadCount(0));
-  }, []);
+  };
+
+  useEffect(() => {
+    fetchUnread();
+
+    if (user?.id) {
+      joinUserRoom(user.id);
+      const socket = getSocket();
+
+      socket.on('notification:new', fetchUnread);
+      socket.on('notification:read', fetchUnread);
+      socket.on('notification:readAll', fetchUnread);
+
+      const interval = setInterval(fetchUnread, 5000);
+
+      return () => {
+        socket.off('notification:new', fetchUnread);
+        socket.off('notification:read', fetchUnread);
+        socket.off('notification:readAll', fetchUnread);
+        clearInterval(interval);
+      };
+    }
+  }, [user?.id]);
 
   const badgeText = unreadCount > 9 ? '9+' : unreadCount > 0 ? String(unreadCount) : null;
 

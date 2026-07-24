@@ -4,6 +4,7 @@ import AppLayout from '../components/AppLayout';
 import StatusTimeline from '../components/StatusTimeline';
 import { useAuth } from '../context/AuthContext';
 import { api } from '../lib/api';
+import { getSocket, joinThesisRoom, leaveThesisRoom, joinSubmissionRoom, leaveSubmissionRoom } from '../lib/socket';
 
 function Icon({ name, className = 'text-[20px]' }) {
   return <span className={`material-symbols-outlined ${className}`}>{name}</span>;
@@ -87,6 +88,55 @@ export default function ThesisReview() {
     loadData();
   }, [id]);
 
+  // Real-time socket listener for thesis status changes
+  useEffect(() => {
+    if (!id) return;
+    joinThesisRoom(id);
+
+    const socket = getSocket();
+
+    const handleStatusChanged = () => {
+      loadData();
+    };
+
+    socket.on('thesis:statusChanged', handleStatusChanged);
+    socket.on('thesis:paperUploaded', handleStatusChanged);
+
+    const interval = setInterval(loadData, 4000);
+
+    return () => {
+      leaveThesisRoom(id);
+      socket.off('thesis:statusChanged', handleStatusChanged);
+      socket.off('thesis:paperUploaded', handleStatusChanged);
+      clearInterval(interval);
+    };
+  }, [id]);
+
+  // Submission room socket listener for comments
+  const currentSubmissionId = thesis?.currentSubmission?.id;
+  useEffect(() => {
+    if (!currentSubmissionId) return;
+    joinSubmissionRoom(currentSubmissionId);
+
+    const socket = getSocket();
+
+    const handleNewComment = (newComment) => {
+      if (newComment && newComment.submissionId === currentSubmissionId) {
+        setComments((prev) => {
+          if (prev.some((c) => c.id === newComment.id)) return prev;
+          return [...prev, newComment];
+        });
+      }
+    };
+
+    socket.on('comment:created', handleNewComment);
+
+    return () => {
+      leaveSubmissionRoom(currentSubmissionId);
+      socket.off('comment:created', handleNewComment);
+    };
+  }, [currentSubmissionId]);
+
   async function handleStartReview() {
     setBusy(true);
     setError('');
@@ -149,7 +199,10 @@ export default function ThesisReview() {
     setPosting(true);
     try {
       const { comment } = await api.postComment(thesis.currentSubmission.id, draft.trim());
-      setComments((prev) => [...prev, comment]);
+      setComments((prev) => {
+        if (prev.some((c) => c.id === comment.id)) return prev;
+        return [...prev, comment];
+      });
       setDraft('');
     } catch (err) {
       setError(err.message);
