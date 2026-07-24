@@ -19,7 +19,11 @@ async function request(path, { method = 'GET', body, auth = true } = {}) {
   const isForm = typeof FormData !== 'undefined' && body instanceof FormData;
   if (!isForm && body !== undefined) headers['Content-Type'] = 'application/json';
 
-  const res = await fetch(`/api${path}`, {
+  const baseUrl = import.meta.env.VITE_API_URL
+    ? `${import.meta.env.VITE_API_URL.replace(/\/$/, '')}/api`
+    : '/api';
+
+  const res = await fetch(`${baseUrl}${path}`, {
     method,
     headers,
     body: isForm ? body : body !== undefined ? JSON.stringify(body) : undefined,

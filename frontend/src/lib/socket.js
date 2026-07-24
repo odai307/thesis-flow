@@ -5,9 +5,10 @@ let socket = null;
 export function getSocket() {
   if (!socket) {
     const SOCKET_URL =
-      window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1'
+      import.meta.env.VITE_API_URL ||
+      (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1'
         ? 'http://localhost:3000'
-        : window.location.origin;
+        : window.location.origin);
 
     socket = io(SOCKET_URL, {
       transports: ['websocket', 'polling'],
