@@ -24,10 +24,14 @@ if (isCloudinaryConfigured) {
     cloudinary,
     params: async (_req, file) => {
       const ext = path.extname(file.originalname).toLowerCase().replace('.', '');
+      const isPdf = ext === 'pdf';
+
       return {
         folder: 'thesisflow_documents',
-        resource_type: 'raw', // RAW resource type for PDF and DOCX files
-        public_id: `${Date.now()}-${Math.round(Math.random() * 1e9)}.${ext}`,
+        // Uploading PDFs as 'image' resource type enables Cloudinary to serve them with Content-Type: application/pdf (inline preview)
+        resource_type: isPdf ? 'image' : 'raw',
+        format: isPdf ? 'pdf' : ext,
+        public_id: `${Date.now()}-${Math.round(Math.random() * 1e9)}`,
       };
     },
   });

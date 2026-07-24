@@ -25,6 +25,17 @@ function formatDate(iso) {
   });
 }
 
+function getEmbedUrl(fileUrl) {
+  if (!fileUrl) return '';
+  const lower = fileUrl.toLowerCase();
+  const isCloudinaryRaw = lower.includes('/raw/upload/');
+  const isDocx = lower.endsWith('.docx') || lower.includes('format=docx');
+  if (isCloudinaryRaw || isDocx) {
+    return `https://docs.google.com/viewer?url=${encodeURIComponent(fileUrl)}&embedded=true`;
+  }
+  return fileUrl;
+}
+
 // Modal dialog for confirming student submission to supervisor
 function ConfirmModal({ isOpen, title, description, confirmText, confirmClass, onConfirm, onClose, busy }) {
   if (!isOpen) return null;
@@ -123,7 +134,6 @@ export default function ThesisWorkspace() {
     socket.on('thesis:statusChanged', handleStatusChanged);
     socket.on('thesis:paperUploaded', handleStatusChanged);
 
-    // Fallback polling interval every 4 seconds
     const interval = setInterval(loadThesisData, 4000);
 
     return () => {
@@ -234,6 +244,7 @@ export default function ThesisWorkspace() {
 
   const version = activeSubmission?.versionNumber ?? thesis._count?.submissions ?? 1;
   const fileUrl = activeSubmission?.fileUrl;
+  const embedUrl = getEmbedUrl(fileUrl);
   const isLatestVersion = activeSubmission?.id === thesis.currentSubmission?.id;
   const canSubmitToSupervisor = ['draft', 'revisions_requested'].includes(thesis.status) && thesis.currentSubmissionId;
 
@@ -338,7 +349,7 @@ export default function ThesisWorkspace() {
                 className="bg-surface-container-lowest border border-outline-variant text-on-surface px-4 py-2.5 rounded-lg font-label-md text-label-md flex items-center gap-2 hover:bg-surface-container-low transition-colors shadow-sm"
               >
                 <Icon name="download" />
-                Download PDF (v{version})
+                Download Document (v{version})
               </a>
             )}
           </div>
@@ -383,7 +394,7 @@ export default function ThesisWorkspace() {
                 rel="noreferrer"
                 className="text-primary font-label-xs text-label-xs hover:underline flex items-center gap-1"
               >
-                Open in Full Window <Icon name="open_in_new" className="text-[14px]" />
+                Open Original File <Icon name="open_in_new" className="text-[14px]" />
               </a>
             )}
           </div>
@@ -391,7 +402,7 @@ export default function ThesisWorkspace() {
           <div className="flex-1 bg-[#F3F4F6] min-h-[600px] flex items-center justify-center relative p-2">
             {fileUrl ? (
               <iframe
-                src={fileUrl}
+                src={embedUrl}
                 title={`Thesis Document v${version}`}
                 className="w-full h-full min-h-[650px] border-0 rounded"
               />
