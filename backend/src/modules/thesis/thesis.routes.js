@@ -17,10 +17,21 @@ const {
 
 const router = Router();
 
+// Wrap multer middleware so Cloudinary/Multer errors are caught and returned as JSON
+function handleUpload(req, res, next) {
+  upload.single('file')(req, res, (err) => {
+    if (err) {
+      console.error('File upload error:', err);
+      return res.status(400).json({ error: err.message || 'File upload failed' });
+    }
+    next();
+  });
+}
+
 // Student actions
 router.post('/', requireAuth, requireRole('student'), validate(createThesisSchema), createThesis);
 router.post('/:id/submissions', requireAuth, requireRole('student'), submitVersion);
-router.post('/:id/submissions/upload', requireAuth, requireRole('student'), upload.single('file'), submitVersion);
+router.post('/:id/submissions/upload', requireAuth, requireRole('student'), handleUpload, submitVersion);
 router.post('/:id/submit', requireAuth, requireRole('student'), submitToSupervisor);
 
 // Shared view actions (student, supervisor, coordinator)

@@ -28,9 +28,10 @@ function formatDate(iso) {
 function getEmbedUrl(fileUrl) {
   if (!fileUrl) return '';
   const lower = fileUrl.toLowerCase();
-  const isCloudinaryRaw = lower.includes('/raw/upload/');
-  const isDocx = lower.endsWith('.docx') || lower.includes('format=docx');
-  if (isCloudinaryRaw || isDocx) {
+  // Use Google Docs Viewer for all Cloudinary-hosted documents and .docx files
+  const isCloudinary = lower.includes('res.cloudinary.com');
+  const isDocx = lower.endsWith('.docx') || lower.includes('.docx');
+  if (isCloudinary || isDocx) {
     return `https://docs.google.com/viewer?url=${encodeURIComponent(fileUrl)}&embedded=true`;
   }
   return fileUrl;
