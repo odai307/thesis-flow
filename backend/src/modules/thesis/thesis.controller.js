@@ -136,10 +136,10 @@ async function submitVersion(req, res) {
     let fileUrl, fileType;
     if (req.file) {
       const ext = path.extname(req.file.originalname).toLowerCase().replace('.', '');
-      fileUrl =
-        req.file.path && (req.file.path.startsWith('http://') || req.file.path.startsWith('https://'))
-          ? req.file.path
-          : `/uploads/${req.file.filename}`;
+      fileUrl = req.file.path || req.file.secure_url || (req.file.filename ? `/uploads/${req.file.filename}` : null);
+      if (fileUrl && !fileUrl.startsWith('http://') && !fileUrl.startsWith('https://') && !fileUrl.startsWith('/uploads')) {
+        fileUrl = `/uploads/${fileUrl}`;
+      }
       fileType = ext === 'docx' ? 'docx' : 'pdf';
     } else {
       ({ fileUrl, fileType } = req.body || {});

@@ -15,9 +15,9 @@ if (isCloudinaryConfigured) {
   const { CloudinaryStorage } = require('multer-storage-cloudinary');
 
   cloudinary.config({
-    cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
-    api_key: process.env.CLOUDINARY_API_KEY,
-    api_secret: process.env.CLOUDINARY_API_SECRET,
+    cloud_name: process.env.CLOUDINARY_CLOUD_NAME.trim(),
+    api_key: process.env.CLOUDINARY_API_KEY.trim(),
+    api_secret: process.env.CLOUDINARY_API_SECRET.trim(),
   });
 
   storage = new CloudinaryStorage({
@@ -26,9 +26,8 @@ if (isCloudinaryConfigured) {
       const ext = path.extname(file.originalname).toLowerCase().replace('.', '');
       return {
         folder: 'thesisflow_documents',
-        resource_type: 'auto', // Supports PDF and DOCX documents
-        format: ext === 'docx' ? 'docx' : 'pdf',
-        public_id: `${Date.now()}-${Math.round(Math.random() * 1e9)}`,
+        resource_type: 'raw', // RAW resource type for PDF and DOCX files
+        public_id: `${Date.now()}-${Math.round(Math.random() * 1e9)}.${ext}`,
       };
     },
   });
