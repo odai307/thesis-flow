@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Playfair+Display:ital,wght@0,600;0,700;1,400;1,600&display=swap');
 
 @tailwind base;
 @tailwind components;
@@ -6,16 +6,17 @@
 
 @layer base {
   body {
-    background-color: #fbf8ff; /* surface / background */
+    background-color: #05080e; /* Deep Academic Obsidian */
+    color: #f8fafc;
     font-family: 'Inter', sans-serif;
   }
 }
 
-/* Ambient shadows for floating elements (from Stitch DESIGN.md) */
+/* Ambient shadows for floating elements */
 .shadow-ambient {
   box-shadow:
-    0 4px 6px -1px rgb(0 0 0 / 0.1),
-    0 2px 4px -2px rgb(0 0 0 / 0.1);
+    0 4px 20px -2px rgba(245, 158, 11, 0.08),
+    0 2px 8px -2px rgba(0, 0, 0, 0.5);
 }
 
 /* Material Symbols icon sizing helper */
@@ -23,17 +24,17 @@
   font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
 }
 
-/* Custom scrollbar for a cleaner look */
+/* Custom scrollbar for deep dark gold theme */
 ::-webkit-scrollbar {
   width: 8px;
 }
 ::-webkit-scrollbar-track {
-  background: transparent;
+  background: #05080e;
 }
 ::-webkit-scrollbar-thumb {
-  background: #dbd8e5; /* surface-dim */
+  background: #1e293b;
   border-radius: 4px;
 }
 ::-webkit-scrollbar-thumb:hover {
-  background: #c6c5d7; /* outline-variant */
+  background: #f59e0b;
 }
