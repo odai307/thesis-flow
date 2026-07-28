@@ -11,13 +11,10 @@ import {
   Sparkles,
   Layers,
   GraduationCap,
-  Bell,
   Clock,
   ChevronRight,
-  Lock,
   Building2,
   FileCheck2,
-  Eye,
   Award,
 } from 'lucide-react';
 
@@ -25,53 +22,53 @@ export default function LandingPage() {
   const [activeTab, setActiveTab] = useState('student');
 
   return (
-    <div className="min-h-screen bg-[#07090e] text-slate-100 font-sans selection:bg-indigo-500 selection:text-white relative overflow-hidden">
+    <div className="min-h-screen bg-[#05080e] text-slate-100 font-sans selection:bg-amber-500 selection:text-black relative overflow-hidden">
       
-      {/* Background Subtle Mesh Gradient Grid */}
-      <div className="absolute inset-0 bg-[linear-gradient(to_right,#1f293d0f_1px,transparent_1px),linear-gradient(to_bottom,#1f293d0f_1px,transparent_1px)] bg-[size:4rem_4rem] [mask-image:radial-gradient(ellipse_60%_50%_at_50%_0%,#000_70%,transparent_100%)] pointer-events-none"></div>
+      {/* Background Gold & Emerald Glow Orbs */}
+      <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[800px] h-[500px] bg-gradient-to-b from-amber-500/10 via-emerald-500/5 to-transparent blur-3xl pointer-events-none"></div>
+      <div className="absolute top-1/3 right-0 w-[450px] h-[450px] bg-emerald-600/10 blur-3xl pointer-events-none"></div>
 
       {/* Top Header Navigation */}
-      <header className="sticky top-0 z-50 bg-[#080c14]/80 backdrop-blur-xl border-b border-slate-800/80 transition-all">
+      <header className="sticky top-0 z-50 bg-[#05080e]/90 backdrop-blur-xl border-b border-amber-900/20 transition-all">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-20 flex items-center justify-between">
           
           {/* Brand Logo */}
           <Link to="/" className="flex items-center gap-3 group">
-            <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-indigo-500 to-cyan-400 p-[1px] shadow-lg shadow-indigo-500/20 group-hover:scale-105 transition-transform">
-              <div className="w-full h-full bg-[#0b0f19] rounded-[11px] flex items-center justify-center">
-                <BookOpen className="w-5 h-5 text-indigo-400" />
+            <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-amber-400 via-amber-500 to-yellow-600 p-[1px] shadow-lg shadow-amber-500/20 group-hover:scale-105 transition-transform">
+              <div className="w-full h-full bg-[#080d17] rounded-[11px] flex items-center justify-center">
+                <BookOpen className="w-5 h-5 text-amber-400" />
               </div>
             </div>
             <div className="flex flex-col">
-              <span className="font-extrabold text-lg tracking-tight text-white group-hover:text-indigo-400 transition-colors">
-                Thesis<span className="text-indigo-400">Flow</span>
+              <span className="font-serif font-bold text-xl tracking-tight text-white group-hover:text-amber-400 transition-colors">
+                Thesis<span className="text-amber-400 font-sans font-bold">Flow</span>
               </span>
-              <span className="text-[10px] font-mono text-slate-400 tracking-wider uppercase">
-                Academic Workflow SaaS
+              <span className="text-[10px] font-mono text-amber-400/70 tracking-widest uppercase">
+                Academic Review Portal
               </span>
             </div>
           </Link>
 
           {/* Center Links */}
-          <nav className="hidden md:flex items-center gap-8 text-xs font-medium text-slate-300">
-            <a href="#features" className="hover:text-white transition-colors">Platform Features</a>
-            <a href="#roles" className="hover:text-white transition-colors">Role Workflows</a>
-            <a href="#architecture" className="hover:text-white transition-colors">System Architecture</a>
-            <a href="#security" className="hover:text-white transition-colors">Security & RBAC</a>
+          <nav className="hidden md:flex items-center gap-8 text-xs font-mono tracking-wider uppercase text-slate-400">
+            <a href="#features" className="hover:text-amber-300 transition-colors">Platform Capabilities</a>
+            <a href="#roles" className="hover:text-amber-300 transition-colors">Role Dashboards</a>
+            <a href="#architecture" className="hover:text-amber-300 transition-colors">System Architecture</a>
           </nav>
 
           {/* Right Action Buttons */}
           <div className="flex items-center gap-4">
             <Link
               to="/login"
-              className="text-xs font-semibold text-slate-300 hover:text-white px-4 py-2 rounded-lg hover:bg-slate-900 transition-colors"
+              className="text-xs font-mono uppercase tracking-wider text-slate-300 hover:text-amber-300 px-4 py-2 rounded-lg hover:bg-slate-900 transition-colors"
             >
               Sign In
             </Link>
             <Link
               to="/register"
-              className="text-xs font-bold px-5 py-2.5 rounded-xl bg-gradient-to-r from-indigo-600 to-cyan-500 text-white hover:opacity-95 transition-opacity shadow-lg shadow-indigo-500/20 flex items-center gap-1.5"
+              className="text-xs font-bold px-5 py-2.5 rounded-xl bg-gradient-to-r from-amber-500 via-yellow-500 to-amber-600 text-black hover:opacity-95 transition-opacity shadow-lg shadow-amber-500/20 flex items-center gap-1.5 font-sans"
             >
-              <span>Get Started</span>
+              <span>Launch Portal</span>
               <ArrowRight className="w-3.5 h-3.5" />
             </Link>
           </div>
@@ -85,70 +82,70 @@ export default function LandingPage() {
           
           <div className="flex flex-col items-center text-center max-w-4xl mx-auto space-y-6">
             
-            {/* Status Pill */}
-            <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-indigo-500/10 border border-indigo-500/20 text-indigo-300 text-xs font-mono">
-              <Sparkles className="w-3.5 h-3.5 text-indigo-400" />
-              <span>Multi-Tenant Academic Management System</span>
-              <span className="text-slate-600">•</span>
+            {/* Academic Luxury Status Badge */}
+            <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-amber-500/10 border border-amber-500/30 text-amber-300 text-xs font-mono tracking-wide">
+              <Sparkles className="w-3.5 h-3.5 text-amber-400" />
+              <span>Institutional Thesis & Dissertation Management</span>
+              <span className="text-amber-700">•</span>
               <span className="text-emerald-400 font-semibold">Production Ready</span>
             </div>
 
-            {/* Main Headline */}
+            {/* Editorial Serif Hero Headline */}
             <h1 className="text-4xl sm:text-6xl lg:text-7xl font-extrabold tracking-tight leading-[1.12] text-white">
-              Streamline Academic Thesis Submissions & <span className="bg-gradient-to-r from-indigo-400 via-cyan-400 to-emerald-400 bg-clip-text text-transparent">Faculty Reviews.</span>
+              Elevate University Thesis Submissions & <span className="font-serif italic font-normal bg-gradient-to-r from-amber-300 via-amber-200 to-yellow-500 bg-clip-text text-transparent">Faculty Reviews.</span>
             </h1>
 
             {/* Sub-headline */}
-            <p className="text-slate-400 text-base sm:text-xl leading-relaxed max-w-2xl">
-              Connect Students, Supervisors, and Department Coordinators in one real-time workspace with line-by-line feedback, version tracking, and automated review lifecycles.
+            <p className="text-slate-300 text-base sm:text-xl leading-relaxed max-w-2xl font-light">
+              Connect Students, Academic Supervisors, and Department Coordinators in one unified real-time workspace with line-by-line feedback, manuscript versioning, and approval workflows.
             </p>
 
             {/* CTAs */}
             <div className="flex flex-col sm:flex-row items-center gap-4 pt-4 w-full sm:w-auto">
               <Link
                 to="/register"
-                className="w-full sm:w-auto px-8 py-4 rounded-xl bg-gradient-to-r from-indigo-600 to-cyan-500 text-white font-bold text-sm hover:opacity-95 transition-all shadow-xl shadow-indigo-500/25 flex items-center justify-center gap-2.5 group"
+                className="w-full sm:w-auto px-8 py-4 rounded-xl bg-gradient-to-r from-amber-500 via-yellow-500 to-amber-600 text-black font-extrabold text-sm hover:opacity-95 transition-all shadow-xl shadow-amber-500/20 flex items-center justify-center gap-2.5 group"
               >
-                <span>Launch Student & Faculty Portal</span>
+                <span>Access Student & Faculty Portal</span>
                 <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
               </Link>
               <Link
                 to="/login"
-                className="w-full sm:w-auto px-8 py-4 rounded-xl bg-slate-900/90 border border-slate-800 text-slate-200 font-bold text-sm hover:bg-slate-800 hover:text-white transition-colors flex items-center justify-center gap-2"
+                className="w-full sm:w-auto px-8 py-4 rounded-xl bg-slate-900/90 border border-slate-800 text-slate-200 font-semibold text-sm hover:bg-slate-800 hover:text-white transition-colors flex items-center justify-center gap-2"
               >
-                <span>Demo Account Login</span>
+                <span>Demo Account Sign In</span>
               </Link>
             </div>
 
-            {/* Trust Badges */}
+            {/* Academic Badges */}
             <div className="pt-8 flex flex-wrap items-center justify-center gap-6 text-xs text-slate-400 font-mono">
-              <div className="flex items-center gap-2">
-                <ShieldCheck className="w-4 h-4 text-indigo-400" />
+              <div className="flex items-center gap-2 text-amber-400/80">
+                <ShieldCheck className="w-4 h-4 text-amber-400" />
                 Role-Based Access Control (RBAC)
               </div>
-              <div className="flex items-center gap-2">
-                <Zap className="w-4 h-4 text-cyan-400" />
+              <div className="flex items-center gap-2 text-emerald-400/80">
+                <Zap className="w-4 h-4 text-emerald-400" />
                 Socket.io Real-Time Events
               </div>
-              <div className="flex items-center gap-2">
-                <FileText className="w-4 h-4 text-emerald-400" />
+              <div className="flex items-center gap-2 text-cyan-400/80">
+                <FileText className="w-4 h-4 text-cyan-400" />
                 Cloudinary Document Cloud
               </div>
             </div>
 
           </div>
 
-          {/* Interactive UI Mockup Showcase */}
-          <div className="mt-16 max-w-5xl mx-auto rounded-2xl p-3 bg-gradient-to-b from-slate-800/80 to-slate-900/40 border border-slate-800 shadow-2xl shadow-indigo-500/10">
-            <div className="bg-[#0b0f19] rounded-xl overflow-hidden border border-slate-800/80">
+          {/* Interactive UI Showcase Window */}
+          <div className="mt-16 max-w-5xl mx-auto rounded-2xl p-3 bg-gradient-to-b from-amber-500/20 via-slate-800/40 to-slate-900/60 border border-amber-500/30 shadow-2xl shadow-amber-500/10">
+            <div className="bg-[#090d16] rounded-xl overflow-hidden border border-slate-800/80">
               
-              {/* Window Bar */}
-              <div className="bg-[#0f172a] px-4 py-3 border-b border-slate-800 flex items-center justify-between text-xs font-mono text-slate-400">
+              {/* Window Header */}
+              <div className="bg-[#0e1422] px-4 py-3 border-b border-slate-800 flex items-center justify-between text-xs font-mono text-slate-400">
                 <div className="flex items-center gap-2">
                   <div className="w-3 h-3 rounded-full bg-rose-500/80"></div>
                   <div className="w-3 h-3 rounded-full bg-amber-500/80"></div>
                   <div className="w-3 h-3 rounded-full bg-emerald-500/80"></div>
-                  <span className="ml-2 text-slate-500">thesisflow.app/workspace/manuscript-v2</span>
+                  <span className="ml-2 text-amber-400/80">thesisflow.app/workspace/manuscript-v2</span>
                 </div>
                 <div className="flex items-center gap-3 text-[11px]">
                   <span className="text-emerald-400 flex items-center gap-1">
@@ -159,40 +156,40 @@ export default function LandingPage() {
               </div>
 
               {/* Mockup Inner Body */}
-              <div className="p-6 md:p-8 grid md:grid-cols-12 gap-6 bg-[#080c14]">
+              <div className="p-6 md:p-8 grid md:grid-cols-12 gap-6 bg-[#070b13]">
                 
                 {/* Left Panel: Manuscript Meta */}
                 <div className="md:col-span-4 space-y-4 border-r border-slate-800/80 pr-6">
-                  <div className="flex items-center gap-2 text-xs font-mono text-indigo-400 uppercase">
+                  <div className="flex items-center gap-2 text-xs font-mono text-amber-400 uppercase tracking-wider">
                     <GraduationCap className="w-4 h-4" />
                     MSc. IT Dissertation
                   </div>
-                  <h3 className="font-bold text-white text-base">
+                  <h3 className="font-serif font-bold text-white text-lg leading-snug">
                     Distributed Ledger Protocols in Mobile Financial Settlements
                   </h3>
-                  <div className="text-xs text-slate-400 space-y-1">
-                    <div>Author: <span className="text-slate-200">Gabriel Odai Afotey</span></div>
-                    <div>Index No: <span className="text-slate-200 font-mono">10293847</span></div>
+                  <div className="text-xs text-slate-400 space-y-1 font-sans">
+                    <div>Author: <span className="text-slate-200 font-semibold">Gabriel Odai Afotey</span></div>
+                    <div>Index No: <span className="text-amber-400/90 font-mono">10293847</span></div>
                     <div>Supervisor: <span className="text-slate-200">Dr. K. Mensah</span></div>
                   </div>
 
                   <div className="pt-2">
                     <div className="text-[11px] font-mono text-slate-500 mb-1.5 uppercase">Submission Status</div>
-                    <span className="px-3 py-1 rounded-full bg-amber-500/10 border border-amber-500/20 text-amber-300 text-xs font-semibold inline-flex items-center gap-1.5">
-                      <Clock className="w-3 h-3" />
+                    <span className="px-3 py-1 rounded-full bg-amber-500/10 border border-amber-500/30 text-amber-300 text-xs font-semibold inline-flex items-center gap-1.5">
+                      <Clock className="w-3 h-3 text-amber-400" />
                       IN_REVIEW (v2.4)
                     </span>
                   </div>
 
                   <div className="pt-2 space-y-2">
                     <div className="text-[11px] font-mono text-slate-500 uppercase">Version History</div>
-                    <div className="p-2.5 rounded-lg bg-slate-900/80 border border-slate-800 text-xs flex items-center justify-between text-slate-300">
+                    <div className="p-2.5 rounded-lg bg-slate-900/80 border border-amber-500/30 text-xs flex items-center justify-between text-amber-200">
                       <span>v2.4 (Latest Draft)</span>
-                      <span className="text-[10px] text-slate-500">Today, 14:20</span>
+                      <span className="text-[10px] text-slate-500 font-mono">Today, 14:20</span>
                     </div>
                     <div className="p-2.5 rounded-lg bg-slate-900/40 border border-slate-800/60 text-xs flex items-center justify-between text-slate-400">
                       <span>v2.1 (Initial Submission)</span>
-                      <span className="text-[10px] text-slate-500">3 days ago</span>
+                      <span className="text-[10px] text-slate-500 font-mono">3 days ago</span>
                     </div>
                   </div>
                 </div>
@@ -202,9 +199,9 @@ export default function LandingPage() {
                   <div className="flex items-center justify-between pb-3 border-b border-slate-800/80">
                     <div className="flex items-center gap-2 text-xs font-semibold text-slate-200">
                       <FileCheck2 className="w-4 h-4 text-emerald-400" />
-                      Supervisor Feedback & Inline Review Notes
+                      Supervisor Feedback & Line Review Notes
                     </div>
-                    <span className="text-xs px-2.5 py-1 rounded-md bg-indigo-500/10 text-indigo-300 border border-indigo-500/20 font-mono">
+                    <span className="text-xs px-2.5 py-1 rounded-md bg-emerald-500/10 text-emerald-300 border border-emerald-500/20 font-mono">
                       Socket.io Connected
                     </span>
                   </div>
@@ -212,10 +209,10 @@ export default function LandingPage() {
                   <div className="space-y-3">
                     <div className="p-4 rounded-xl bg-slate-900/60 border border-slate-800 text-xs space-y-2">
                       <div className="flex items-center justify-between text-slate-400">
-                        <span className="font-semibold text-indigo-300">Dr. K. Mensah (Supervisor)</span>
+                        <span className="font-semibold text-amber-300">Dr. K. Mensah (Supervisor)</span>
                         <span className="text-[10px] font-mono">10 mins ago</span>
                       </div>
-                      <p className="text-slate-300 leading-relaxed">
+                      <p className="text-slate-300 leading-relaxed font-sans">
                         "Chapter 3 methodology looks solid. Please expand section 3.2 on transaction latency benchmarks before final thesis defense binding."
                       </p>
                     </div>
@@ -225,17 +222,17 @@ export default function LandingPage() {
                         <span className="font-semibold text-emerald-400">Gabriel Odai Afotey (Student)</span>
                         <span className="text-[10px] font-mono">Just now</span>
                       </div>
-                      <p className="text-slate-300 leading-relaxed">
+                      <p className="text-slate-300 leading-relaxed font-sans">
                         "Updated Chapter 3.2 with latency benchmarks under 200ms connection load. Re-submitted manuscript v2.4."
                       </p>
                     </div>
                   </div>
 
                   <div className="pt-2 flex items-center gap-3">
-                    <div className="flex-1 py-2.5 px-4 rounded-xl bg-slate-950 border border-slate-800 text-xs text-slate-500">
+                    <div className="flex-1 py-2.5 px-4 rounded-xl bg-slate-950 border border-slate-800 text-xs text-slate-500 font-sans">
                       Type review note or approval comment...
                     </div>
-                    <button className="px-4 py-2.5 rounded-xl bg-indigo-600 text-white font-semibold text-xs flex items-center gap-1.5">
+                    <button className="px-4 py-2.5 rounded-xl bg-gradient-to-r from-amber-500 to-yellow-500 text-black font-bold text-xs flex items-center gap-1.5">
                       <span>Post Note</span>
                       <ChevronRight className="w-3.5 h-3.5" />
                     </button>
@@ -251,18 +248,18 @@ export default function LandingPage() {
       </section>
 
       {/* Role-Based Workflows Showcase */}
-      <section id="roles" className="py-24 bg-[#080c14] relative border-t border-slate-800/80">
+      <section id="roles" className="py-24 bg-[#070b13] relative border-t border-slate-800/80">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           
           <div className="flex flex-col items-center text-center mb-16">
-            <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-cyan-500/10 border border-cyan-500/20 text-cyan-400 text-xs font-mono mb-4">
+            <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-amber-500/10 border border-amber-500/20 text-amber-300 text-xs font-mono mb-4">
               <Users className="w-3.5 h-3.5" />
               <span>Multi-Role Academic Architecture</span>
             </div>
-            <h2 className="text-3xl sm:text-4xl font-bold text-white tracking-tight">
+            <h2 className="text-3xl sm:text-5xl font-serif font-bold text-white tracking-tight">
               Tailored Portals for Every Academic Role
             </h2>
-            <p className="text-slate-400 text-base max-w-2xl mt-3">
+            <p className="text-slate-400 text-base max-w-2xl mt-3 font-light">
               ThesisFlow provides dedicated permission-controlled dashboards custom-built for Students, Supervisors, and Department Coordinators.
             </p>
           </div>
@@ -273,7 +270,7 @@ export default function LandingPage() {
               onClick={() => setActiveTab('student')}
               className={`flex-1 py-3 rounded-xl text-xs font-bold transition-all flex items-center justify-center gap-2 ${
                 activeTab === 'student'
-                  ? 'bg-indigo-600 text-white shadow-lg shadow-indigo-500/20'
+                  ? 'bg-gradient-to-r from-amber-500 to-yellow-500 text-black shadow-lg shadow-amber-500/20'
                   : 'text-slate-400 hover:text-white'
               }`}
             >
@@ -284,7 +281,7 @@ export default function LandingPage() {
               onClick={() => setActiveTab('supervisor')}
               className={`flex-1 py-3 rounded-xl text-xs font-bold transition-all flex items-center justify-center gap-2 ${
                 activeTab === 'supervisor'
-                  ? 'bg-indigo-600 text-white shadow-lg shadow-indigo-500/20'
+                  ? 'bg-gradient-to-r from-amber-500 to-yellow-500 text-black shadow-lg shadow-amber-500/20'
                   : 'text-slate-400 hover:text-white'
               }`}
             >
@@ -295,7 +292,7 @@ export default function LandingPage() {
               onClick={() => setActiveTab('coordinator')}
               className={`flex-1 py-3 rounded-xl text-xs font-bold transition-all flex items-center justify-center gap-2 ${
                 activeTab === 'coordinator'
-                  ? 'bg-indigo-600 text-white shadow-lg shadow-indigo-500/20'
+                  ? 'bg-gradient-to-r from-amber-500 to-yellow-500 text-black shadow-lg shadow-amber-500/20'
                   : 'text-slate-400 hover:text-white'
               }`}
             >
@@ -305,15 +302,15 @@ export default function LandingPage() {
           </div>
 
           {/* Role Content Display */}
-          <div className="max-w-4xl mx-auto rounded-2xl p-8 bg-slate-900/40 border border-slate-800">
+          <div className="max-w-4xl mx-auto rounded-2xl p-8 bg-slate-900/40 border border-amber-500/20">
             {activeTab === 'student' && (
               <div className="space-y-6">
                 <div className="flex items-center gap-4">
-                  <div className="p-3 rounded-xl bg-indigo-500/10 text-indigo-400 border border-indigo-500/20">
+                  <div className="p-3 rounded-xl bg-amber-500/10 text-amber-400 border border-amber-500/20">
                     <GraduationCap className="w-6 h-6" />
                   </div>
                   <div>
-                    <h3 className="text-xl font-bold text-white">Student Submission Portal</h3>
+                    <h3 className="text-xl font-serif font-bold text-white">Student Submission Portal</h3>
                     <p className="text-xs text-slate-400">Streamlining thesis manuscript uploads and supervisory tracking</p>
                   </div>
                 </div>
@@ -321,7 +318,7 @@ export default function LandingPage() {
                 <div className="grid sm:grid-cols-2 gap-4 pt-2">
                   <div className="p-4 rounded-xl bg-slate-950 border border-slate-800 space-y-1.5">
                     <div className="text-sm font-semibold text-white flex items-center gap-2">
-                      <CheckCircle2 className="w-4 h-4 text-indigo-400" />
+                      <CheckCircle2 className="w-4 h-4 text-amber-400" />
                       25MB Document Upload Engine
                     </div>
                     <p className="text-xs text-slate-400">
@@ -330,7 +327,7 @@ export default function LandingPage() {
                   </div>
                   <div className="p-4 rounded-xl bg-slate-950 border border-slate-800 space-y-1.5">
                     <div className="text-sm font-semibold text-white flex items-center gap-2">
-                      <CheckCircle2 className="w-4 h-4 text-indigo-400" />
+                      <CheckCircle2 className="w-4 h-4 text-amber-400" />
                       Live Status Transitions
                     </div>
                     <p className="text-xs text-slate-400">
@@ -339,7 +336,7 @@ export default function LandingPage() {
                   </div>
                   <div className="p-4 rounded-xl bg-slate-950 border border-slate-800 space-y-1.5">
                     <div className="text-sm font-semibold text-white flex items-center gap-2">
-                      <CheckCircle2 className="w-4 h-4 text-indigo-400" />
+                      <CheckCircle2 className="w-4 h-4 text-amber-400" />
                       Embedded PDF / Word Viewer
                     </div>
                     <p className="text-xs text-slate-400">
@@ -348,7 +345,7 @@ export default function LandingPage() {
                   </div>
                   <div className="p-4 rounded-xl bg-slate-950 border border-slate-800 space-y-1.5">
                     <div className="text-sm font-semibold text-white flex items-center gap-2">
-                      <CheckCircle2 className="w-4 h-4 text-indigo-400" />
+                      <CheckCircle2 className="w-4 h-4 text-amber-400" />
                       Real-Time Notification Badges
                     </div>
                     <p className="text-xs text-slate-400">
@@ -362,11 +359,11 @@ export default function LandingPage() {
             {activeTab === 'supervisor' && (
               <div className="space-y-6">
                 <div className="flex items-center gap-4">
-                  <div className="p-3 rounded-xl bg-cyan-500/10 text-cyan-400 border border-cyan-500/20">
+                  <div className="p-3 rounded-xl bg-emerald-500/10 text-emerald-400 border border-emerald-500/20">
                     <Award className="w-6 h-6" />
                   </div>
                   <div>
-                    <h3 className="text-xl font-bold text-white">Supervisor Review Desk</h3>
+                    <h3 className="text-xl font-serif font-bold text-white">Supervisor Review Desk</h3>
                     <p className="text-xs text-slate-400">Empowering faculty to conduct efficient line-by-line feedback</p>
                   </div>
                 </div>
@@ -374,7 +371,7 @@ export default function LandingPage() {
                 <div className="grid sm:grid-cols-2 gap-4 pt-2">
                   <div className="p-4 rounded-xl bg-slate-950 border border-slate-800 space-y-1.5">
                     <div className="text-sm font-semibold text-white flex items-center gap-2">
-                      <CheckCircle2 className="w-4 h-4 text-cyan-400" />
+                      <CheckCircle2 className="w-4 h-4 text-emerald-400" />
                       Assigned Student Roster
                     </div>
                     <p className="text-xs text-slate-400">
@@ -383,7 +380,7 @@ export default function LandingPage() {
                   </div>
                   <div className="p-4 rounded-xl bg-slate-950 border border-slate-800 space-y-1.5">
                     <div className="text-sm font-semibold text-white flex items-center gap-2">
-                      <CheckCircle2 className="w-4 h-4 text-cyan-400" />
+                      <CheckCircle2 className="w-4 h-4 text-emerald-400" />
                       Inline Feedback Notes
                     </div>
                     <p className="text-xs text-slate-400">
@@ -392,7 +389,7 @@ export default function LandingPage() {
                   </div>
                   <div className="p-4 rounded-xl bg-slate-950 border border-slate-800 space-y-1.5">
                     <div className="text-sm font-semibold text-white flex items-center gap-2">
-                      <CheckCircle2 className="w-4 h-4 text-cyan-400" />
+                      <CheckCircle2 className="w-4 h-4 text-emerald-400" />
                       Approval & Revision Actions
                     </div>
                     <p className="text-xs text-slate-400">
@@ -401,7 +398,7 @@ export default function LandingPage() {
                   </div>
                   <div className="p-4 rounded-xl bg-slate-950 border border-slate-800 space-y-1.5">
                     <div className="text-sm font-semibold text-white flex items-center gap-2">
-                      <CheckCircle2 className="w-4 h-4 text-cyan-400" />
+                      <CheckCircle2 className="w-4 h-4 text-emerald-400" />
                       Version Comparison Timeline
                     </div>
                     <p className="text-xs text-slate-400">
@@ -415,11 +412,11 @@ export default function LandingPage() {
             {activeTab === 'coordinator' && (
               <div className="space-y-6">
                 <div className="flex items-center gap-4">
-                  <div className="p-3 rounded-xl bg-emerald-500/10 text-emerald-400 border border-emerald-500/20">
+                  <div className="p-3 rounded-xl bg-cyan-500/10 text-cyan-400 border border-cyan-500/20">
                     <Building2 className="w-6 h-6" />
                   </div>
                   <div>
-                    <h3 className="text-xl font-bold text-white">Department Coordinator Oversight</h3>
+                    <h3 className="text-xl font-serif font-bold text-white">Department Coordinator Oversight</h3>
                     <p className="text-xs text-slate-400">Faculty-wide oversight, user management, & reporting</p>
                   </div>
                 </div>
@@ -427,7 +424,7 @@ export default function LandingPage() {
                 <div className="grid sm:grid-cols-2 gap-4 pt-2">
                   <div className="p-4 rounded-xl bg-slate-950 border border-slate-800 space-y-1.5">
                     <div className="text-sm font-semibold text-white flex items-center gap-2">
-                      <CheckCircle2 className="w-4 h-4 text-emerald-400" />
+                      <CheckCircle2 className="w-4 h-4 text-cyan-400" />
                       Student-Supervisor Allocations
                     </div>
                     <p className="text-xs text-slate-400">
@@ -436,7 +433,7 @@ export default function LandingPage() {
                   </div>
                   <div className="p-4 rounded-xl bg-slate-950 border border-slate-800 space-y-1.5">
                     <div className="text-sm font-semibold text-white flex items-center gap-2">
-                      <CheckCircle2 className="w-4 h-4 text-emerald-400" />
+                      <CheckCircle2 className="w-4 h-4 text-cyan-400" />
                       Institutional Index Tracking
                     </div>
                     <p className="text-xs text-slate-400">
@@ -445,7 +442,7 @@ export default function LandingPage() {
                   </div>
                   <div className="p-4 rounded-xl bg-slate-950 border border-slate-800 space-y-1.5">
                     <div className="text-sm font-semibold text-white flex items-center gap-2">
-                      <CheckCircle2 className="w-4 h-4 text-emerald-400" />
+                      <CheckCircle2 className="w-4 h-4 text-cyan-400" />
                       Department Completion Analytics
                     </div>
                     <p className="text-xs text-slate-400">
@@ -454,7 +451,7 @@ export default function LandingPage() {
                   </div>
                   <div className="p-4 rounded-xl bg-slate-950 border border-slate-800 space-y-1.5">
                     <div className="text-sm font-semibold text-white flex items-center gap-2">
-                      <CheckCircle2 className="w-4 h-4 text-emerald-400" />
+                      <CheckCircle2 className="w-4 h-4 text-cyan-400" />
                       User & Role Management
                     </div>
                     <p className="text-xs text-slate-400">
@@ -470,50 +467,50 @@ export default function LandingPage() {
       </section>
 
       {/* Core Platform Capabilities Grid */}
-      <section id="features" className="py-24 relative overflow-hidden">
+      <section id="features" className="py-24 relative overflow-hidden bg-[#05080e]">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           
           <div className="flex flex-col items-center text-center mb-16">
-            <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-indigo-500/10 border border-indigo-500/20 text-indigo-400 text-xs font-mono mb-4">
+            <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-amber-500/10 border border-amber-500/20 text-amber-300 text-xs font-mono mb-4">
               <Layers className="w-3.5 h-3.5" />
               <span>Full-Stack Engineering</span>
             </div>
-            <h2 className="text-3xl sm:text-4xl font-bold text-white tracking-tight">
+            <h2 className="text-3xl sm:text-5xl font-serif font-bold text-white tracking-tight">
               Enterprise Features Built for Scale
             </h2>
-            <p className="text-slate-400 text-base max-w-2xl mt-3">
+            <p className="text-slate-400 text-base max-w-2xl mt-3 font-light">
               Engineered with modern full-stack practices: robust relational database schemas, real-time WebSocket event rooms, and cloud file pipelines.
             </p>
           </div>
 
           <div className="grid md:grid-cols-3 gap-8 max-w-6xl mx-auto">
             
-            <div className="p-7 rounded-2xl bg-slate-900/40 border border-slate-800 hover:border-slate-700 transition-all space-y-4">
-              <div className="w-12 h-12 rounded-xl bg-indigo-500/10 border border-indigo-500/20 flex items-center justify-center text-indigo-400">
+            <div className="p-7 rounded-2xl bg-slate-900/40 border border-amber-500/20 hover:border-amber-500/40 transition-all space-y-4">
+              <div className="w-12 h-12 rounded-xl bg-amber-500/10 border border-amber-500/20 flex items-center justify-center text-amber-400">
                 <ShieldCheck className="w-6 h-6" />
               </div>
-              <h3 className="text-lg font-bold text-white">Role-Based Access Control</h3>
-              <p className="text-xs text-slate-400 leading-relaxed">
+              <h3 className="text-lg font-serif font-bold text-white">Role-Based Access Control</h3>
+              <p className="text-xs text-slate-400 leading-relaxed font-sans">
                 Strict RBAC authorization logic isolating Student, Supervisor, and Coordinator permissions across API endpoints and database queries.
               </p>
             </div>
 
-            <div className="p-7 rounded-2xl bg-slate-900/40 border border-slate-800 hover:border-slate-700 transition-all space-y-4">
-              <div className="w-12 h-12 rounded-xl bg-cyan-500/10 border border-cyan-500/20 flex items-center justify-center text-cyan-400">
+            <div className="p-7 rounded-2xl bg-slate-900/40 border border-emerald-500/20 hover:border-emerald-500/40 transition-all space-y-4">
+              <div className="w-12 h-12 rounded-xl bg-emerald-500/10 border border-emerald-500/20 flex items-center justify-center text-emerald-400">
                 <Zap className="w-6 h-6" />
               </div>
-              <h3 className="text-lg font-bold text-white">Socket.io Event Architecture</h3>
-              <p className="text-xs text-slate-400 leading-relaxed">
+              <h3 className="text-lg font-serif font-bold text-white">Socket.io Event Architecture</h3>
+              <p className="text-xs text-slate-400 leading-relaxed font-sans">
                 Real-time WebSocket event rooms (`user`, `thesis`, `submission`) for instant unread notification badges, status updates, and feedback threads.
               </p>
             </div>
 
-            <div className="p-7 rounded-2xl bg-slate-900/40 border border-slate-800 hover:border-slate-700 transition-all space-y-4">
-              <div className="w-12 h-12 rounded-xl bg-emerald-500/10 border border-emerald-500/20 flex items-center justify-center text-emerald-400">
+            <div className="p-7 rounded-2xl bg-slate-900/40 border border-cyan-500/20 hover:border-cyan-500/40 transition-all space-y-4">
+              <div className="w-12 h-12 rounded-xl bg-cyan-500/10 border border-cyan-500/20 flex items-center justify-center text-cyan-400">
                 <FileText className="w-6 h-6" />
               </div>
-              <h3 className="text-lg font-bold text-white">Cloudinary & Google Viewer</h3>
-              <p className="text-xs text-slate-400 leading-relaxed">
+              <h3 className="text-lg font-serif font-bold text-white">Cloudinary & Google Viewer</h3>
+              <p className="text-xs text-slate-400 leading-relaxed font-sans">
                 Seamless 25MB document upload handling paired with Google Docs Embedded Viewer for instant in-browser manuscript reading.
               </p>
             </div>
@@ -524,26 +521,26 @@ export default function LandingPage() {
       </section>
 
       {/* Bottom CTA Banner */}
-      <section className="py-20 relative bg-gradient-to-b from-[#080c14] to-[#040609] border-t border-slate-800/80">
+      <section className="py-20 relative bg-gradient-to-b from-[#070b13] to-[#040609] border-t border-slate-800/80">
         <div className="max-w-4xl mx-auto px-4 text-center space-y-6">
-          <h2 className="text-3xl sm:text-4xl font-extrabold text-white tracking-tight">
+          <h2 className="text-3xl sm:text-5xl font-serif font-extrabold text-white tracking-tight">
             Ready to Modernise Your Institution's Thesis Lifecycle?
           </h2>
-          <p className="text-slate-400 text-sm sm:text-base max-w-xl mx-auto">
+          <p className="text-slate-400 text-sm sm:text-base max-w-xl mx-auto font-light">
             Experience the production-ready academic workflow platform built for higher education.
           </p>
 
           <div className="pt-4 flex flex-col sm:flex-row items-center justify-center gap-4">
             <Link
               to="/register"
-              className="w-full sm:w-auto px-8 py-4 rounded-xl bg-gradient-to-r from-indigo-600 to-cyan-500 text-white font-bold text-sm hover:opacity-95 transition-all shadow-xl shadow-indigo-500/25 flex items-center justify-center gap-2"
+              className="w-full sm:w-auto px-8 py-4 rounded-xl bg-gradient-to-r from-amber-500 via-yellow-500 to-amber-600 text-black font-extrabold text-sm hover:opacity-95 transition-all shadow-xl shadow-amber-500/20 flex items-center justify-center gap-2"
             >
               <span>Create Free Account</span>
               <ArrowRight className="w-4 h-4" />
             </Link>
             <Link
               to="/login"
-              className="w-full sm:w-auto px-8 py-4 rounded-xl bg-slate-900 border border-slate-800 text-slate-200 font-bold text-sm hover:bg-slate-800 hover:text-white transition-colors"
+              className="w-full sm:w-auto px-8 py-4 rounded-xl bg-slate-900 border border-slate-800 text-slate-200 font-semibold text-sm hover:bg-slate-800 hover:text-white transition-colors"
             >
               Sign In to Portal
             </Link>
@@ -553,9 +550,9 @@ export default function LandingPage() {
 
       {/* Footer */}
       <footer className="bg-[#030508] border-t border-slate-900 py-10 text-xs text-slate-500">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col sm:flex-row items-center justify-between gap-4">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col sm:flex-row items-center justify-between gap-4 font-mono">
           <div className="flex items-center gap-2">
-            <BookOpen className="w-4 h-4 text-indigo-400" />
+            <BookOpen className="w-4 h-4 text-amber-400" />
             <span className="text-slate-300 font-semibold">ThesisFlow Platform</span>
             <span>•</span>
             <span>Academic Workflow & Review SaaS</span>
